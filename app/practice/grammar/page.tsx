@@ -5,14 +5,50 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Grammar quiz - articles, cases, simple structures
+// B1–C1 Grammar: Advanced structures (Konjunktiv II, passive, relative clauses, word order)
 const questions = [
-  { q: "Ich kaufe ___ Apfel.", en: "I buy an apple", options: ["der", "die", "das", "den"], correct: "den", hint: "Apfel is masculine → accusative = den" },
-  { q: "Das ist ___ Katze.", en: "That is the cat", options: ["der", "die", "das", "den"], correct: "die", hint: "Katze is feminine" },
-  { q: "Ich gehe ___ Schule.", en: "I go to school", options: ["in die", "in der", "in das", "in den"], correct: "in die", hint: "Schule = feminine, direction = accusative" },
-  { q: "Er hat ___ Buch.", en: "He has a book", options: ["ein", "eine", "einen", "eines"], correct: "ein", hint: "Buch is neuter" },
-  { q: "Wo ist ___ Bahnhof?", en: "Where is the train station?", options: ["der", "die", "das", "den"], correct: "der", hint: "Bahnhof is masculine" },
-  { q: "Ich trinke ___ Wasser.", en: "I drink water", options: ["der", "die", "das", "den"], correct: "das", hint: "Wasser is neuter" },
+  { 
+    q: "Wenn ich mehr Zeit ___ (haben), ___ ich nach Berlin reisen.", 
+    en: "If I had more time, I would travel to Berlin.", 
+    options: ["hätte / würde", "habe / werde", "hatte / reise", "hätte / reise"], 
+    correct: "hätte / würde", 
+    hint: "Konjunktiv II for hypothetical situations" 
+  },
+  { 
+    q: "Das Projekt ___ (müssen / abschließen) werden.", 
+    en: "The project must be completed.", 
+    options: ["muss abgeschlossen", "müssen abgeschlossen", "muss abschließen", "müssen abschließen"], 
+    correct: "muss abgeschlossen", 
+    hint: "Passive voice with modal verb" 
+  },
+  { 
+    q: "Der Mann, ___ ich gestern getroffen habe, ist mein Professor.", 
+    en: "The man whom I met yesterday is my professor.", 
+    options: ["den", "der", "dem", "dessen"], 
+    correct: "den", 
+    hint: "Relative pronoun in accusative (direct object)" 
+  },
+  { 
+    q: "Es ___ (werden / sagen), dass die Wirtschaft sich erholt.", 
+    en: "It is said that the economy is recovering.", 
+    options: ["wird gesagt", "werden gesagt", "sagt", "gesagt wird"], 
+    correct: "wird gesagt", 
+    hint: "Impersonal passive construction" 
+  },
+  { 
+    q: "Hätte er die Prüfung bestanden, ___ er das Stipendium bekommen.", 
+    en: "Had he passed the exam, he would have received the scholarship.", 
+    options: ["hätte / würde", "hätte / hätte", "hat / hat", "würde / würde"], 
+    correct: "hätte / hätte", 
+    hint: "Past unreal conditional (Konjunktiv II)" 
+  },
+  { 
+    q: "Die Studierenden, ___ die Vorlesung besucht hatten, bestanden die Klausur.", 
+    en: "The students who had attended the lecture passed the exam.", 
+    options: ["die", "deren", "denen", "welche"], 
+    correct: "die", 
+    hint: "Relative pronoun referring to people (nominative plural)" 
+  },
 ];
 
 export default function GrammarQuiz() {
@@ -88,7 +124,7 @@ export default function GrammarQuiz() {
         </div>
 
         <div className="flex gap-4 justify-center">
-          <Button onClick={restart} className="duo-cta px-10 bg-[#1cb0f6] hover:bg-[#0d9de0]">Play again</Button>
+          <Button onClick={restart} className="px-8 py-3 rounded-2xl font-semibold bg-[#3D5A5B] text-white hover:bg-[#8B6F47]">Play again</Button>
           <Button asChild variant="outline" className="px-10 rounded-3xl text-xl font-bold">
             <Link href="/dashboard">Back to dashboard</Link>
           </Button>
@@ -122,10 +158,10 @@ export default function GrammarQuiz() {
       </div>
 
       <div className="question-box">
-        <div className="text-sm font-black tracking-[3px] text-[#1cb0f6] mb-2">CHOOSE THE CORRECT WORD</div>
+        <div className="text-xs tracking-[2px] text-[#8B6F47] mb-1">COMPLEX GRAMMAR</div>
         
         <div className="question-text">{q.q}</div>
-        <div className="text-center text-[#64748b] text-xl mb-8">{q.en}</div>
+        <div className="text-center text-[#6B6B6B] text-lg mb-6">{q.en}</div>
 
         <div className="grid grid-cols-2 gap-3">
           {currentOptions.map((opt, idx) => {

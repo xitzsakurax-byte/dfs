@@ -1,71 +1,51 @@
+'use client';
+
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function PracticeHub() {
   return (
-    <div className="max-w-5xl mx-auto py-6">
-      <div className="mb-8 flex items-end justify-between">
-        <div>
-          <div className="text-[#58cc02] font-black tracking-[2px]">PICK YOUR POISON</div>
-          <h1 className="text-6xl font-black tracking-[-2px]">Choose a skill</h1>
-        </div>
-        <Link href="/dashboard" className="font-bold text-[#58cc02] hover:underline">← Back to dashboard</Link>
+    <div className="max-w-5xl mx-auto py-8">
+      <div className="mb-10">
+        <div className="text-xs tracking-[2px] text-[#8B6F47] mb-1">B1 — C1</div>
+        <h1 className="text-5xl font-semibold tracking-tight">Advanced practice</h1>
+        <p className="text-[#6B6B6B] mt-2">Focused exercises for independent and proficient users.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Vocabulary */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <Link href="/practice/vocab" className="skill-card vocabulary group">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* Vocabulary - B1-C1 */}
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <Link href="/practice/vocab" className="skill-card group block">
+            <div 
+              className="h-40 -mx-6 -mt-6 mb-6 bg-cover bg-center" 
+              style={{ backgroundImage: "url('https://picsum.photos/id/1015/800/400')" }}
+            />
             <div>
-              <div className="icon">📚</div>
-              <div className="font-black text-5xl mb-2">Vocabulary</div>
-              <div className="text-2xl text-white/90">Translate 10 German words.<br />Multiple choice. Instant green/red feedback.</div>
-            </div>
-            <div className="mt-auto">
-              <div className="inline-block bg-white/25 px-4 py-1 rounded-2xl font-black text-sm">10 QUESTIONS • +10–20 XP</div>
+              <div className="font-semibold text-2xl tracking-tight mb-2">Advanced Vocabulary</div>
+              <div className="text-[#6B6B6B] text-[15px] leading-relaxed">Nuanced terms, collocations, and professional language from authentic German contexts.</div>
+              <div className="mt-6 text-sm font-medium text-[#8B6F47] group-hover:underline">Begin exercise →</div>
             </div>
           </Link>
         </motion.div>
 
-        {/* Grammar */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
-          <Link href="/practice/grammar" className="skill-card grammar group">
+        {/* Grammar - B1-C1 */}
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
+          <Link href="/practice/grammar" className="skill-card group block">
+            <div 
+              className="h-40 -mx-6 -mt-6 mb-6 bg-cover bg-center" 
+              style={{ backgroundImage: "url('https://picsum.photos/id/201/800/400')" }}
+            />
             <div>
-              <div className="icon">✍️</div>
-              <div className="font-black text-5xl mb-2">Grammar</div>
-              <div className="text-2xl text-white/90">Cases, articles &amp; verbs.<br />6 quick questions. Lose hearts if you mess up.</div>
-            </div>
-            <div className="mt-auto">
-              <div className="inline-block bg-white/25 px-4 py-1 rounded-2xl font-black text-sm">6 QUESTIONS • HEARTS MODE</div>
+              <div className="font-semibold text-2xl tracking-tight mb-2">Complex Grammar</div>
+              <div className="text-[#6B6B6B] text-[15px] leading-relaxed">Subjunctive, passive voice, relative clauses, and sophisticated sentence structures.</div>
+              <div className="mt-6 text-sm font-medium text-[#8B6F47] group-hover:underline">Begin exercise →</div>
             </div>
           </Link>
         </motion.div>
-
-        {/* Listening (placeholder) */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.26 }}>
-          <div className="skill-card listening opacity-70 cursor-not-allowed">
-            <div>
-              <div className="icon">🎧</div>
-              <div className="font-black text-5xl mb-2">Listening</div>
-              <div className="text-2xl text-white/90">Real audio sentences.<br />Type what you hear. Coming in the next update.</div>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Speaking (placeholder) */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.34 }}>
-          <div className="skill-card speaking opacity-70 cursor-not-allowed">
-            <div>
-              <div className="icon">🎤</div>
-              <div className="font-black text-5xl mb-2">Speaking</div>
-              <div className="text-2xl text-white/90">Record yourself saying the sentence.<br />Pronunciation scoring coming soon.</div>
-            </div>
-          </motion.div>
-        </motion.div>
       </div>
 
-      <div className="mt-10 text-center text-sm font-medium text-[#64748b]">
-        Tip: Answer fast and correct for maximum XP. Wrong answers cost a heart ❤️
+      <div className="mt-8 text-center text-sm text-[#6B6B6B]">
+        Listening and Speaking modules coming soon with authentic audio and guided practice.
       </div>
     </div>
   );

@@ -49,72 +49,69 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #F8F5F0;
+  --foreground: #2C2C2C;
+  --card: #FFFFFF;
+  --card-foreground: #2C2C2C;
+  --popover: #FFFFFF;
+  --popover-foreground: #2C2C2C;
+  --primary: #3D5A5B;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EDE8E0;
+  --secondary-foreground: #2C2C2C;
+  --muted: #F1EDE6;
+  --muted-foreground: #6B6B6B;
+  --accent: #3D5A5B;
+  --accent-foreground: #FFFFFF;
+  --accent-warm: #8B6F47;
+  --destructive: #A65D5D;
+  --border: #D4CFC6;
+  --input: #FFFFFF;
+  --ring: #3D5A5B;
+  --chart-1: #3D5A5B;
+  --chart-2: #8B6F47;
+  --chart-3: #5C7A7B;
+  --chart-4: #A65D5D;
+  --chart-5: #6B6B6B;
+  --radius: 0.75rem;
+  --sidebar: #F8F5F0;
+  --sidebar-foreground: #2C2C2C;
+  --sidebar-primary: #3D5A5B;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EDE8E0;
+  --sidebar-accent-foreground: #2C2C2C;
+  --sidebar-border: #D4CFC6;
+  --sidebar-ring: #3D5A5B;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #2C2C2C;
+  --foreground: #F8F5F0;
+  --card: #3A3A3A;
+  --card-foreground: #F8F5F0;
+  --popover: #3A3A3A;
+  --popover-foreground: #F8F5F0;
+  --primary: #A8B5B5;
+  --primary-foreground: #2C2C2C;
+  --secondary: #4A4A4A;
+  --secondary-foreground: #F8F5F0;
+  --muted: #4A4A4A;
+  --muted-foreground: #A8A8A8;
+  --accent: #A8B5B5;
+  --accent-foreground: #2C2C2C;
+  --accent-warm: #C4A77D;
+  --destructive: #C17A7A;
+  --border: #555555;
+  --input: #3A3A3A;
+  --ring: #A8B5B5;
+  --sidebar: #2C2C2C;
+  --sidebar-foreground: #F8F5F0;
+  --sidebar-primary: #A8B5B5;
+  --sidebar-primary-foreground: #2C2C2C;
+  --sidebar-accent: #4A4A4A;
+  --sidebar-accent-foreground: #F8F5F0;
+  --sidebar-border: #555555;
+  --sidebar-ring: #A8B5B5;
 }
 
 @layer base {
@@ -140,36 +137,128 @@
   --duo-yellow: #ffc800;
 }
 
-/* Bright colorful overrides */
+/* Aesthetic professional styles - muted elegant (no bright abuse) */
 .streak-flame {
-  font-size: 2.5rem;
-  transition: transform 0.2s;
-}
-.streak-flame.hot {
-  animation: flame 0.8s infinite alternate;
-}
-@keyframes flame {
-  from { transform: scale(1) rotate(-4deg); }
-  to { transform: scale(1.15) rotate(4deg); }
+  font-size: 2rem;
+  color: var(--accent-warm);
 }
 
 .xp-bar {
-  height: 14px;
-  background: linear-gradient(to right, #58cc02, #4aa302);
-  transition: width 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 12px #58cc02;
-  border-radius: 9999px;
+  height: 6px;
+  background: var(--accent);
+  transition: width 400ms ease;
+  border-radius: 999px;
 }
 
-/* Skill cards - very Duolingo */
-.skill-card {
-  @apply rounded-3xl p-7 text-white shadow-xl active:scale-[0.985] transition-all cursor-pointer flex flex-col justify-between;
-  min-height: 170px;
+.practice-card, .skill-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.skill-card.vocabulary { background: linear-gradient(145deg, #58cc02, #46a302); }
-.skill-card.grammar { background: linear-gradient(145deg, #1cb0f6, #0d9de0); }
-.skill-card.listening { background: linear-gradient(145deg, #ce82ff, #a85de0); }
-.skill-card.speaking { background: linear-gradient(145deg, #ff9500, #e07d00); }
+
+.practice-card:hover, .skill-card:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08);
+  transform: translateY(-1px);
+}
+
+/* Elegant cards with subtle image support */
+.skill-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.06;
+  z-index: 0;
+  transition: opacity 0.3s;
+}
+
+.skill-card:hover::before {
+  opacity: 0.1;
+}
+
+.skill-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Stop icon abuse - subtle or text only */
+.skill-card .icon {
+  font-size: 1.1rem;
+  opacity: 0.5;
+  margin-bottom: 0.75rem;
+}
+
+/* Aesthetic quiz */
+.quiz-option {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  text-align: left;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--muted);
+}
+
+.quiz-option.correct {
+  background: #E8F0E8;
+  border-color: var(--accent);
+}
+
+.quiz-option.wrong {
+  background: #F8E8E8;
+  border-color: var(--error);
+}
+
+.feedback {
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.feedback.correct {
+  background: #E8F0E8;
+  color: #2C4A3A;
+  border-color: var(--accent);
+}
+
+.feedback.wrong {
+  background: #F8E8E8;
+  color: #6B3A3A;
+  border-color: var(--error);
+}
+
+/* Elegant buttons */
+.duo-cta {
+  background: var(--accent);
+  color: white;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.625rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.duo-cta:hover {
+  background: var(--accent-warm);
+}
+
+/* More breathing room, aesthetic spacing */
+h1, h2 {
+  letter-spacing: -0.02em;
+}
 
 .skill-card .icon { font-size: 3.2rem; margin-bottom: 0.75rem; }
 

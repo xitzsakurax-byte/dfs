@@ -5,18 +5,18 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Proper quiz data: German → English translation
+// B1–C1 level: Advanced vocabulary (nuanced, professional, idiomatic)
 const questions = [
-  { de: "der Tisch", en: "the table", options: ["the table", "the chair", "the bed", "the door"] },
-  { de: "das Haus", en: "the house", options: ["the house", "the car", "the school", "the garden"] },
-  { de: "die Katze", en: "the cat", options: ["the dog", "the cat", "the bird", "the fish"] },
-  { de: "essen", en: "to eat", options: ["to drink", "to eat", "to sleep", "to run"] },
-  { de: "trinken", en: "to drink", options: ["to eat", "to drink", "to cook", "to buy"] },
-  { de: "der Apfel", en: "the apple", options: ["the banana", "the apple", "the orange", "the grape"] },
-  { de: "freundlich", en: "friendly", options: ["friendly", "angry", "tired", "happy"] },
-  { de: "die Arbeit", en: "the work / job", options: ["the work / job", "the school", "the money", "the time"] },
-  { de: "sprechen", en: "to speak", options: ["to listen", "to speak", "to write", "to read"] },
-  { de: "gut", en: "good", options: ["good", "bad", "big", "small"] },
+  { de: "die Nachhaltigkeit", en: "sustainability", options: ["sustainability", "pollution", "innovation", "economy"] },
+  { de: "sich bewerben um", en: "to apply for (a job)", options: ["to apply for (a job)", "to reject", "to interview", "to resign"] },
+  { de: "konsequent", en: "consistent / consequently", options: ["consistent / consequently", "occasionally", "randomly", "hesitantly"] },
+  { de: "die Resilienz", en: "resilience", options: ["resilience", "vulnerability", "fragility", "dependence"] },
+  { de: "vorausschauend", en: "forward-looking / proactive", options: ["forward-looking / proactive", "short-sighted", "reactive", "careless"] },
+  { de: "der Paradigmenwechsel", en: "paradigm shift", options: ["paradigm shift", "minor adjustment", "stagnation", "repetition"] },
+  { de: "ambivalent", en: "ambivalent / having mixed feelings", options: ["ambivalent / having mixed feelings", "decisive", "enthusiastic", "indifferent"] },
+  { de: "die Selbstverwirklichung", en: "self-actualization", options: ["self-actualization", "conformity", "dependence", "submission"] },
+  { de: "jemandem den Wind aus den Segeln nehmen", en: "to take the wind out of someone's sails", options: ["to take the wind out of someone's sails", "to encourage someone", "to ignore someone", "to praise someone"] },
+  { de: "umweltbewusst", en: "environmentally conscious", options: ["environmentally conscious", "wasteful", "indifferent", "exploitative"] },
 ];
 
 export default function VocabQuiz() {
@@ -95,7 +95,7 @@ export default function VocabQuiz() {
         </div>
 
         <div className="flex gap-4 justify-center">
-          <Button onClick={restart} className="duo-cta px-10">Play again</Button>
+          <Button onClick={restart} className="px-8 py-3 rounded-2xl font-semibold bg-[#3D5A5B] text-white hover:bg-[#8B6F47]">Play again</Button>
           <Button asChild variant="outline" className="px-10 rounded-3xl text-xl font-bold">
             <Link href="/dashboard">Back to dashboard</Link>
           </Button>
@@ -132,11 +132,11 @@ export default function VocabQuiz() {
       </div>
 
       <div className="question-box">
-        <div className="text-sm font-black tracking-[3px] text-[#58cc02] mb-2">TRANSLATE THIS</div>
+        <div className="text-xs tracking-[2px] text-[#8B6F47] mb-1">ADVANCED VOCABULARY</div>
         
         <div className="question-text">{q.de}</div>
         
-        <div className="text-[#64748b] text-center mb-8 text-xl">What does this mean in English?</div>
+        <div className="text-[#6B6B6B] text-center mb-6 text-lg">What is the English equivalent?</div>
 
         <div>
           {currentOptions.map((opt, idx) => {

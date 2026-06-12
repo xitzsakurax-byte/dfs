@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Flame, Target, Award } from 'lucide-react';
@@ -49,8 +51,8 @@ export default function Dashboard() {
           </div>
 
           <div>
-            <Button asChild className="duo-cta !text-3xl px-16 py-8 rounded-3xl">
-              <Link href="/practice">START DAILY PRACTICE</Link>
+            <Button asChild className="px-10 py-4 text-xl font-semibold rounded-2xl bg-[#3D5A5B] text-white hover:bg-[#8B6F47]">
+              <Link href="/practice">Start advanced practice</Link>
             </Button>
             <div className="text-center text-sm font-bold text-[#64748b] mt-2">8–12 questions • ~5 minutes</div>
           </div>
@@ -107,25 +109,20 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + index * 0.08 }}
             >
-          {[
-            { title: "Vocabulary", desc: "Translate 10 words. Multiple choice. Fast XP.", href: "/practice/vocab", icon: "📚", color: "vocabulary" },
-            { title: "Grammar", desc: "Cases, verbs, word order. 6 quick questions.", href: "/practice/grammar", icon: "✍️", color: "grammar" },
-            { title: "Listening", desc: "Coming very soon — real audio drills.", href: "/practice", icon: "🎧", color: "listening" },
-            { title: "Speaking", desc: "Coming very soon — record & score.", href: "/practice", icon: "🎤", color: "speaking" },
-          ].map((s) => (
-            <Link key={s.title} href={s.href} className={`skill-card ${s.color} group`}>
-              <div className="icon">{s.icon}</div>
-              <div>
-                <div className="font-black text-4xl mb-1 group-active:scale-95 transition">{s.title}</div>
-                <div className="text-white/90 text-[17px] leading-tight">{s.desc}</div>
-              </div>
-            </Link>
+              <Link href={s.href} className={`skill-card ${s.color} group`}>
+                <div className="icon">{s.icon}</div>
+                <div>
+                  <div className="font-black text-4xl mb-1 group-active:scale-95 transition">{s.title}</div>
+                  <div className="text-white/90 text-[17px] leading-tight">{s.desc}</div>
+                </div>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>
 
-      <div className="text-center text-sm font-medium text-[#64748b] pt-4">
-        Guest mode • Your progress is saved in this browser only. Sign in later to sync across devices.
+      <div className="text-center text-sm text-[#6B6B6B] pt-4">
+        Guest mode • Your progress is saved locally. Sign in later to sync.
       </div>
     </div>
   );

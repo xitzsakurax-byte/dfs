@@ -1,99 +1,112 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Flame, Trophy, Target, BookOpen, Award } from 'lucide-react';
 
 export default function GermanForgeLanding() {
   return (
-    <div className="min-h-screen bg-[#f0f4f8] text-[#1f2937]">
-      {/* Fun colorful nav */}
-      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#2C2C2C]">
+      {/* Elegant nav */}
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-[#D4CFC6]">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#58cc02] text-white font-black text-2xl tracking-[-1px]">GF</div>
-            <div>
-              <div className="font-black text-2xl tracking-tighter">GermanForge</div>
-            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3D5A5B] text-white font-semibold text-xl tracking-tight">GF</div>
+            <div className="font-semibold text-2xl tracking-tight">GermanForge</div>
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="font-bold text-[#1f2937] hover:text-[#58cc02]">Dashboard</Link>
-            <Link href="/practice" className="font-bold text-[#1f2937] hover:text-[#58cc02]">Practice</Link>
-            <Button asChild className="duo-cta !px-7 !py-2 !text-base !rounded-2xl">
-              <Link href="/dashboard">Start practicing free</Link>
+          <div className="flex items-center gap-6 text-sm font-medium">
+            <Link href="/dashboard" className="hover:text-[#3D5A5B] transition-colors">Dashboard</Link>
+            <Link href="/practice" className="hover:text-[#3D5A5B] transition-colors">Practice</Link>
+            <Button asChild className="px-5 py-2 rounded-xl text-sm font-semibold bg-[#3D5A5B] text-white hover:bg-[#8B6F47]">
+              <Link href="/dashboard">Begin practice</Link>
             </Button>
           </div>
         </div>
       </nav>
 
-      {/* Hero - super colorful and fun */}
-      <div className="mx-auto max-w-5xl px-6 pt-14 pb-16 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full bg-[#58cc02] px-4 py-1 text-sm font-extrabold tracking-widest text-white mb-6">
-          🔥 LIKE DUOLINGO BUT FOR SERIOUS GERMAN
+      {/* Aesthetic hero with image */}
+      <div className="mx-auto max-w-6xl px-6 pt-16 pb-20 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div className="inline-block px-3 py-1 rounded-full bg-[#EDE8E0] text-[#6B6B6B] text-xs tracking-[2px] mb-6">B1 • B2 • C1</div>
+          
+          <h1 className="text-6xl md:text-7xl font-semibold tracking-tighter leading-[1.05] mb-6">
+            Master advanced German.<br />With precision.
+          </h1>
+          
+          <p className="text-xl text-[#6B6B6B] max-w-md mb-8">
+            Elegant, focused practice for B1–C1 learners. Real-world vocabulary, nuanced grammar, and visual context.
+          </p>
+
+          <div className="flex gap-4">
+            <Button asChild className="px-8 py-3 rounded-2xl text-base font-semibold bg-[#3D5A5B] text-white hover:bg-[#8B6F47]">
+              <Link href="/dashboard">Start practicing</Link>
+            </Button>
+            <Button asChild variant="outline" className="px-8 py-3 rounded-2xl text-base font-medium border-[#D4CFC6] hover:bg-[#EDE8E0]">
+              <Link href="#skills">Explore skills</Link>
+            </Button>
+          </div>
+          <p className="mt-3 text-xs text-[#6B6B6B]">Guest access • Progress saved locally</p>
         </div>
 
-        <h1 className="text-7xl md:text-[82px] font-black tracking-[-4.5px] leading-[0.9] mb-6">
-          Learn German.<br />
-          <span className="text-[#58cc02]">Have fun doing it.</span>
-        </h1>
-        
-        <p className="mx-auto max-w-xl text-2xl text-[#475569] mb-10 font-medium">
-          Short, colorful quizzes. Earn XP. Keep your streak alive. 
-          Perfect for Ausbildung, work, or just not sounding like a tourist.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg" className="duo-cta text-2xl px-14 py-7 rounded-3xl">
-            <Link href="/dashboard">Start free • No signup</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="text-xl px-10 py-7 rounded-3xl border-4 border-[#1f2937] font-bold">
-            <Link href="#play">See how it works</Link>
-          </Button>
+        {/* Hero image */}
+        <div className="relative rounded-3xl overflow-hidden shadow-xl aspect-[16/10] bg-[#EDE8E0]">
+          <img 
+            src="https://picsum.photos/id/1015/1200/750" 
+            alt="Elegant study space with German books and natural light" 
+            className="object-cover w-full h-full" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
-        <p className="mt-4 text-sm text-[#64748b]">Guest mode • Progress saves in your browser for now</p>
       </div>
 
-      {/* Big colorful stats bar */}
-      <div className="bg-white border-y py-5">
-        <div className="mx-auto max-w-5xl grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4 px-6 text-center text-sm font-semibold">
-          <div className="flex items-center justify-center gap-2"><span className="text-[#58cc02] text-3xl">87k</span> streaks today</div>
-          <div className="flex items-center justify-center gap-2"><span className="text-[#1cb0f6] text-3xl">4.2×</span> more practice</div>
-          <div className="flex items-center justify-center gap-2"><span className="text-[#ce82ff] text-3xl">A1 → B2</span> in ~90 days</div>
-          <div className="flex items-center justify-center gap-2"><span className="text-[#ff9500] text-3xl">92%</span> keep their streak</div>
+      {/* Subtle stats */}
+      <div className="border-y border-[#D4CFC6] bg-white py-6">
+        <div className="mx-auto max-w-5xl px-6 grid grid-cols-2 md:grid-cols-4 text-center text-sm font-medium text-[#6B6B6B]">
+          <div>Designed for serious learners</div>
+          <div>Context-rich exercises</div>
+          <div>Visual learning support</div>
+          <div>CEFR-aligned B1–C1</div>
         </div>
       </div>
 
-      {/* How to play - colorful cards */}
-      <div id="play" className="mx-auto max-w-6xl px-6 py-16">
-        <div className="text-center mb-10">
-          <div className="text-[#58cc02] font-black tracking-[3px] text-sm mb-2">3 MINUTES A DAY IS ENOUGH</div>
-          <h2 className="text-6xl font-black tracking-[-2px]">Play like Duolingo.<br />Actually remember like Quizlet.</h2>
+      {/* Skills with images - aesthetic, less icons */}
+      <div id="skills" className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mb-10">
+          <div className="text-xs tracking-[3px] text-[#8B6F47] mb-2">FOCUSED PRACTICE</div>
+          <h2 className="text-5xl font-semibold tracking-tight">Advanced skills for B1–C1</h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="skill-card vocabulary">
-            <div>
-              <div className="icon">📚</div>
-              <div className="font-black text-4xl mb-1">Vocabulary</div>
-              <div className="text-white/90 text-xl">Multiple choice. Instant feedback. Real words you’ll use.</div>
+        <div className="grid md:grid-cols-2 gap-6">
+          <Link href="/practice/vocab" className="skill-card group flex flex-col">
+            <div className="flex-1">
+              <div className="text-[#8B6F47] text-xs tracking-widest mb-2">VOCABULARY</div>
+              <div className="font-semibold text-3xl mb-3 tracking-tight">Advanced Vocabulary</div>
+              <div className="text-[#6B6B6B] leading-snug">Nuanced terms, collocations, and professional language from real German contexts.</div>
             </div>
-            <div className="text-sm font-bold opacity-75">10 questions • +XP per correct</div>
-          </div>
+            <div className="mt-6 text-sm text-[#8B6F47] font-medium group-hover:underline">Start →</div>
+          </Link>
 
-          <div className="skill-card grammar">
-            <div>
-              <div className="icon">✍️</div>
-              <div className="font-black text-4xl mb-1">Grammar</div>
-              <div className="text-white/90 text-xl">Quick drills. Cases, verbs, word order. No boring explanations until you get it wrong.</div>
+          <Link href="/practice/grammar" className="skill-card group flex flex-col">
+            <div className="flex-1">
+              <div className="text-[#8B6F47] text-xs tracking-widest mb-2">GRAMMAR</div>
+              <div className="font-semibold text-3xl mb-3 tracking-tight">Complex Structures</div>
+              <div className="text-[#6B6B6B] leading-snug">Subjunctive, passive constructions, relative clauses, and sophisticated sentence building.</div>
             </div>
-            <div className="text-sm font-bold opacity-75">5–8 questions • Hearts system</div>
-          </div>
+            <div className="mt-6 text-sm text-[#8B6F47] font-medium group-hover:underline">Start →</div>
+          </Link>
+        </div>
 
-          <div className="skill-card listening">
-            <div>
-              <div className="icon">🎧</div>
-              <div className="font-black text-4xl mb-1">Listening + Speaking</div>
-              <div className="text-white/90 text-xl">Coming very soon. Browser audio + voice. Kahoot energy.</div>
+        <div className="mt-6 grid md:grid-cols-2 gap-6">
+          <div className="skill-card flex flex-col opacity-70">
+            <div className="flex-1">
+              <div className="text-[#8B6F47] text-xs tracking-widest mb-2">LISTENING</div>
+              <div className="font-semibold text-3xl mb-3 tracking-tight">Authentic Audio</div>
+              <div className="text-[#6B6B6B]">Coming soon. Podcasts, interviews, and lectures at B2–C1 level.</div>
             </div>
-            <div className="text-sm font-bold opacity-75">Short &amp; addictive</div>
+          </div>
+          <div className="skill-card flex flex-col opacity-70">
+            <div className="flex-1">
+              <div className="text-[#8B6F47] text-xs tracking-widest mb-2">SPEAKING</div>
+              <div className="font-semibold text-3xl mb-3 tracking-tight">Fluent Expression</div>
+              <div className="text-[#6B6B6B]">Coming soon. Pronunciation and structured speaking practice.</div>
+            </div>
           </div>
         </div>
       </div>
