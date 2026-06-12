@@ -1,19 +1,26 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
+import { getUserStats } from '@/lib/progress';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Simple guest mode state (will become real later)
-  const streak = 14;
-  const xp = 2840;
-  const level = 12;
+  const [stats, setStats] = useState({ totalXp: 0, level: 1, streak: 0 });
+
+  useEffect(() => {
+    getUserStats().then(s => {
+      setStats({ totalXp: s.totalXp, level: s.level, streak: s.streak });
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA]">
-      {/* Professional dark header - no white, no icon spam, clean exam focus */}
+      {/* Professional dark header - now shows real remembered stats */}
       <header className="sticky top-0 z-50 bg-[var(--surface)] border-b border-[var(--line)]">
         <div className="mx-auto max-w-6xl px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
@@ -33,19 +40,19 @@ export default function DashboardLayout({
             </div>
           </div>
 
-          {/* Clean top stats - no icons, no white bg, elegant */}
+          {/* Clean top stats - real data, remembered daily (Vietnam time) */}
           <div className="flex items-center gap-5 text-sm font-medium text-[var(--muted)]">
             <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface2)] border border-[var(--line)]">
-              <span className="font-semibold text-[var(--text)]">{streak} day streak</span>
+              <span className="font-semibold text-[var(--text)]">{stats.streak} day streak</span>
             </div>
 
             <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface2)] border border-[var(--line)]">
-              <span className="font-semibold text-[var(--text)]">{xp.toLocaleString()} XP</span>
-              <span className="text-[var(--gold)]">Lv.{level}</span>
+              <span className="font-semibold text-[var(--text)]">{stats.totalXp.toLocaleString()} XP</span>
+              <span className="text-[var(--gold)]">Lv.{stats.level}</span>
             </div>
 
             <Button asChild variant="ghost" size="sm" className="btn-ghost text-sm">
-              <Link href="/">Anh Kiet</Link>
+              <Link href="/profile">Profile</Link>
             </Button>
           </div>
         </div>
