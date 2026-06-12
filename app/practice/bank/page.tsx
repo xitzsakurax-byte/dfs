@@ -27,11 +27,24 @@ export default function BankDrill() {
       const mastered = await getBankMastered();
       setBankMastered(mastered);
 
-      // Build drill preferring unmastered
-      const unmastered = [...fullVocab].sort(() => Math.random() - 0.5).filter(w => !mastered.includes(w));
+      // Build drill preferring unmastered. Filter for B1-C1 relevant (avoid pure A1 basics like short everyday words).
+      // Prioritize longer terms, compounds, academic/professional words from the official list.
+      const isB1Plus = (w: string) => {
+        if (!w || w.length < 6) return false;
+        const lower = w.toLowerCase();
+        const tooBasic = ['bus', 'hund', 'milch', 'haus', 'wasser', 'wetter', 'woche', 'tee', 'tisch', 'sonne', 'mond', 'himmel', 'regen', 'schnee', 'auto', 'zug', 'flug', 'hund', 'katze', 'vater', 'mutter', 'kind', 'freund', 'freundin', 'opa', 'oma', 'onkel', 'tante', 'bruder', 'schwester', 'mann', 'frau', 'junge', 'mädchen', 'stadt', 'land', 'meer', 'strand', 'wald', 'berg', 'fluss'];
+        if (tooBasic.some(b => lower.includes(b))) return false;
+        // Prefer words with B1+ indicators: length, umlauts in compounds, typical endings, phrases
+        return w.length >= 7 || w.includes(' ') || /[äöüß]/.test(w) || /(keit|ung|schaft|tion|ismus|enz|anz|heit)$/.test(lower) || w[0] === w[0].toUpperCase() && w.length > 8;
+      };
+
+      let candidates = [...fullVocab].filter(isB1Plus);
+      if (candidates.length < 50) candidates = [...fullVocab]; // fallback if filter too strict
+
+      const unmastered = candidates.sort(() => Math.random() - 0.5).filter(w => !mastered.includes(w));
       let drill = unmastered.slice(0, DRILL_SIZE);
       if (drill.length < DRILL_SIZE) {
-        const fillers = [...fullVocab].sort(() => Math.random() - 0.5).filter(w => !drill.includes(w)).slice(0, DRILL_SIZE - drill.length);
+        const fillers = candidates.sort(() => Math.random() - 0.5).filter(w => !drill.includes(w) && !mastered.includes(w)).slice(0, DRILL_SIZE - drill.length);
         drill = [...drill, ...fillers];
       }
       setDrillWords(drill);
@@ -81,10 +94,20 @@ export default function BankDrill() {
   function restartDrill() {
     // New random drill respecting current global mastered (no repeat already known if possible)
     const mastered = [...bankMastered];
-    const unmastered = [...fullVocab].sort(() => Math.random() - 0.5).filter(w => !mastered.includes(w));
+    const isB1Plus = (w: string) => {
+      if (!w || w.length < 6) return false;
+      const lower = w.toLowerCase();
+      const tooBasic = ['bus', 'hund', 'milch', 'haus', 'wasser', 'wetter', 'woche', 'tee', 'tisch', 'sonne', 'mond', 'himmel', 'regen', 'schnee', 'auto', 'zug', 'flug', 'hund', 'katze', 'vater', 'mutter', 'kind', 'freund', 'freundin', 'opa', 'oma', 'onkel', 'tante', 'bruder', 'schwester', 'mann', 'frau', 'junge', 'mädchen', 'stadt', 'land', 'meer', 'strand', 'wald', 'berg', 'fluss'];
+      if (tooBasic.some(b => lower.includes(b))) return false;
+      return w.length >= 7 || w.includes(' ') || /[äöüß]/.test(w) || /(keit|ung|schaft|tion|ismus|enz|anz|heit)$/.test(lower) || w[0] === w[0].toUpperCase() && w.length > 8;
+    };
+    let candidates = [...fullVocab].filter(isB1Plus);
+    if (candidates.length < 50) candidates = [...fullVocab];
+
+    const unmastered = candidates.sort(() => Math.random() - 0.5).filter(w => !mastered.includes(w));
     let drill = unmastered.slice(0, DRILL_SIZE);
     if (drill.length < DRILL_SIZE) {
-      const fillers = [...fullVocab].sort(() => Math.random() - 0.5).filter(w => !drill.includes(w)).slice(0, DRILL_SIZE - drill.length);
+      const fillers = candidates.sort(() => Math.random() - 0.5).filter(w => !drill.includes(w) && !mastered.includes(w)).slice(0, DRILL_SIZE - drill.length);
       drill = [...drill, ...fillers];
     }
     setDrillWords(drill);
