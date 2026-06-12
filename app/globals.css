@@ -56,6 +56,7 @@
   --muted-foreground: var(--muted);
   --accent: var(--gold-warm);
   --accent-foreground: #0A0D14;
+  --accent-light: var(--gold-bright);
   --destructive: #EF4444;
   --border: var(--line);
   --input: var(--surface-2);

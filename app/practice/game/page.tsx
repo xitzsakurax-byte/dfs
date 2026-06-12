@@ -312,7 +312,7 @@ export default function PracticeGame() {
                   >
                     Submit Answer
                   </Button>
-                  <Button onClick={handleSkip} variant="outline" className="px-6 py-3">
+                  <Button onClick={handleSkip} className="btn-ghost px-6 py-3">
                     Skip for Now
                   </Button>
                 </>
@@ -321,7 +321,7 @@ export default function PracticeGame() {
                   <Button onClick={handleNext} className="btn-primary px-8 py-3">
                     Next Question
                   </Button>
-                  <Button onClick={resetSession} variant="outline" className="px-6 py-3">
+                  <Button onClick={resetSession} className="btn-ghost px-6 py-3">
                     End Session
                   </Button>
                 </>
@@ -357,12 +357,12 @@ export default function PracticeGame() {
               <Button onClick={() => startNewSession(mode)} className="btn-primary px-8 py-3">
                 Play Again
               </Button>
-              <Button asChild variant="outline" className="px-8 py-3">
-                <Link href="/practice">Back to Practice</Link>
-              </Button>
-              <Button asChild variant="outline" className="px-8 py-3">
-                <Link href="/dashboard">See Progress</Link>
-              </Button>
+              <Link href="/practice" className="btn-ghost px-8 py-3 inline-flex items-center justify-center">
+                Back to Practice
+              </Link>
+              <Link href="/dashboard" className="btn-ghost px-8 py-3 inline-flex items-center justify-center">
+                See Progress
+              </Link>
             </div>
 
             <div className="mt-6 text-xs text-[var(--muted)]">

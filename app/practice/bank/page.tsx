@@ -193,7 +193,7 @@ export default function BankDrill() {
             <span>Drill progress</span>
             <span>{progress}%</span>
           </div>
-          <div className="h-2 bg-[var(--surface2)] rounded-full overflow-hidden mb-2">
+          <div className="h-2 bg-[var(--surface-2)] rounded-full overflow-hidden mb-2">
             <div className="h-2 bg-gradient-to-r from-[#C8102E] to-[var(--gold)] transition-all" style={{ width: `${progress}%` }} />
           </div>
           <div className="text-xs text-[var(--text-2)]">Global Bank Mastery: {bankMastered.length} / {BANK_TOTAL} ({masteryPercent}%)</div>

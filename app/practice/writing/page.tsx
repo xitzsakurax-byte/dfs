@@ -188,7 +188,7 @@ export default function WritingMockTest() {
                 <button
                   key={set.id}
                   onClick={() => startNewTest(set)}
-                  className="text-left p-4 rounded-lg border border-[var(--line)] hover:border-[var(--gold)] bg-[var(--surface2)] transition-colors"
+                  className="text-left p-4 rounded-lg border border-[var(--line)] hover:border-[var(--gold)] bg-[var(--surface-2)] transition-colors"
                 >
                   <div className="text-[var(--gold)] text-xs tracking-widest mb-1">{set.type}</div>
                   <div className="font-semibold text-lg mb-2">{set.title}</div>
@@ -274,7 +274,7 @@ export default function WritingMockTest() {
                   </div>
                 </div>
 
-                <div className="bg-[var(--surface2)] p-4 rounded mb-4 text-sm whitespace-pre-line">
+                <div className="bg-[var(--surface-2)] p-4 rounded mb-4 text-sm whitespace-pre-line">
                   {task.instructions}
                 </div>
 
@@ -286,7 +286,7 @@ export default function WritingMockTest() {
                   value={answers[index]}
                   onChange={(e) => handleAnswerChange(index, e.target.value)}
                   placeholder="Write your answer here in German..."
-                  className="w-full h-48 p-4 rounded-lg bg-[var(--surface2)] border border-[var(--line)] text-[var(--text)] font-mono text-sm resize-y focus:border-[var(--gold)]"
+                  className="w-full h-48 p-4 rounded-lg bg-[var(--surface-2)] border border-[var(--line)] text-[var(--text)] font-mono text-sm resize-y focus:border-[var(--gold)]"
                 />
                 <div className="text-right text-xs mt-1 text-[var(--text-2)]">
                   {getWordCount(answers[index])} / {task.targetWords} words
@@ -322,7 +322,7 @@ export default function WritingMockTest() {
                 {/* Mobile: single column results for phone UI */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                   {rating.perTask.map((r: any, i: number) => (
-                    <div key={i} className="bg-[var(--surface2)] p-4 rounded">
+                    <div key={i} className="bg-[var(--surface-2)] p-4 rounded">
                       <div className="font-semibold mb-1">{currentPrompt.tasks[i].title}</div>
                       <div className="text-2xl font-bold text-[var(--gold)] mb-2">{r.total}/20</div>
                       <div className="text-sm">Words: {r.wordCount} • Professional terms matched: {r.matchedKeywords}</div>
@@ -333,7 +333,7 @@ export default function WritingMockTest() {
 
               <div className="practice-card p-8">
                 <h3 className="font-semibold text-xl mb-4">Detailed AI feedback</h3>
-                <div className="whitespace-pre-line text-sm leading-relaxed bg-[var(--surface2)] p-6 rounded border border-[var(--line)]">
+                <div className="whitespace-pre-line text-sm leading-relaxed bg-[var(--surface-2)] p-6 rounded border border-[var(--line)]">
                   {rating.fullFeedback}
                 </div>
 

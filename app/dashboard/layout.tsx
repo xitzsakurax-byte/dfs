@@ -25,7 +25,7 @@ export default function DashboardLayout({
         <div className="mx-auto max-w-6xl px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2 font-semibold text-xl tracking-tight">
-              <div className="logo-mark w-8 h-8 rounded-[9px] bg-gradient-to-br from-[var(--black)] to-[var(--red)] flex items-center justify-center text-white text-sm font-bold border border-[rgba(244,196,48,.35)]">GF</div>
+              <div className="logo-mark w-8 h-8 rounded-[9px] bg-gradient-to-br from-[#8B1E3D] to-[#C24A3A] flex items-center justify-center text-white text-sm font-bold border border-[rgba(244,196,48,.35)]">GF</div>
               GermanForge
             </Link>
             {/* Desktop nav */}
@@ -42,11 +42,11 @@ export default function DashboardLayout({
 
           {/* Clean top stats - real data, remembered daily (Vietnam time) - Anh Kiet local only */}
           <div className="flex items-center gap-5 text-sm font-medium text-[var(--muted)]">
-            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface2)] border border-[var(--line)]">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface-2)] border border-[var(--line)]">
               <span className="font-semibold text-[var(--text)]">{stats.streak} day streak</span>
             </div>
 
-            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface2)] border border-[var(--line)]">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface-2)] border border-[var(--line)]">
               <span className="font-semibold text-[var(--text)]">{stats.totalXp.toLocaleString()} XP</span>
               <span className="text-[var(--gold)]">Lv.{stats.level}</span>
             </div>
