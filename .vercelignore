@@ -1,0 +1,8 @@
+# Ignore large local assets and build artifacts for Vercel CLI deploys
+C1.zip
+c1ref/
+*.zip
+.next/
+out/
+node_modules/
+.git/
