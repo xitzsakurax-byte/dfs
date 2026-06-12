@@ -124,7 +124,7 @@ export default function WritingMockTest() {
       localStorage.setItem(bankKey, JSON.stringify(bankMastered));
     } catch (e) {}
 
-    // Save attempt (local always + Supabase when logged in via unified layer)
+    // Save attempt (local only)
     const newAttempt: Attempt = {
       id: Date.now(),
       date: new Date().toLocaleString(),

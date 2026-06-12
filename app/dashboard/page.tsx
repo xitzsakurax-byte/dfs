@@ -140,7 +140,7 @@ export default function Dashboard() {
         </div>
 
         {/* NEW: Performance Insights & Analysis - strong/weak points + improvement tips */}
-        {/* Placed in the main dashboard summary area as requested. Uses real performance data from quizzes/game/writing (logged via Supabase when available, local fallback). */}
+        {/* Pure local performance data from quizzes/game/writing. */}
         <div className="practice-card p-6 mb-8">
           <div className="text-sm text-[#8F95A3] mb-1">Performance Insights (B2-C1 Focus)</div>
           <h3 className="text-2xl font-semibold tracking-tight mb-4">Your Strengths, Weak Points & How to Improve</h3>

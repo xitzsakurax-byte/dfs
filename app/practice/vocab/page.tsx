@@ -94,7 +94,7 @@ export default function VocabQuiz() {
       const newRemaining = remaining.filter(item => item !== currentQ);
       setRemaining(newRemaining);
 
-      // Unified bank mastery (local + Supabase when signed in). No-repeat across the whole site continues to work.
+      // Bank mastery (local only). No-repeat across the whole site continues to work.
       addToBankMastered(currentQ.de); // fire and forget — updates both layers
 
       // Log for dashboard performance analysis (by topic)

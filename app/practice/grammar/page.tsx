@@ -87,7 +87,7 @@ export default function GrammarQuiz() {
       const newRemaining = remaining.filter(item => item !== currentQ);
       setRemaining(newRemaining);
 
-      // Unified bank mastery (local + Supabase when signed in)
+      // Bank mastery (local only)
       addToBankMastered(currentQ.q); // fire and forget — updates both layers
 
       // Log for analysis (grammar structures)

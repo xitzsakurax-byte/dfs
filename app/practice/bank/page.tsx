@@ -21,7 +21,7 @@ export default function BankDrill() {
   const [finished, setFinished] = useState(false);
   const [lastAction, setLastAction] = useState<'master' | 'skip' | null>(null);
 
-  // Load shared bank mastery (now unified: Supabase when logged in, localStorage for guests + instant)
+  // Load bank mastery - pure localStorage (instant, no backend)
   useEffect(() => {
     async function load() {
       const mastered = await getBankMastered();
@@ -52,7 +52,7 @@ export default function BankDrill() {
       setBankMastered(newMastered);
       setSessionNew(s => s + 1);
 
-      // This handles localStorage + Supabase (when signed in) in one call
+      // Pure local (instant)
       await addToBankMastered(currentWord);
     }
 

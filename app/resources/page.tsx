@@ -17,7 +17,7 @@ function FullVocabBank({ list }: { list: string[] }) {
   const [bankMastered, setBankMastered] = useState<string[]>([]);
   const [reviewList, setReviewList] = useState<string[]>([]);
 
-  // Load mastery from unified layer (Supabase when signed in + localStorage)
+  // Load mastery - pure localStorage (fast)
   useEffect(() => {
     getBankMastered().then(setBankMastered);
   }, []);

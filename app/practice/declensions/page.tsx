@@ -78,7 +78,7 @@ export default function DeclensionsQuiz() {
       const newRemaining = remaining.filter(item => item !== currentQ);
       setRemaining(newRemaining);
 
-      // Unified bank mastery (local + Supabase when signed in)
+      // Bank mastery (local only)
       addToBankMastered(currentQ.base); // fire and forget — updates both layers
 
       // Log for analysis (by case)
