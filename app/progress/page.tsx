@@ -84,7 +84,7 @@ export default function ProgressDashboard() {
             <div className="practice-card p-6 mb-8">
               <div className="flex items-baseline justify-between mb-4">
                 <div>
-                  <div className="text-xs tracking-[2px] text-[#8B1E3D]">LAST 30 DAYS (VIETNAM CALENDAR)</div>
+                  <div className="text-xs tracking-[2px] text-[var(--gold)]">LAST 30 DAYS (VIETNAM CALENDAR)</div>
                   <div className="text-2xl font-semibold">Your real daily history</div>
                 </div>
                 <div className="text-right text-sm text-[var(--text-2)]">
@@ -103,7 +103,7 @@ export default function ProgressDashboard() {
                     return (
                       <div key={idx} className="flex-1 flex flex-col items-center group">
                         <div 
-                          className={`w-full rounded-t ${isToday ? 'bg-[var(--gold)]' : 'bg-[#8B1E3D]'} transition-all`}
+                          className={`w-full rounded-t ${isToday ? 'bg-[var(--gold)]' : 'bg-[var(--gold-dim)]'} transition-all`}
                           style={{ height: `${height}px` }}
                           title={`${day.date}: ${day.words_mastered} words, ${day.xp_earned} XP`}
                         />
@@ -125,7 +125,7 @@ export default function ProgressDashboard() {
                     <div key={idx} className="flex items-center justify-between p-3 rounded-xl bg-[#171A21] border border-[#2C303A]">
                       <div>
                         <span className="font-mono text-[var(--gold)]">{day.date}</span>
-                        {idx === 0 && <span className="ml-2 text-xs px-2 py-0.5 rounded bg-[#8B1E3D] text-white">TODAY</span>}
+                        {idx === 0 && <span className="ml-2 text-xs px-2 py-0.5 rounded bg-[var(--gold)] text-[#07090F] font-bold">TODAY</span>}
                       </div>
                       <div className="flex gap-6 text-right">
                         <div>
@@ -149,7 +149,7 @@ export default function ProgressDashboard() {
 
             {/* Routine insight */}
             <div className="practice-card p-6">
-              <div className="text-xs tracking-[2px] text-[#8B1E3D] mb-2">ROUTINE INSIGHT</div>
+              <div className="text-xs tracking-[2px] text-[var(--gold)] mb-2">ROUTINE INSIGHT</div>
               <div className="text-xl">
                 Over the last 30 days you averaged <span className="font-semibold text-[var(--gold)]">{avgWords} words per active day</span>.
               </div>
