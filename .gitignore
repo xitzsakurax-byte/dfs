@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large local reference material (C1 exam books/PDFs — corrupted archive + extracted, >2GB, not needed for deploys)
+C1.zip
+c1ref/
+*.zip
+
