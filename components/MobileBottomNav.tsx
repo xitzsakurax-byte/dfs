@@ -3,15 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+const items = [
+  { href: '/dashboard',     label: 'Home',    icon: '⌂' },
+  { href: '/practice',      label: 'Practice', icon: '✏' },
+  { href: '/achievements',  label: 'Badges',   icon: '🏆' },
+  { href: '/exams',         label: 'Exams',    icon: '📋' },
+  { href: '/progress',      label: 'Progress', icon: '📈' },
+];
+
 export default function MobileBottomNav() {
   const pathname = usePathname();
-
-  const items = [
-    { href: '/dashboard', label: 'Home' },
-    { href: '/practice', label: 'Practice' },
-    { href: '/practice/bank', label: 'Bank' },
-    { href: '/progress', label: 'Progress' },
-  ];
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard' || pathname === '/';
@@ -19,19 +20,26 @@ export default function MobileBottomNav() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-[200] border-t border-[#2C303A] bg-[#0A0C12]/95 backdrop-blur-xl md:hidden">
-      <div className="flex items-center justify-around h-16 px-2 text-sm">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-[200] md:hidden"
+      style={{
+        background: 'rgba(10, 13, 20, 0.95)',
+        backdropFilter: 'blur(20px)',
+        borderTop: '1px solid var(--line)',
+      }}
+    >
+      <div className="flex items-center justify-around h-16 px-1">
         {items.map((item) => {
           const active = isActive(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center flex-1 py-1 font-medium tracking-tight transition-colors ${
-                active ? 'text-[#F4C430]' : 'text-[#8F95A3] active:text-[#EDEEF2]'
-              }`}
+              className="flex flex-col items-center justify-center flex-1 py-1 gap-0.5 transition-colors min-h-[44px]"
+              style={{ color: active ? 'var(--gold)' : 'var(--muted)' }}
             >
-              <span>{item.label}</span>
+              <span className="text-lg leading-none">{item.icon}</span>
+              <span className="text-[10px] font-semibold tracking-wide">{item.label}</span>
             </Link>
           );
         })}

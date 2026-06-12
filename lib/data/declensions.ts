@@ -1,18 +1,15 @@
 // GermanForge — B1-C1 Declension / Word Forms practice for TELC & Goethe exams
-// Focus on the 4 cases: Nominativ, Akkusativ, Dativ, Genitiv
-// High-frequency B1 structures: prepositions (in, auf, mit, für, von, etc.), verbs governing cases (helfen, danken, sehen, etc.)
-// Each item teaches the structure through a realistic exam-style sentence.
-// Quiz format: given context + noun in base form, choose the correct declined form (article + noun).
-// Explanations highlight why that case is used — key for B1-C1 writing, speaking, and reading sections.
+// Focus: the 4 cases (Nominativ, Akkusativ, Dativ, Genitiv) in realistic exam-style sentences.
+// Each item has exactly 4 UNIQUE options. Correct answer is always included.
 
 export type DeclensionItem = {
-  base: string;           // e.g. "der Park" or just the noun for flexibility
-  sentence: string;       // sentence with ___ placeholder
-  correct: string;        // full correct form e.g. "in den Park"
-  options: string[];      // 4 options, one is correct
+  base: string;
+  sentence: string;
+  correct: string;
+  options: string[];
   case: 'Nominativ' | 'Akkusativ' | 'Dativ' | 'Genitiv';
   explanation: string;
-  topic: string;          // exam-relevant theme
+  topic: string;
 };
 
 export const declensionItems: DeclensionItem[] = [
@@ -56,9 +53,9 @@ export const declensionItems: DeclensionItem[] = [
     base: "die Lehrerin",
     sentence: "Ich habe gestern ___ getroffen.",
     correct: "die Lehrerin",
-    options: ["die Lehrerin", "der Lehrerin", "der Lehrerin", "den Lehrerin"],
+    options: ["die Lehrerin", "der Lehrerin", "eine Lehrerin", "den Lehrerin"],
     case: "Akkusativ",
-    explanation: "Direktes Objekt (wen?) → Akkusativ.",
+    explanation: "Direktes Objekt (wen?) → Akkusativ. Femininum Akkusativ: die (bestimmt) oder eine (unbestimmt).",
     topic: "Beruf & Ausbildung"
   },
   {
@@ -74,9 +71,9 @@ export const declensionItems: DeclensionItem[] = [
     base: "die Freundin",
     sentence: "Das Geschenk ist für ___ .",
     correct: "meine Freundin",
-    options: ["meine Freundin", "meiner Freundin", "meines Freundes", "mein Freund"],
+    options: ["meine Freundin", "meiner Freundin", "meinen Freundinnen", "meiner Freunden"],
     case: "Akkusativ",
-    explanation: "für + Akkusativ (Person oder Sache).",
+    explanation: "für + Akkusativ (Person oder Sache). Femininum Akkusativ Singular: meine Freundin.",
     topic: "Beziehungen"
   },
   {
@@ -101,7 +98,7 @@ export const declensionItems: DeclensionItem[] = [
     base: "die Prüfung",
     sentence: "Ich habe Angst vor ___ .",
     correct: "der Prüfung",
-    options: ["der Prüfung", "die Prüfung", "den Prüfung", "des Prüfungs"],
+    options: ["der Prüfung", "die Prüfung", "den Prüfungen", "eine Prüfung"],
     case: "Dativ",
     explanation: "vor + Dativ (bei 'Angst haben vor'). Wichtige B1-Struktur.",
     topic: "Prüfung & Lernen"
@@ -119,9 +116,9 @@ export const declensionItems: DeclensionItem[] = [
     base: "die Kollegin",
     sentence: "Ich gebe ___ das Dokument.",
     correct: "der Kollegin",
-    options: ["der Kollegin", "die Kollegin", "den Kollegin", "der Kollegin"],
+    options: ["der Kollegin", "die Kollegin", "den Kollegin", "eine Kollegin"],
     case: "Dativ",
-    explanation: "geben + Dativ (indirektes Objekt) + Akkusativ (direktes Objekt).",
+    explanation: "geben + Dativ (indirektes Objekt) + Akkusativ (direktes Objekt). Femininum Dativ: der Kollegin.",
     topic: "Arbeit"
   },
   {
@@ -137,9 +134,9 @@ export const declensionItems: DeclensionItem[] = [
     base: "die Universität",
     sentence: "Ich studiere an ___ .",
     correct: "der Universität",
-    options: ["der Universität", "die Universität", "den Universität", "der Universität"],
+    options: ["der Universität", "die Universität", "den Universitäten", "eine Universität"],
     case: "Dativ",
-    explanation: "an + Dativ bei 'studieren an' (Ort / Institution).",
+    explanation: "an + Dativ bei 'studieren an' (Ort / Institution). Femininum Dativ: der Universität.",
     topic: "Bildung & Studium"
   },
   {
@@ -148,16 +145,16 @@ export const declensionItems: DeclensionItem[] = [
     correct: "den Zug",
     options: ["den Zug", "dem Zug", "des Zuges", "der Zug"],
     case: "Akkusativ",
-    explanation: "in + Akkusativ bei Bewegung (einstiegen).",
+    explanation: "in + Akkusativ bei Bewegung (einsteigen).",
     topic: "Reisen & Verkehr"
   },
   {
     base: "die Frau",
     sentence: "Ich habe ___ gestern gesehen.",
     correct: "die Frau",
-    options: ["die Frau", "der Frau", "den Frau", "des Frau"],
+    options: ["die Frau", "der Frau", "den Frauen", "des Frau"],
     case: "Akkusativ",
-    explanation: "sehen + Akkusativ (direktes Objekt).",
+    explanation: "sehen + Akkusativ (direktes Objekt). Femininum Akkusativ: die Frau.",
     topic: "Alltag"
   },
   {
@@ -175,12 +172,12 @@ export const declensionItems: DeclensionItem[] = [
     correct: "meine Eltern",
     options: ["meine Eltern", "meinen Eltern", "meiner Eltern", "meines Eltern"],
     case: "Akkusativ",
-    explanation: "anrufen + Akkusativ (Person).",
+    explanation: "anrufen + Akkusativ (Person). Plural Akkusativ: meine Eltern (Plural, kein -n im Akkusativ).",
     topic: "Familie"
   }
 ];
 
-// Simple shuffle helper
+// Shuffle helper — call client-side only (inside useEffect), never at module scope
 export function getShuffledDeclensions(): DeclensionItem[] {
   return [...declensionItems].sort(() => Math.random() - 0.5);
 }

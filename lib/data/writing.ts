@@ -28,19 +28,19 @@ export const writingPromptSets: WritingPromptSet[] = [
     id: 1,
     type: 'Goethe',
     title: 'Goethe B1 Writing – Formal Email + Short Report',
-    description: 'Authentic Goethe B1 writing simulation: a professional email followed by a concise report or article on work experience, training or sustainability.',
-    totalTimeMin: 45,
+    description: 'Goethe B1 writing training mode: a professional email followed by a concise report or article on work experience, training or sustainability. (Note: real Goethe B1 Schreiben is 60 min with 3 tasks — this is training format.)',
+    totalTimeMin: 60,
     tasks: [
       {
-        title: 'Task 1: Formal Email (80-100 words)',
-        instructions: 'Write a polite formal email to the HR manager of a company. Inquire about possibilities to continue working after completing vocational training. Clearly state your reasons, mention key skills you have acquired (e.g. teamwork, sustainability practices), and ask about next steps.',
+        title: 'Task 1: Formelle E-Mail (80-100 Wörter)',
+        instructions: 'Schreiben Sie eine höfliche formelle E-Mail an den Personalverantwortlichen eines Unternehmens. Erkundigen Sie sich nach Möglichkeiten, nach Abschluss der Ausbildung weiterzuarbeiten. Nennen Sie klar Ihre Gründe, erwähnen Sie erworbene Schlüsselkompetenzen (z. B. Teamarbeit, Nachhaltigkeitspraktiken) und fragen Sie nach den nächsten Schritten.',
         targetWords: 90,
         keywords: ['bewerben', 'Ausbildung', 'Weiterbildung', 'Teamgeist', 'Nachhaltigkeit', 'Verantwortung'],
         modelSnippet: 'Sehr geehrte Frau/Herr ..., ich wende mich an Sie, weil ... Während meiner Ausbildung habe ich gelernt, ... Ich würde mich freuen, wenn ...',
       },
       {
-        title: 'Task 2: Short Report / Article (120-150 words)',
-        instructions: 'Describe a project or experience during your training (for example, participating in a sustainability improvement at the workplace). Mention advantages, challenges and what you learned. Write in the style of an internal company post or professional blog entry.',
+        title: 'Task 2: Kurzer Bericht / Artikel (120-150 Wörter)',
+        instructions: 'Beschreiben Sie ein Projekt oder eine Erfahrung während Ihrer Ausbildung (z. B. Beteiligung an einer Nachhaltigkeitsverbesserung am Arbeitsplatz). Erwähnen Sie Vorteile, Herausforderungen und was Sie gelernt haben. Schreiben Sie im Stil eines internen Unternehmensbeitrags oder professionellen Blog-Eintrags.',
         targetWords: 130,
         keywords: ['Nachhaltigkeit', 'Projekt', 'Verantwortung', 'Team', 'Erfolg', 'Zukunft'],
         modelSnippet: 'In meinem Ausbildungsprojekt haben wir ... Das hat zu ... geführt. Die Herausforderung war ... Am Ende habe ich gelernt, dass ...',
@@ -56,15 +56,15 @@ export const writingPromptSets: WritingPromptSet[] = [
     totalTimeMin: 40,
     tasks: [
       {
-        title: 'Task 1: Email to Colleague (70-90 words)',
-        instructions: 'Write a polite email in German to a new colleague to arrange a meeting about a training project. Include the reason, suggest a time, and ask for their opinion. Assume you are in the middle of a training program.',
+        title: 'Task 1: E-Mail an Kollegen (70-90 Wörter)',
+        instructions: 'Schreiben Sie eine höfliche E-Mail auf Deutsch an einen neuen Kollegen, um ein Treffen zu einem Ausbildungsprojekt zu vereinbaren. Nennen Sie den Grund, schlagen Sie einen Zeitpunkt vor und fragen Sie nach seiner Meinung. Gehen Sie davon aus, dass Sie mitten in einem Ausbildungsprogramm sind.',
         targetWords: 80,
         keywords: ['Ausbildung', 'Projekt', 'Termin', 'Kollege', 'Verabredung', 'Information'],
         modelSnippet: 'Hallo [Name], ich hoffe, es geht dir gut. Ich möchte mit dir über ... sprechen. Können wir uns am ... treffen? Was hältst du davon?',
       },
       {
-        title: 'Task 2: Opinion Text for Forum (100-130 words)',
-        instructions: 'Write a forum post for foreigners working in Germany on the topic: "How to balance work and personal life during vocational training?" Give your personal view, an example from experience, and practical advice. Use connectors such as deshalb, trotzdem, außerdem.',
+        title: 'Task 2: Meinungsbeitrag für Forum (100-130 Wörter)',
+        instructions: 'Schreiben Sie einen Forenbeitrag für Ausländer, die in Deutschland arbeiten, zum Thema: „Wie lässt sich Arbeit und Privatleben während der Ausbildung ausbalancieren?“ Geben Sie Ihre persönliche Meinung, ein Beispiel aus der Erfahrung und praktische Tipps. Verwenden Sie Konnektoren wie deshalb, trotzdem, außerdem.',
         targetWords: 115,
         keywords: ['Arbeitsplatz', 'Freizeit', 'Gesundheit', 'Zukunft', 'Team', 'Stress'],
         modelSnippet: 'Meiner Meinung nach ist es wichtig, ... Deshalb versuche ich, ... Ein guter Tipp ist ... Am Ende hilft das, motiviert zu bleiben.',
@@ -80,15 +80,15 @@ export const writingPromptSets: WritingPromptSet[] = [
     totalTimeMin: 50,
     tasks: [
       {
-        title: 'Task 1: Internal Email (90-110 words)',
-        instructions: 'Write an email to your manager proposing a small change to improve sustainability in the production department (e.g. reduce waste or save energy). State the reason, expected benefits, and suggest a short meeting to discuss.',
+        title: 'Task 1: Interne E-Mail (90-110 Wörter)',
+        instructions: 'Schreiben Sie eine E-Mail an Ihren Vorgesetzten mit einem Vorschlag für eine kleine Veränderung zur Verbesserung der Nachhaltigkeit in der Produktionsabteilung (z. B. Abfall reduzieren oder Energie sparen). Nennen Sie den Grund, erwartete Vorteile und schlagen Sie ein kurzes Treffen zur Besprechung vor.',
         targetWords: 100,
         keywords: ['Nachhaltigkeit', 'Projekt', 'Verantwortung', 'Idee', 'Zukunft', 'Kosten'],
         modelSnippet: 'Sehr geehrter Herr/Frau ..., ich habe eine Idee für ... Das würde ... verbessern. Können wir darüber sprechen?',
       },
       {
-        title: 'Task 2: Short Analysis / Report (110-140 words)',
-        instructions: 'Write a paragraph describing the impact of a sustainability measure you observed (or imagine) in a company. Compare before and after, note pros/cons, and conclude with the broader value for the future of professional training.',
+        title: 'Task 2: Kurze Analyse / Bericht (110-140 Wörter)',
+        instructions: 'Schreiben Sie einen Absatz, in dem Sie die Auswirkung einer Nachhaltigkeitsmaßnahme beschreiben, die Sie in einem Unternehmen beobachtet (oder sich vorgestellt) haben. Vergleichen Sie Vorher und Nachher, notieren Sie Vor- und Nachteile und schließen Sie mit dem breiteren Wert für die Zukunft der beruflichen Ausbildung.',
         targetWords: 125,
         keywords: ['Umwelt', 'Veränderung', 'Erfolg', 'Teamgeist', 'Betrieb', 'Zukunft'],
         modelSnippet: 'Vor der Maßnahme ... Danach hat sich ... verbessert. Die Mitarbeiter haben ... gelernt. Insgesamt ist das ein Schritt in die richtige Richtung für die Ausbildung.',
@@ -125,8 +125,8 @@ export function rateWritingAI(text: string, task: WritingTask, allBankWords: str
 
   const total = Math.round(((contentScore + structureScore + vocabScore + grammarScore) / 20) * 20);
 
-  // "AI-written" feedback (varied templates, professional tone, references to official criteria and the word bank)
-  let feedback = `🤖 AI Rater (simulated according to official Goethe-Zertifikat B1 & TELC B1 writing criteria)\n\n`;
+  // Feedback aligned to official Goethe-Zertifikat B1 & TELC B1 writing criteria
+  let feedback = `AI Writing Rater — simulated assessment based on official Goethe-Zertifikat B1 & TELC B1 writing criteria\n\n`;
   feedback += `Total score: ${total}/20\n\n`;
   feedback += `• Content: ${contentScore}/5 — ${contentScore >= 4 ? 'Task completed well with specific examples.' : 'Add more detail and stay closer to the prompt requirements.'}\n`;
   feedback += `• Structure & Coherence: ${structureScore}/5 — ${structureScore >= 4 ? 'Clear paragraphs and good use of connectors.' : 'Divide into paragraphs and use more linking words (deshalb, trotzdem, außerdem).'}\n`;
@@ -141,7 +141,7 @@ export function rateWritingAI(text: string, task: WritingTask, allBankWords: str
 
   feedback += `\nSuggested Wortliste terms for your next piece: ${task.keywords.slice(0, 3).join(', ')}.\n`;
   feedback += `Model improvement snippet: ${task.modelSnippet}\n\n`;
-  feedback += `Note: This is a heuristic simulation. In a real commercial version a full LLM (Grok/xAI or equivalent) would be called with the complete official rubric for accurate scoring, detailed corrections and explanations aligned to the exam standards.`;
+  feedback += `Note: This is a heuristic simulation. A production version would use a language model with the complete official rubric for accurate scoring and detailed corrections aligned to exam standards.`;
 
   return {
     total,

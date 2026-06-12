@@ -164,20 +164,20 @@ export default function WritingMockTest() {
   // If no test started yet
   if (!currentPrompt) {
     return (
-      <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] py-8">
         <div className="container max-w-4xl mx-auto px-6">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">B1-C1 | TELC + GOETHE</div>
+              <div className="text-[var(--gold)] text-xs tracking-[2px] mb-1">B1-C1 | TELC + GOETHE</div>
               <h1 className="text-4xl font-semibold tracking-tight">Writing Mock Test</h1>
               <p className="text-[var(--muted)] mt-2">Professional exam writing practice for TELC B1 and Goethe B1-C1 • AI feedback aligned with official criteria</p>
             </div>
-            <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Back to Practice Hub</Link>
+            <Link href="/practice" className="text-sm text-[var(--text-2)] hover:text-[var(--text)]">← Back to Practice Hub</Link>
           </div>
 
           <div className="practice-card p-8 mb-8">
             <h2 className="font-semibold text-xl mb-4">Choose a writing test (TELC + Goethe B1-C1)</h2>
-            <p className="text-sm text-[#A8B3C7] mb-6">
+            <p className="text-sm text-[var(--text-2)] mb-6">
               Realistic exam simulations: professional email + report/opinion piece. Focus on standard TELC and Goethe B1-C1 topics: environment, work, society, personal experiences. 
               Use vocabulary from the <strong>3000+ Wortliste</strong> bank (see Resources) to score high.
             </p>
@@ -190,10 +190,10 @@ export default function WritingMockTest() {
                   onClick={() => startNewTest(set)}
                   className="text-left p-4 rounded-lg border border-[var(--line)] hover:border-[var(--gold)] bg-[var(--surface2)] transition-colors"
                 >
-                  <div className="text-[#F4C430] text-xs tracking-widest mb-1">{set.type}</div>
+                  <div className="text-[var(--gold)] text-xs tracking-widest mb-1">{set.type}</div>
                   <div className="font-semibold text-lg mb-2">{set.title}</div>
-                  <div className="text-sm text-[#A8B3C7] line-clamp-3">{set.description}</div>
-                  <div className="mt-3 text-xs text-[#F4C430]">~{set.totalTimeMin} min • 2 tasks</div>
+                  <div className="text-sm text-[var(--text-2)] line-clamp-3">{set.description}</div>
+                  <div className="mt-3 text-xs text-[var(--gold)]">~{set.totalTimeMin} min • 2 tasks</div>
                 </button>
               ))}
             </div>
@@ -210,7 +210,7 @@ export default function WritingMockTest() {
             <div className="practice-card p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-semibold">Recent writing attempts</h3>
-                <button onClick={() => setShowHistory(!showHistory)} className="text-sm text-[#F4C430] hover:underline">
+                <button onClick={() => setShowHistory(!showHistory)} className="text-sm text-[var(--gold)] hover:underline">
                   {showHistory ? 'Hide' : 'Show all'}
                 </button>
               </div>
@@ -220,9 +220,9 @@ export default function WritingMockTest() {
                     <div key={a.id} className="p-3 bg-[var(--surface)] rounded border border-[var(--line)]">
                       <div className="flex justify-between">
                         <span>{a.promptTitle}</span>
-                        <span className="font-mono text-[#F4C430]">{a.totalScore}/20 • {a.date}</span>
+                        <span className="font-mono text-[var(--gold)]">{a.totalScore}/20 • {a.date}</span>
                       </div>
-                      <div className="text-[#A8B3C7] mt-1 line-clamp-2">{a.feedback.split('\n')[0]}</div>
+                      <div className="text-[var(--text-2)] mt-1 line-clamp-2">{a.feedback.split('\n')[0]}</div>
                     </div>
                   ))}
                 </div>
@@ -230,7 +230,7 @@ export default function WritingMockTest() {
             </div>
           )}
 
-          <div className="text-xs text-[#A8B3C7] mt-8 text-center">
+          <div className="text-xs text-[var(--text-2)] mt-8 text-center">
             Note: This is a practice simulation tool. The AI rating uses heuristics + templates (will be replaced by a real LLM in production). 
             Always cross-reference official Goethe &amp; TELC materials. Use the 3000+ bank to improve quickly.
           </div>
@@ -241,22 +241,22 @@ export default function WritingMockTest() {
 
   // Active test UI
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] py-8">
       <div className="container max-w-4xl mx-auto px-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <div className="text-[#F4C430] text-xs tracking-[2px]">{currentPrompt.type} • B1-C1</div>
+            <div className="text-[var(--gold)] text-xs tracking-[2px]">{currentPrompt.type} • B1-C1</div>
             <h1 className="text-3xl font-semibold tracking-tight">{currentPrompt.title}</h1>
           </div>
           <div className="text-right">
             {isTimerRunning && timer > 0 && (
-              <div className="font-mono text-2xl text-[#F4C430]">{formatTime(timer)}</div>
+              <div className="font-mono text-2xl text-[var(--gold)]">{formatTime(timer)}</div>
             )}
-            <button onClick={resetTest} className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">End &amp; choose another test</button>
+            <button onClick={resetTest} className="text-sm text-[var(--text-2)] hover:text-[var(--text)]">End &amp; choose another test</button>
           </div>
         </div>
 
-        <div className="mb-4 text-sm text-[#A8B3C7]">
+        <div className="mb-4 text-sm text-[var(--text-2)]">
           {currentPrompt.description} • Each task has a word target. Use terms from the 3000+ Wortliste bank (Resources) to score high.
         </div>
 
@@ -266,10 +266,10 @@ export default function WritingMockTest() {
               <div key={index} className="practice-card p-6 mb-6">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <div className="text-[#F4C430] text-xs tracking-widest mb-1">TASK {index + 1}</div>
+                    <div className="text-[var(--gold)] text-xs tracking-widest mb-1">TASK {index + 1}</div>
                     <h3 className="font-semibold text-xl">{task.title}</h3>
                   </div>
-                  <div className="text-right text-sm text-[#A8B3C7]">
+                  <div className="text-right text-sm text-[var(--text-2)]">
                     Target: {task.targetWords} words
                   </div>
                 </div>
@@ -278,7 +278,7 @@ export default function WritingMockTest() {
                   {task.instructions}
                 </div>
 
-                <div className="text-xs text-[#A8B3C7] mb-2">
+                <div className="text-xs text-[var(--text-2)] mb-2">
                   Suggested vocabulary (from 3000+ bank): {task.keywords.join(', ')}
                 </div>
 
@@ -288,9 +288,9 @@ export default function WritingMockTest() {
                   placeholder="Write your answer here in German..."
                   className="w-full h-48 p-4 rounded-lg bg-[var(--surface2)] border border-[var(--line)] text-[var(--text)] font-mono text-sm resize-y focus:border-[var(--gold)]"
                 />
-                <div className="text-right text-xs mt-1 text-[#A8B3C7]">
+                <div className="text-right text-xs mt-1 text-[var(--text-2)]">
                   {getWordCount(answers[index])} / {task.targetWords} words
-                  {getWordCount(answers[index]) < task.targetWords * 0.7 && <span className="text-[#F4C430]"> (too short)</span>}
+                  {getWordCount(answers[index]) < task.targetWords * 0.7 && <span className="text-[var(--gold)]"> (too short)</span>}
                 </div>
               </div>
             ))}
@@ -315,16 +315,16 @@ export default function WritingMockTest() {
           {isSubmitted && rating && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
               <div className="practice-card p-8">
-                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">AI RATING RESULTS</div>
+                <div className="text-[var(--gold)] text-xs tracking-[2px] mb-1">AI RATING RESULTS</div>
                 <h2 className="text-3xl font-semibold tracking-tight mb-2">Overall: {rating.overall}/20</h2>
-                <p className="text-[#A8B3C7]">Scored by AI rater (heuristic simulation of official Goethe &amp; TELC B1 Schreiben criteria)</p>
+                <p className="text-[var(--text-2)]">Scored by AI rater (heuristic simulation of official Goethe &amp; TELC B1 Schreiben criteria)</p>
 
                 {/* Mobile: single column results for phone UI */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                   {rating.perTask.map((r: any, i: number) => (
                     <div key={i} className="bg-[var(--surface2)] p-4 rounded">
                       <div className="font-semibold mb-1">{currentPrompt.tasks[i].title}</div>
-                      <div className="text-2xl font-bold text-[#F4C430] mb-2">{r.total}/20</div>
+                      <div className="text-2xl font-bold text-[var(--gold)] mb-2">{r.total}/20</div>
                       <div className="text-sm">Words: {r.wordCount} • Professional terms matched: {r.matchedKeywords}</div>
                     </div>
                   ))}
@@ -343,7 +343,7 @@ export default function WritingMockTest() {
                   <Link href="/resources" className="btn-ghost px-6 py-3 inline-flex items-center rounded-full border border-[var(--line)] text-sm hover:border-[var(--gold)]">View 3000+ bank</Link>
                   <Link href="/practice/bank" className="btn-ghost px-6 py-3 inline-flex items-center rounded-full border border-[var(--gold)] text-sm hover:border-[var(--gold)]">Quick Bank Drill (add mastery now)</Link>
                 </div>
-                <div className="mt-4 text-xs text-[#A8B3C7]">Your writing was rated with direct reference to the 3000+ Wortliste bank. Matched professional terms are recorded and contribute to global Bank Mastery (synced to dashboard + all quizzes).</div>
+                <div className="mt-4 text-xs text-[var(--text-2)]">Your writing was rated with direct reference to the 3000+ Wortliste bank. Matched professional terms are recorded and contribute to global Bank Mastery (synced to dashboard + all quizzes).</div>
               </div>
 
               {showHistory && attempts.length > 1 && (

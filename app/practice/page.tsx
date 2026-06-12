@@ -6,14 +6,14 @@ import MobileBottomNav from '@/components/MobileBottomNav';
 
 export default function PracticeHub() {
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] py-8">
       <div className="container max-w-5xl mx-auto px-6">
         <div className="mb-8 flex items-end justify-between">
           <div>
             <div className="text-[var(--accent-light)] text-xs tracking-[2px]">TELC B1 • GOETHE B1-C1</div>
             <h1 className="text-4xl font-semibold tracking-tight">Exam Skills</h1>
           </div>
-          <Link href="/dashboard" className="text-sm text-[#8F95A3] hover:text-[#EDEEF2]">← Back</Link>
+          <Link href="/dashboard" className="text-sm text-[var(--muted)] hover:text-[#EDEEF2]">← Back</Link>
         </div>
 
         {/* Separate phone UI: comfortable 1-2 column cards on mobile. Desktop gets the rich multi-column view */}

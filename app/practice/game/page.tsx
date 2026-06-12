@@ -196,7 +196,7 @@ export default function PracticeGame() {
   // The old useEffect was removed to prevent any stuck loading state.
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] py-8">
       <div className="container max-w-3xl mx-auto px-6">
         {/* Header */}
         <div className="mb-8 flex items-end justify-between">
@@ -204,11 +204,11 @@ export default function PracticeGame() {
             <div className="text-[var(--accent-light)] text-xs tracking-[2px]">INTERACTIVE • CASE &amp; GRAMMAR</div>
             <h1 className="text-4xl font-semibold tracking-tight">Practice Game</h1>
           </div>
-          <Link href="/practice" className="text-sm text-[#8F95A3] hover:text-[#EDEEF2]">← Back to Practice</Link>
+          <Link href="/practice" className="text-sm text-[var(--muted)] hover:text-[#EDEEF2]">← Back to Practice</Link>
         </div>
 
         {/* Mode selector - clean professional tabs, no icons */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b border-[#2C303A] pb-4">
+        <div className="flex flex-wrap gap-2 mb-6 border-b border-[var(--line)] pb-4">
           {(['write', 'fix', 'quiz'] as GameMode[]).map((m) => (
             <button
               key={m}
@@ -216,25 +216,25 @@ export default function PracticeGame() {
               className={`px-5 py-2 text-sm font-medium rounded-full transition-all border ${
                 mode === m 
                   ? 'bg-[#8B1E3D] text-white border-[#8B1E3D]' 
-                  : 'border-[#2C303A] hover:border-[#8B1E3D] text-[#C5CAD6]'
+                  : 'border-[var(--line)] hover:border-[#8B1E3D] text-[#C5CAD6]'
               }`}
             >
-              {m === 'write' && 'Write the Form'}
-              {m === 'fix' && 'Fix the Error'}
-              {m === 'quiz' && 'Pop Quiz'}
+              {m === 'write' && 'Form schreiben'}
+              {m === 'fix' && 'Fehler korrigieren'}
+              {m === 'quiz' && 'Pop-Quiz'}
             </button>
           ))}
         </div>
 
         {/* Session stats with rewards */}
         <div className="flex items-center gap-4 mb-6 text-sm">
-          <div className="px-4 py-1 rounded-full bg-[#171A21] border border-[#2C303A]">
-            Score: <span className="font-semibold text-[#F4C430]">{score}</span>
+          <div className="px-4 py-1 rounded-full bg-[#171A21] border border-[var(--line)]">
+            Score: <span className="font-semibold text-[var(--gold)]">{score}</span>
           </div>
-          <div className="px-4 py-1 rounded-full bg-[#171A21] border border-[#2C303A]">
+          <div className="px-4 py-1 rounded-full bg-[#171A21] border border-[var(--line)]">
             Answered: {totalAnswered}
           </div>
-          <div className="px-4 py-1 rounded-full bg-[#171A21] border border-[#2C303A]">
+          <div className="px-4 py-1 rounded-full bg-[#171A21] border border-[var(--line)]">
             +{xpEarned} XP this session
           </div>
         </div>
@@ -243,9 +243,9 @@ export default function PracticeGame() {
         {!sessionComplete && current ? (
           <div className="practice-card p-8">
             <div className="text-xs tracking-[2px] text-[#8B1E3D] mb-2">
-              {mode === 'write' && 'WRITE THE CORRECT FORM'}
-              {mode === 'fix' && 'CORRECT THE GRAMMAR STRUCTURE'}
-              {mode === 'quiz' && 'POP QUIZ — QUICK RESPONSE'}
+              {mode === 'write' && 'SCHREIBEN SIE DIE KORREKTE FORM'}
+              {mode === 'fix' && 'KORRIGIEREN SIE DIE GRAMMATIKSTRUKTUR'}
+              {mode === 'quiz' && 'SCHNELL-QUIZ — KURZE ANTWORT'}
             </div>
 
             <div className="text-xl sm:text-2xl font-medium leading-snug mb-8">
@@ -261,7 +261,7 @@ export default function PracticeGame() {
                   onChange={(e) => setUserInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={mode === 'write' ? "Type the full correct phrase..." : "Type the corrected sentence..."}
-                  className="w-full p-4 text-lg rounded-xl bg-[#0A0C12] border border-[#2C303A] focus:border-[#8B1E3D] outline-none placeholder:text-[#64748b]"
+                  className="w-full p-4 text-lg rounded-xl bg-[#0A0C12] border border-[var(--line)] focus:border-[#8B1E3D] outline-none placeholder:text-[#64748b]"
                   disabled={isAnswered}
                 />
               </div>
@@ -293,7 +293,7 @@ export default function PracticeGame() {
                       }
                     }}
                     disabled={isAnswered}
-                    className="text-left p-4 rounded-xl border border-[#2C303A] hover:border-[#8B1E3D] bg-[#0A0C12] disabled:opacity-70 active:bg-[#111418] transition-colors"
+                    className="text-left p-4 rounded-xl border border-[var(--line)] hover:border-[#8B1E3D] bg-[#0A0C12] disabled:opacity-70 active:bg-[#111418] transition-colors"
                   >
                     {opt}
                   </button>
@@ -350,8 +350,8 @@ export default function PracticeGame() {
           /* End screen with rewards */
           <div className="practice-card p-8 text-center">
             <div className="text-2xl font-semibold tracking-tight mb-2">Session Complete</div>
-            <div className="text-5xl font-semibold text-[#F4C430] mb-1">+{score} points</div>
-            <div className="text-[#A8B3C7] mb-6">You earned {xpEarned} XP this round</div>
+            <div className="text-5xl font-semibold text-[var(--gold)] mb-1">+{score} points</div>
+            <div className="text-[var(--text-2)] mb-6">You earned {xpEarned} XP this round</div>
 
             <div className="flex flex-wrap gap-3 justify-center">
               <Button onClick={() => startNewSession(mode)} className="btn-primary px-8 py-3">
@@ -365,15 +365,15 @@ export default function PracticeGame() {
               </Button>
             </div>
 
-            <div className="mt-6 text-xs text-[#8F95A3]">
+            <div className="mt-6 text-xs text-[var(--muted)]">
               Progress saved to your bank and daily stats. Keep the streak going.
             </div>
           </div>
         ) : (
-          <div className="text-center py-12 text-[#A8B3C7]">Loading practice items...</div>
+          <div className="text-center py-12 text-[var(--text-2)]">Loading practice items...</div>
         )}
 
-        <div className="mt-8 text-xs text-center text-[#8F95A3]">
+        <div className="mt-8 text-xs text-center text-[var(--muted)]">
           All answers use real exam-style sentences. No repeats in a session. Points and XP feed your overall progress.
         </div>
       </div>

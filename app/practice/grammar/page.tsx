@@ -137,7 +137,7 @@ export default function GrammarQuiz() {
 
   if (!currentQ && !finished) {
     return (
-      <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex items-center justify-center p-6">
         Loading...
       </div>
     );
@@ -145,14 +145,14 @@ export default function GrammarQuiz() {
 
   if (finished || remaining.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex items-center justify-center p-6">
         <div className="max-w-md w-full text-center">
           <h1 className="text-4xl font-semibold tracking-tight mb-2">Session complete!</h1>
           <div className="text-xl mb-6">You finished the round — {Math.round((score / Math.max(1, questions.length)) * 100)}% accuracy.</div>
           <div className="practice-card p-8 mb-6">
-            <div className="text-5xl font-bold text-[#F4C430] mb-1">+{earnedXP} XP</div>
+            <div className="text-5xl font-bold text-[var(--gold)] mb-1">+{earnedXP} XP</div>
             <div>Mastered structures: {completed.size}/{questions.length}. Your B1-C1 grammar is getting stronger.</div>
-            <div className="mt-3 text-sm text-[#A8B3C7]">Bank Mastery (3000+ Goethe) updated: {bankCount} terms. Every correct answer syncs to the shared bank — no repeats across modules.</div>
+            <div className="mt-3 text-sm text-[var(--text-2)]">Bank Mastery (3000+ Goethe) updated: {bankCount} terms. Every correct answer syncs to the shared bank — no repeats across modules.</div>
           </div>
           <div className="flex gap-4 justify-center">
             <Button onClick={restart} className="btn-primary px-8 py-3">Practice this round again</Button>
@@ -171,21 +171,21 @@ export default function GrammarQuiz() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] py-8">
       <div className="container max-w-2xl mx-auto px-6">
         <div className="flex items-center justify-between mb-6">
-          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Back to Practice</Link>
+          <Link href="/practice" className="text-sm text-[var(--text-2)] hover:text-[var(--text)]">← Back to Practice</Link>
           <div className="flex items-center gap-4">
             <div className="font-mono text-sm text-[var(--muted)]">
-              {score} correct / {remaining.length} left • Mastered: {completed.size}/{questions.length} • Bank 3000+: <span className="text-[#F4C430]">{bankCount}</span>
+              {score} correct / {remaining.length} left • Mastered: {completed.size}/{questions.length} • Bank 3000+: <span className="text-[var(--gold)]">{bankCount}</span>
             </div>
           </div>
         </div>
 
         <div className="practice-card p-8">
-          <div className="text-xs tracking-[2px] text-[#F4C430] mb-1">B1-C1 COMPLEX STRUCTURES</div>
+          <div className="text-xs tracking-[2px] text-[var(--gold)] mb-1">B1-C1 COMPLEX STRUCTURES</div>
           <div className="text-3xl font-semibold tracking-tight mb-2">{currentQ.q}</div>
-          <div className="text-[#A8B3C7] mb-6">{currentQ.en}</div>
+          <div className="text-[var(--text-2)] mb-6">{currentQ.en}</div>
 
           {/* Separate mobile: full-width stacked options for easy thumb taps. Desktop keeps 2-col */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

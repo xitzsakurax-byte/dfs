@@ -1,164 +1,486 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Three.js hero — dynamic import with ssr:false required for R3F in Next.js 16
+const HeroScene = dynamic(() => import('@/components/HeroScene'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="orb-gold" style={{ width: 240, height: 240, top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+    </div>
+  ),
+});
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function GermanForgeLanding() {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
+  const stepsRef = useRef<HTMLDivElement>(null);
+  const examRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero text stagger entrance
+      gsap.from('.hero-line', {
+        y: 60,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        ease: 'power3.out',
+        delay: 0.1,
+      });
+
+      // Feature cards scroll reveal
+      gsap.from('.feature-card', {
+        scrollTrigger: {
+          trigger: featuresRef.current,
+          start: 'top 80%',
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.1,
+        ease: 'power2.out',
+      });
+
+      // Steps
+      gsap.from('.step-item', {
+        scrollTrigger: {
+          trigger: stepsRef.current,
+          start: 'top 80%',
+        },
+        x: -40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: 'power2.out',
+      });
+
+      // Exam section
+      gsap.from('.exam-card', {
+        scrollTrigger: {
+          trigger: examRef.current,
+          start: 'top 80%',
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: 'power2.out',
+      });
+
+      // CTA
+      gsap.from('.cta-section', {
+        scrollTrigger: {
+          trigger: ctaRef.current,
+          start: 'top 85%',
+        },
+        scale: 0.97,
+        opacity: 0,
+        duration: 0.7,
+        ease: 'power2.out',
+      });
+    });
+
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach(st => st.kill());
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#0F1116] text-[#EDEEF2] overflow-x-hidden selection:bg-[#8B1E3D] selection:text-white">
-      {/* Simple, elegant top nav - mobile optimized */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-8 py-4 sm:py-5 bg-[#0F1116]/90 backdrop-blur-2xl border-b border-[#2C303A]">
+    <div
+      className="min-h-screen text-[var(--text)] overflow-x-hidden selection:bg-[var(--gold)] selection:text-black"
+      style={{ background: 'var(--bg)' }}
+    >
+      {/* ── NAV ─────────────────────────────────────────────────────────────── */}
+      <nav className="nav-glass fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 sm:px-8 py-4">
         <div className="flex items-center gap-3">
-          <div className="logo-mark w-8 h-8 sm:w-9 sm:h-9 rounded-[10px] bg-gradient-to-br from-[#8B1E3D] to-[#C24A3A] flex items-center justify-center text-white text-[15px] sm:text-[17px] font-semibold tracking-[-0.5px]">GF</div>
-          <div className="font-semibold tracking-[-0.3px] text-[15px] sm:text-[17px]">GermanForge</div>
+          <div className="logo-mark w-9 h-9 rounded-xl flex items-center justify-center text-[#0A0D14] text-[15px] font-black tracking-tight">
+            GF
+          </div>
+          <span className="font-semibold tracking-tight text-[15px] sm:text-[16px]">GermanForge</span>
         </div>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-7 text-sm font-medium">
-          <a href="#features" className="hover:text-[#8B1E3D] transition-colors">Features</a>
-          <a href="#how" className="hover:text-[#8B1E3D] transition-colors">How it works</a>
-          <Link href="/dashboard" className="btn-primary px-6 py-2 text-sm">Enter Training</Link>
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-[var(--text-2)]">
+          <a href="#features" className="hover:text-[var(--gold)] transition-colors">Features</a>
+          <Link href="/exams" className="hover:text-[var(--gold)] transition-colors">Exams</Link>
+          <Link href="/resources" className="hover:text-[var(--gold)] transition-colors">Resources</Link>
+          <Link
+            href="/dashboard"
+            className="btn-primary px-5 py-2 text-sm inline-block"
+          >
+            Enter Training
+          </Link>
         </div>
 
-        {/* Mobile: prominent start button */}
+        {/* Mobile CTA */}
         <div className="md:hidden">
-          <Link href="/dashboard" className="btn-primary px-5 py-1.5 text-sm rounded-full">Start</Link>
+          <Link href="/dashboard" className="btn-primary px-5 py-2 text-sm">Start</Link>
         </div>
       </nav>
 
-      {/* HERO — Simple, elegant, beautiful with gradient theme. Fully mobile responsive */}
-      <div className="relative pt-16 pb-12 sm:pt-20 sm:pb-16 bg-gradient-to-b from-[#0F1116] via-[#0F1116] to-[#111418]">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          {/* Trust logos / badges - stacks nicely on mobile */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-x-6 gap-y-3 mb-8 sm:mb-10">
-            <div className="flex items-center gap-2.5">
-              {/* Inline elegant logo mark for Goethe (no broken image) */}
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded bg-gradient-to-br from-[#8B1E3D] to-[#C24A3A] flex items-center justify-center text-white text-[10px] sm:text-[11px] font-bold tracking-tighter">GI</div>
-                <span className="text-sm sm:text-base font-medium tracking-tight">Goethe-Institut</span>
-              </div>
+      {/* ── HERO ────────────────────────────────────────────────────────────── */}
+      <section className="relative min-h-screen flex items-center pt-20 pb-16 overflow-hidden texture-bg">
+        {/* Background orbs */}
+        <div className="orb-gold" style={{ width: 600, height: 600, top: '-100px', right: '-100px', opacity: 0.6 }} />
+        <div className="orb-blue" style={{ width: 400, height: 400, bottom: '0', left: '-100px' }} />
+
+        <div className="container max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left: copy */}
+          <div className="relative z-10">
+            {/* Badge */}
+            <div className="hero-line inline-flex items-center gap-2.5 mb-8 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase"
+              style={{ background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.3)', color: 'var(--gold)' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] animate-pulse inline-block" />
+              Goethe-Zertifikat &amp; TELC B1–C1
             </div>
-            <div className="hidden sm:block h-3 w-px bg-[#2C303A]" />
-            <div className="px-3 sm:px-4 py-1 rounded-full border border-[#2C303A] bg-[#171A21]/60 text-xs sm:text-sm tracking-wide">
-              <span className="font-medium text-[#C5CAD6]">TELC B1</span> <span className="text-[#8F95A3]">•</span> <span className="font-medium text-[#C5CAD6]">Goethe B1–C1</span>
+
+            <h1 className="hero-line text-[52px] sm:text-[64px] lg:text-[72px] leading-[0.9] font-black tracking-[-3px] sm:tracking-[-4px] mb-6">
+              Master real<br />
+              <span className="gradient-text">German exams.</span>
+            </h1>
+
+            <p className="hero-line text-[16px] sm:text-[18px] text-[var(--text-2)] max-w-[42ch] mb-8 leading-relaxed">
+              Premium B1–C1 preparation for TELC &amp; Goethe-Zertifikat.
+              Authentic tasks, the official 3,000+ word bank, advanced gamification, and real exam data.
+            </p>
+
+            {/* CEFR badges */}
+            <div className="hero-line flex flex-wrap gap-2.5 mb-10">
+              {['B1', 'B2', 'C1'].map(level => (
+                <span key={level} className="px-3 py-1 rounded-lg text-xs font-bold tracking-wide"
+                  style={{
+                    background: 'rgba(212,160,23,0.08)',
+                    border: '1px solid rgba(212,160,23,0.2)',
+                    color: 'var(--gold)',
+                  }}>
+                  {level}
+                </span>
+              ))}
+              <span className="px-3 py-1 rounded-lg text-xs font-medium tracking-wide text-[var(--muted)]"
+                style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
+                TELC &amp; Goethe
+              </span>
             </div>
+
+            <div className="hero-line flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/dashboard"
+                className="btn-primary px-8 py-4 text-base font-bold inline-block text-center"
+              >
+                Start Training Free
+              </Link>
+              <Link
+                href="/exams"
+                className="btn-ghost px-8 py-4 text-base inline-block text-center"
+              >
+                View Exam Info
+              </Link>
+            </div>
+
+            <p className="hero-line mt-5 text-xs text-[var(--muted)]">
+              All progress saved locally for Anh Kiet • No sign-up required
+            </p>
           </div>
 
-          <h1 className="text-[42px] sm:text-[56px] lg:text-[68px] leading-[0.92] font-semibold tracking-[-2.8px] sm:tracking-[-3.2px] mb-5 sm:mb-6">
-            Master real<br />TELC &amp; Goethe German.
-          </h1>
-
-          <p className="max-w-[40ch] mx-auto text-[15px] sm:text-[17px] text-[#C5CAD6] mb-8 sm:mb-10 leading-snug">
-            Professional, focused preparation for B1–C1 exams. 
-            Authentic tasks, the official 3000+ word bank, and clear feedback — nothing extra.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <Link href="/dashboard" className="btn-primary px-8 sm:px-10 py-3.5 sm:py-4 text-base sm:text-lg rounded-2xl inline-block w-full sm:w-auto">
-              Start Training
-            </Link>
-            <a href="#features" className="px-8 sm:px-10 py-3.5 sm:py-4 text-base sm:text-lg border border-[#2C303A] hover:border-[#8B1E3D] rounded-2xl inline-block transition-colors w-full sm:w-auto">
-              See what’s inside
-            </a>
+          {/* Right: 3D scene (hidden on mobile → show gradient instead) */}
+          <div
+            ref={heroRef}
+            className="relative hidden lg:block"
+            style={{ height: 500 }}
+          >
+            <HeroScene />
           </div>
 
-          <div className="mt-6 sm:mt-8 text-xs text-[#8F95A3]">Progress saved locally for Anh Kiet • No sign-up • Instant in your browser</div>
-        </div>
-      </div>
-
-      {/* Trust bar with logos - mobile friendly wrap */}
-      <div className="border-b border-[#2C303A] py-5 sm:py-6 bg-[#0A0C12]">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-10 gap-y-3 text-xs sm:text-sm text-center">
-          <div className="flex items-center gap-2 opacity-80">
-            <div className="w-6 h-6 rounded bg-gradient-to-br from-[#8B1E3D] to-[#C24A3A] flex items-center justify-center text-white text-[9px] font-bold">GI</div>
-            <span className="text-[#C5CAD6]">Goethe-Institut standards</span>
+          {/* Mobile: decorative orb instead of 3D */}
+          <div className="lg:hidden flex justify-center">
+            <div style={{
+              width: 220,
+              height: 220,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(212,160,23,0.2) 0%, transparent 70%)',
+              border: '1px solid rgba(212,160,23,0.25)',
+              boxShadow: '0 0 60px rgba(212,160,23,0.15)',
+            }} />
           </div>
-          <div className="text-[#8F95A3] hidden sm:inline">•</div>
-          <div className="text-[#C5CAD6]">TELC B1 certified alignment</div>
-          <div className="text-[#8F95A3] hidden sm:inline">•</div>
-          <div className="text-[#C5CAD6]">3,000+ official exam vocabulary</div>
-        </div>
-      </div>
-
-      {/* Features — elegant cards with gradient accents. Excellent on mobile */}
-      <div id="features" className="container max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-        <div className="text-center mb-10 sm:mb-12">
-          <div className="uppercase tracking-[3px] text-xs text-[#8B1E3D] mb-3">Everything you need. Nothing you don’t.</div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-1.5px]">Focused exam training</h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Scroll hint */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--muted)] text-xs">
+          <span>Scroll to explore</span>
+          <div className="w-px h-8 bg-gradient-to-b from-[var(--gold)] to-transparent" />
+        </div>
+      </section>
+
+      {/* ── TRUST BAR ───────────────────────────────────────────────────────── */}
+      <div style={{ borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)', background: 'var(--surface)' }}
+        className="py-4">
+        <div className="container max-w-5xl mx-auto px-5 sm:px-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm">
           {[
-            { title: "Exam Vocabulary", desc: "3,000+ official Goethe B1 terms with examples. No repeats after you master them." },
-            { title: "Complex Grammar", desc: "The structures that actually appear on TELC & Goethe papers. Clear explanations." },
-            { title: "Writing Practice", desc: "Authentic email + report tasks with AI scoring against official criteria." },
-            { title: "Word Forms & Cases", desc: "Master nominative, accusative, dative and genitive in real sentences." },
-            { title: "The Official Bank", desc: "Quick mastery drills. Prioritises what you don’t know yet. Syncs everywhere." },
-          ].map((f, i) => (
-            <motion.div 
-              key={i} 
-              className="practice-card p-5 sm:p-6 group hover:border-[#8B1E3D]/60 transition-colors bg-gradient-to-b from-[#111418] to-[#0F1116] cursor-default"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -3, transition: { duration: 0.15 } }}
-              whileTap={{ scale: 0.985 }}
-              transition={{ delay: 0.05 * i }}
-            >
-              <div className="text-[#8B1E3D] text-xs tracking-[2px] mb-3">{String(i+1).padStart(2, '0')}</div>
-              <div className="font-semibold text-lg sm:text-xl tracking-tight mb-3">{f.title}</div>
-              <div className="text-[14px] sm:text-[15px] text-[#C5CAD6] leading-snug">{f.desc}</div>
-            </motion.div>
+            { label: 'Goethe-Zertifikat aligned', dot: true },
+            { label: 'TELC B1 certified alignment', dot: true },
+            { label: '3,078 official exam words', dot: true },
+            { label: 'SRS spaced repetition', dot: false },
+          ].map((item, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && <span className="text-[var(--muted)] hidden sm:inline">·</span>}
+              <span className="text-[var(--text-2)]">{item.label}</span>
+            </React.Fragment>
           ))}
         </div>
       </div>
 
-      {/* How it works — simple & elegant, mobile stacked */}
-      <div id="how" className="bg-[#0A0C12] border-y border-[#2C303A]">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-16">
-          <div className="text-center mb-8 sm:mb-10">
-            <div className="text-[#8B1E3D] text-xs tracking-[3px] mb-2">THREE STEPS</div>
-            <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">Simple. Effective. Professional.</h3>
+      {/* ── FEATURES ────────────────────────────────────────────────────────── */}
+      <section id="features" ref={featuresRef} className="py-20 sm:py-28">
+        <div className="container max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="text-center mb-14">
+            <div className="section-label mb-3">Everything you need</div>
+            <h2 className="text-[36px] sm:text-[48px] font-black tracking-[-2px] mb-4">
+              Focused exam training
+            </h2>
+            <p className="text-[var(--text-2)] max-w-[50ch] mx-auto text-lg">
+              Six modules built around real TELC and Goethe exam formats, now with gamification, spaced repetition and skill tracking.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { num: "01", title: "Train", text: "Work through real exam-style tasks in vocabulary, grammar, writing and cases." },
-              { num: "02", title: "Master", text: "Every correct answer removes the item from future practice. The bank grows with you." },
-              { num: "03", title: "Track", text: "See your real daily progress, streaks and history in the dedicated progress view." },
-            ].map((step, i) => (
-              <motion.div 
-                key={i} 
-                className="space-y-2 sm:space-y-3 px-4"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -2 }}
-                transition={{ delay: 0.1 * i }}
+              {
+                num: '01',
+                title: 'Exam Vocabulary',
+                desc: '3,000+ official Goethe B1 terms with example sentences. Spaced repetition queues words you struggle with.',
+                link: '/practice/vocab',
+              },
+              {
+                num: '02',
+                title: 'Grammar Structures',
+                desc: 'The exact structures tested on TELC & Goethe papers — Konjunktiv II, passive, relative clauses, with clear explanations.',
+                link: '/practice/grammar',
+              },
+              {
+                num: '03',
+                title: 'Writing Practice',
+                desc: 'Authentic email + report tasks scored against official criteria. Real exam formats for B1–C1.',
+                link: '/practice/writing',
+              },
+              {
+                num: '04',
+                title: 'Word Forms & Cases',
+                desc: 'Master Nominativ, Akkusativ, Dativ and Genitiv in real exam sentences with full case explanations.',
+                link: '/practice/declensions',
+              },
+              {
+                num: '05',
+                title: 'Official Bank Drill',
+                desc: '3,078-word mastery drill — no repeats after you get it right, prefers words you haven\'t seen.',
+                link: '/practice/bank',
+              },
+              {
+                num: '06',
+                title: 'Interactive Game',
+                desc: 'Three game modes: Write Forms, Fix the Error, Pop Quiz. Combo multipliers, real XP, leaderboard-ready.',
+                link: '/practice/game',
+              },
+            ].map((f, i) => (
+              <Link
+                key={i}
+                href={f.link}
+                className="feature-card glass-card p-7 block group"
               >
-                <div className="mx-auto inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#8B1E3D] to-[#C24A3A] text-white text-sm font-medium">{step.num}</div>
-                <div className="font-semibold text-lg sm:text-xl tracking-tight">{step.title}</div>
-                <div className="text-[#C5CAD6] text-[14px] sm:text-[15px] max-w-[30ch] mx-auto leading-snug">{step.text}</div>
-              </motion.div>
+                <div className="text-xs font-bold tracking-[3px] mb-4 text-[var(--gold)]">{f.num}</div>
+                <div className="font-bold text-xl tracking-tight mb-3 group-hover:text-[var(--gold)] transition-colors">{f.title}</div>
+                <div className="text-[15px] text-[var(--text-2)] leading-relaxed">{f.desc}</div>
+                <div className="mt-5 text-sm font-semibold text-[var(--gold)] opacity-0 group-hover:opacity-100 transition-opacity">
+                  Start now →
+                </div>
+              </Link>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Final elegant CTA with gradient - mobile friendly */}
-      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20 text-center">
-        <div className="mb-5 sm:mb-6">
-          <div className="inline-block px-4 py-1 text-xs tracking-[3px] border border-[#8B1E3D]/30 rounded-full text-[#8B1E3D]">NO GIMMICKS. JUST THE WORK THAT WORKS.</div>
+      {/* ── GAMIFICATION ────────────────────────────────────────────────────── */}
+      <section className="py-20 sm:py-28" style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
+        <div className="container max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="grid lg:grid-cols-2 gap-14 items-center">
+            <div>
+              <div className="section-label mb-3">Gamification</div>
+              <h2 className="text-[36px] sm:text-[44px] font-black tracking-[-2px] mb-5">
+                Progress like<br />
+                <span className="gradient-text">a game</span>
+              </h2>
+              <p className="text-[var(--text-2)] text-lg leading-relaxed mb-8">
+                XP, levels, streaks, achievements, daily quests, combo multipliers — all tied to real exam content. Every correct answer counts.
+              </p>
+              <div className="space-y-4">
+                {[
+                  { icon: '🔥', label: 'Daily Streaks', desc: 'Vietnam-time calendar tracks your consistency' },
+                  { icon: '⚡', label: 'Combo Multiplier', desc: 'Chain correct answers for up to 3× XP' },
+                  { icon: '🏆', label: '14 Achievements', desc: 'Unlock badges from first word to complete mastery' },
+                  { icon: '🔄', label: 'Spaced Repetition', desc: 'SM-2 algorithm queues hard words for review' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <span className="text-2xl flex-shrink-0">{item.icon}</span>
+                    <div>
+                      <div className="font-semibold">{item.label}</div>
+                      <div className="text-sm text-[var(--text-2)]">{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { value: '3,078', label: 'Exam Words', sub: 'Official Goethe B1 Wortliste' },
+                { value: '14', label: 'Achievements', sub: 'From first word to mastery' },
+                { value: '3×', label: 'Max Combo', sub: 'XP multiplier on hot streaks' },
+                { value: 'B1→C1', label: 'Skill Tree', sub: 'Visual CEFR progression path' },
+              ].map((stat, i) => (
+                <div key={i} className="glass-card p-6 text-center">
+                  <div className="text-3xl sm:text-4xl font-black gradient-text mb-1">{stat.value}</div>
+                  <div className="font-semibold text-sm mb-1">{stat.label}</div>
+                  <div className="text-xs text-[var(--muted)]">{stat.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <h3 className="text-[32px] sm:text-[40px] lg:text-[46px] leading-none font-semibold tracking-[-1.6px] sm:tracking-[-1.8px] mb-5 sm:mb-6">
-          Ready to prepare<br />like a professional?
-        </h3>
-        <Link href="/dashboard" className="inline-block bg-gradient-to-r from-[#8B1E3D] to-[#C24A3A] hover:brightness-105 active:brightness-95 transition-all text-white text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl font-medium w-full sm:w-auto">
-          Enter GermanForge
-        </Link>
-        <div className="mt-3 sm:mt-4 text-xs text-[#8F95A3]">Everything stays on your device • For Anh Kiet</div>
-      </div>
+      </section>
 
+      {/* ── HOW IT WORKS ────────────────────────────────────────────────────── */}
+      <section ref={stepsRef} className="py-20 sm:py-28">
+        <div className="container max-w-5xl mx-auto px-5 sm:px-8">
+          <div className="text-center mb-14">
+            <div className="section-label mb-3">How it works</div>
+            <h2 className="text-[36px] sm:text-[44px] font-black tracking-[-2px]">Simple. Effective.</h2>
+          </div>
+
+          <div className="relative">
+            {/* Connector line (desktop) */}
+            <div className="hidden md:block absolute top-10 left-[calc(16.67%+20px)] right-[calc(16.67%+20px)] h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent opacity-30" />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+              {[
+                { num: '01', title: 'Train', text: 'Work through real exam-style tasks in vocabulary, grammar, writing and declensions.' },
+                { num: '02', title: 'Master', text: 'Earn XP and combo bonuses. Wrong answers go into SRS for targeted follow-up review.' },
+                { num: '03', title: 'Track', text: 'See your daily heatmap, skill tree progress, achievements, and 30-day history.' },
+              ].map((step, i) => (
+                <div key={i} className="step-item space-y-4 px-4">
+                  <div className="mx-auto inline-flex h-11 w-11 items-center justify-center rounded-full font-black text-sm text-[#0A0D14]"
+                    style={{ background: 'linear-gradient(135deg, var(--gold) 0%, var(--gold-warm) 100%)', boxShadow: '0 0 20px var(--gold-glow-strong)' }}>
+                    {step.num}
+                  </div>
+                  <div className="font-bold text-xl tracking-tight">{step.title}</div>
+                  <div className="text-[var(--text-2)] text-[15px] max-w-[28ch] mx-auto leading-relaxed">{step.text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── EXAM INFO TEASER ────────────────────────────────────────────────── */}
+      <section ref={examRef} style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}
+        className="py-20 sm:py-28">
+        <div className="container max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="text-center mb-12">
+            <div className="section-label mb-3">Official Exam Info</div>
+            <h2 className="text-[36px] sm:text-[44px] font-black tracking-[-2px] mb-4">Know your target exam</h2>
+            <p className="text-[var(--text-2)] text-lg max-w-[50ch] mx-auto">
+              Complete official data for Goethe-Zertifikat and telc Deutsch — formats, times, pass criteria, and free practice materials.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+            {[
+              {
+                name: 'Goethe-Zertifikat',
+                levels: 'B1 · B2 · C1',
+                tag: 'Fully modular since 2024',
+                highlights: ['60/100 pass per module', 'Modules taken separately', 'Certificate does not expire'],
+                color: 'rgba(212,160,23,0.08)',
+                borderColor: 'rgba(212,160,23,0.25)',
+              },
+              {
+                name: 'telc Deutsch',
+                levels: 'B1 · B2 · C1',
+                tag: 'Accepted for citizenship & university',
+                highlights: ['60% pass (written + oral each ≥60%)', 'Failed section retakeable', 'telc C1 Hochschule for HRK universities'],
+                color: 'rgba(59,130,246,0.06)',
+                borderColor: 'rgba(59,130,246,0.2)',
+              },
+            ].map((exam, i) => (
+              <div key={i} className="exam-card rounded-2xl p-7"
+                style={{ background: exam.color, border: `1px solid ${exam.borderColor}` }}>
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <div className="font-black text-2xl tracking-tight">{exam.name}</div>
+                    <div className="text-[var(--muted)] text-sm mt-0.5">{exam.levels}</div>
+                  </div>
+                  <span className="text-xs px-3 py-1 rounded-full font-medium"
+                    style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--gold)' }}>
+                    {exam.tag}
+                  </span>
+                </div>
+                <ul className="space-y-2">
+                  {exam.highlights.map((h, j) => (
+                    <li key={j} className="flex items-center gap-2.5 text-sm text-[var(--text-2)]">
+                      <span className="text-[var(--gold)] text-xs">✓</span>
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link href="/exams" className="btn-primary px-8 py-3.5 text-base inline-block">
+              Full Exam Comparison →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ─────────────────────────────────────────────────────────────── */}
+      <section ref={ctaRef} className="py-20 sm:py-28">
+        <div className="container max-w-3xl mx-auto px-5 sm:px-8 text-center cta-section">
+          <div className="inline-block px-5 py-1.5 text-xs tracking-[4px] uppercase font-semibold rounded-full mb-8"
+            style={{ border: '1px solid rgba(212,160,23,0.3)', color: 'var(--gold)', background: 'rgba(212,160,23,0.06)' }}>
+            No gimmicks. Just the work that works.
+          </div>
+
+          <h2 className="text-[40px] sm:text-[56px] font-black tracking-[-2.5px] leading-tight mb-6">
+            Ready to prepare<br />
+            <span className="gradient-text">like a professional?</span>
+          </h2>
+
+          <p className="text-[var(--text-2)] text-lg mb-10 max-w-[40ch] mx-auto">
+            Start training immediately. No registration, no payment, no barriers.
+          </p>
+
+          <Link
+            href="/dashboard"
+            className="btn-primary text-lg px-10 py-4 inline-block"
+          >
+            Enter GermanForge
+          </Link>
+
+          <p className="mt-5 text-xs text-[var(--muted)]">
+            Everything stays on your device • For Anh Kiet • Vietnam time
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

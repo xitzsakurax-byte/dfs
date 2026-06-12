@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { vocabQuestions } from '@/lib/data/vocab';
-import { addToBankMastered, logPerformance } from '@/lib/progress';
+import { addToBankMastered, logPerformance, awardXp } from '@/lib/progress';
+import { incrementCombo, resetCombo, getComboMultiplier, addToSRS } from '@/lib/gamification';
 
 // Use the rich data source (expanded, documented, Exam-relevant B1-C1 items)
 const questions = vocabQuestions;
@@ -80,7 +81,10 @@ export default function VocabQuiz() {
     setIsAnswered(true);
     const correct = option === currentQ.en;
     if (correct) {
-      const points = 15 + Math.floor(Math.random() * 6);
+      const combo = incrementCombo();
+      const multiplier = getComboMultiplier(combo);
+      const base = 15 + Math.floor(Math.random() * 6);
+      const points = Math.round(base * multiplier);
       setScore(s => s + 1);
       setEarnedXP(e => e + points);
 
@@ -99,6 +103,11 @@ export default function VocabQuiz() {
 
       // Log for dashboard performance analysis (by topic)
       logPerformance('vocab', currentQ.topic || 'general', true);
+    } else {
+      resetCombo();
+      logPerformance('vocab', currentQ.topic || 'general', false);
+      // Add to SRS for spaced repetition follow-up
+      addToSRS(currentQ.de, 'vocab');
     }
   }
 
@@ -145,7 +154,7 @@ export default function VocabQuiz() {
 
   if (!currentQ && !finished) {
     return (
-      <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex items-center justify-center p-6">
         Loading...
       </div>
     );
@@ -153,14 +162,14 @@ export default function VocabQuiz() {
 
   if (finished || remaining.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex items-center justify-center p-6">
         <div className="max-w-md w-full text-center">
           <h1 className="text-4xl font-semibold tracking-tight mb-2">Session complete!</h1>
           <div className="text-xl mb-6">You finished the round with {score} correct out of this pool.</div>
           <div className="practice-card p-8 mb-6">
-            <div className="text-5xl font-bold text-[#F4C430] mb-1">+{earnedXP} XP</div>
+            <div className="text-5xl font-bold text-[var(--gold)] mb-1">+{earnedXP} XP</div>
             <div>Mastered in this bank: {completed.size}/{questions.length} terms. Your B1-C1 knowledge is solidifying.</div>
-            <div className="mt-3 text-sm text-[#A8B3C7]">Bank Mastery (3000+ Goethe) updated: {bankCount} terms. Every correct answer syncs to the shared bank — no repeats across Vocab, Grammar, Writing, or Bank Drill.</div>
+            <div className="mt-3 text-sm text-[var(--text-2)]">Bank Mastery (3000+ Goethe) updated: {bankCount} terms. Every correct answer syncs to the shared bank — no repeats across Vocab, Grammar, Writing, or Bank Drill.</div>
           </div>
           <div className="flex gap-4 justify-center">
             <Button onClick={restart} className="btn-primary px-8 py-3">Practice this round again</Button>
@@ -179,21 +188,24 @@ export default function VocabQuiz() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] py-8">
       <div className="container max-w-2xl mx-auto px-6">
         <div className="flex items-center justify-between mb-6">
-          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Back to Practice</Link>
+          <Link href="/practice" className="text-sm text-[var(--text-2)] hover:text-[var(--text)]">← Back to Practice</Link>
           <div className="flex items-center gap-4">
             <div className="font-mono text-sm text-[var(--muted)]">
-              {score} correct / {remaining.length} left • Mastered: {completed.size}/{questions.length} • Bank 3000+: <span className="text-[#F4C430]">{bankCount}</span>
+              {score} correct / {remaining.length} left • Mastered: {completed.size}/{questions.length} • Bank 3000+: <span className="text-[var(--gold)]">{bankCount}</span>
             </div>
           </div>
         </div>
 
         <div className="practice-card p-8">
-          <div className="text-xs tracking-[2px] text-[#F4C430] mb-1">B1-C1 EXAM VOCABULARY</div>
-          <div className="text-4xl font-semibold tracking-tight mb-4">{currentQ.de}</div>
-          <div className="text-[#A8B3C7] mb-6">What is the English meaning?</div>
+          <div className="text-xs tracking-[2px] text-[var(--gold)] mb-1">B1-C1 PRÜFUNGSWORTSCHATZ • Niveau: {currentQ.cefr || 'B1-C1'}</div>
+          <div className="text-4xl font-semibold tracking-tight mb-2">{currentQ.de}</div>
+          {currentQ.example && (
+            <div className="text-sm text-[var(--text-2)] mb-4">Beispiel: {currentQ.example}</div>
+          )}
+          <div className="text-[var(--text-2)] mb-6 font-medium">Wählen Sie die korrekte englische Übersetzung:</div>
 
           <div className="space-y-3">
             {currentOptions.map((opt, idx) => {

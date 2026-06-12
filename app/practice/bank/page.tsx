@@ -126,7 +126,7 @@ export default function BankDrill() {
 
   if (!currentWord && !finished) {
     return (
-      <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex items-center justify-center p-6">
         Loading the 3000+ bank...
       </div>
     );
@@ -134,15 +134,15 @@ export default function BankDrill() {
 
   if (finished) {
     return (
-      <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex items-center justify-center p-6">
         <div className="max-w-md w-full text-center">
           <h1 className="text-4xl font-semibold tracking-tight mb-2">Bank Drill complete!</h1>
           <div className="text-xl mb-6">You processed {drillWords.length} terms from the official Goethe bank.</div>
 
           <div className="practice-card p-8 mb-6">
-            <div className="text-5xl font-bold text-[#F4C430] mb-1">+{earnedXP} XP</div>
-            <div className="text-[#A8B3C7] mb-3">Newly mastered this drill: <span className="font-semibold text-[#F5F7FA]">{sessionNew}</span></div>
-            <div className="text-sm">Total Bank Mastery: <span className="font-mono text-[#F4C430]">{bankMastered.length}/{BANK_TOTAL}</span> ({masteryPercent}%)</div>
+            <div className="text-5xl font-bold text-[var(--gold)] mb-1">+{earnedXP} XP</div>
+            <div className="text-[var(--text-2)] mb-3">Newly mastered this drill: <span className="font-semibold text-[var(--text)]">{sessionNew}</span></div>
+            <div className="text-sm">Total Bank Mastery: <span className="font-mono text-[var(--gold)]">{bankMastered.length}/{BANK_TOTAL}</span> ({masteryPercent}%)</div>
             <div className="mt-2 text-xs text-[var(--muted)]">Every mastered term directly improves your readiness for the TELC and Goethe B1-C1 exams.</div>
           </div>
 
@@ -157,12 +157,12 @@ export default function BankDrill() {
             <Button asChild className="btn-ghost px-6 py-2 text-sm">
               <Link href="/resources">View full bank &amp; Resources</Link>
             </Button>
-            <Button onClick={resetBank} className="btn-ghost px-6 py-2 text-sm text-[#A8B3C7]">
+            <Button onClick={resetBank} className="btn-ghost px-6 py-2 text-sm text-[var(--text-2)]">
               Reset entire Bank Mastery
             </Button>
           </div>
 
-          <div className="mt-6 text-xs text-[#A8B3C7]">
+          <div className="mt-6 text-xs text-[var(--text-2)]">
             Continue: Vocab / Grammar / Writing quizzes also auto-sync correct answers into this bank (no repeats after correct).
           </div>
         </div>
@@ -171,37 +171,37 @@ export default function BankDrill() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] py-8">
       <div className="container max-w-2xl mx-auto px-6">
         {/* Header with live bank gamification stat */}
         <div className="flex items-center justify-between mb-6">
-          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Back to Practice</Link>
+          <Link href="/practice" className="text-sm text-[var(--text-2)] hover:text-[var(--text)]">← Back to Practice</Link>
           <div className="flex items-center gap-4 text-sm font-mono text-[var(--muted)]">
-            Bank: <span className="text-[#F4C430]">{bankMastered.length}/{BANK_TOTAL}</span> • Drill {currentIndex + 1}/{drillWords.length}
+            Bank: <span className="text-[var(--gold)]">{bankMastered.length}/{BANK_TOTAL}</span> • Drill {currentIndex + 1}/{drillWords.length}
           </div>
         </div>
 
         <div className="mb-4">
-          <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">OFFICIAL GOETHE 3000+ WORTLISTE • GAMIFICATION</div>
+          <div className="text-[var(--gold)] text-xs tracking-[2px] mb-1">OFFICIAL GOETHE 3000+ WORTLISTE • GAMIFICATION</div>
           <h1 className="text-3xl font-semibold tracking-tight">Official Vocabulary Bank — Quick Mastery Drill</h1>
           <p className="text-[var(--muted)] mt-1 text-sm">Master terms → +XP • Real-time sync with all training modules • No-repeat system • Builds direct exam readiness</p>
         </div>
 
         {/* Progress bar for this drill + global */}
         <div className="mb-6">
-          <div className="flex justify-between text-xs mb-1 text-[#A8B3C7]">
+          <div className="flex justify-between text-xs mb-1 text-[var(--text-2)]">
             <span>Drill progress</span>
             <span>{progress}%</span>
           </div>
           <div className="h-2 bg-[var(--surface2)] rounded-full overflow-hidden mb-2">
-            <div className="h-2 bg-gradient-to-r from-[#C8102E] to-[#F4C430] transition-all" style={{ width: `${progress}%` }} />
+            <div className="h-2 bg-gradient-to-r from-[#C8102E] to-[var(--gold)] transition-all" style={{ width: `${progress}%` }} />
           </div>
-          <div className="text-xs text-[#A8B3C7]">Global Bank Mastery: {bankMastered.length} / {BANK_TOTAL} ({masteryPercent}%)</div>
+          <div className="text-xs text-[var(--text-2)]">Global Bank Mastery: {bankMastered.length} / {BANK_TOTAL} ({masteryPercent}%)</div>
         </div>
 
         {/* Main card - clean, no icons, high contrast */}
         <div className="practice-card p-8 mb-6">
-          <div className="text-xs tracking-[2px] text-[#F4C430] mb-2">OFFICIAL BANK TERMS (B1-C1+)</div>
+          <div className="text-xs tracking-[2px] text-[var(--gold)] mb-2">OFFIZIELLER GOETHE B1-C1 WORTSCHATZ • Niveau: B1–C1 (hochsprachlich &amp; prüfungsrelevant)</div>
 
           <AnimatePresence mode="wait">
             <motion.div
@@ -215,7 +215,7 @@ export default function BankDrill() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="text-[#A8B3C7] text-sm mb-6">Recognize and own this term? Tap Master to record it in the 3000+ bank (it will not repeat later in any exercise).</div>
+          <div className="text-[var(--text-2)] text-sm mb-6">Kennen und beherrschen Sie diesen Begriff? Tippen Sie auf „Master“, um ihn im 3000+ Bank zu speichern (keine Wiederholung später in anderen Übungen).</div>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Button onClick={masterWord} className="btn-primary flex-1 py-4 text-lg">
@@ -226,17 +226,17 @@ export default function BankDrill() {
             </Button>
           </div>
 
-          <div className="mt-4 text-xs text-[#A8B3C7] text-center">
+          <div className="mt-4 text-xs text-[var(--text-2)] text-center">
             Each Master contributes to streak, level and global Bank Mastery %. Data syncs live with Dashboard and all quizzes.
           </div>
         </div>
 
         <div className="text-center">
           <Button onClick={restartDrill} className="btn-ghost px-6 py-2 text-sm mr-3">Start new drill</Button>
-          <Link href="/resources" className="text-sm text-[#F4C430] hover:underline">View full list &amp; search →</Link>
+          <Link href="/resources" className="text-sm text-[var(--gold)] hover:underline">View full list &amp; search →</Link>
         </div>
 
-        <div className="mt-8 text-xs text-[#A8B3C7] text-center">
+        <div className="mt-8 text-xs text-[var(--text-2)] text-center">
           Fully randomized • Prioritizes unmastered • Fully integrated into gamification (dashboard, every quiz, writing).
         </div>
       </div>

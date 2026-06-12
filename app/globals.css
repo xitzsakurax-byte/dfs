@@ -1,46 +1,66 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Human, warm, thoughtful dark theme for people actually studying for TELC & Goethe exams.
-   Less "AI dashboard", more like a calm, serious study room someone put care into.
-   Warm red/gold heritage (German exam feel) mixed with soft, readable neutrals. */
+/* GermanForge — Premium dark theme with gold/amber accents and glassmorphism.
+   High-end SaaS aesthetic for serious B1-C1 exam preparation. */
 
 :root {
-  --bg: #0F1116;
-  --surface: #171A21;
-  --surface2: #20242D;
-  --text: #EDEEF2;
-  --muted: #8F95A3;
-  --line: #2C303A;
+  /* Base surfaces */
+  --bg: #0A0D14;
+  --bg-2: #0D1018;
+  --surface: #111520;
+  --surface-2: #161B28;
+  --surface-3: #1C2235;
 
-  /* Warmer, more human accent — deep exam red with a touch of gold warmth */
-  --accent: #8B1E3D;
-  --accent-2: #C24A3A;
-  --accent-warm: #B76E3E;
+  /* Text */
+  --text: #F0F2F7;
+  --text-2: #C8CEDC;
+  --muted: #7A839A;
 
-  --green: #2A6B4E;
-  --red-soft: #A13A3A;
+  /* Borders */
+  --line: #1E2538;
+  --line-2: #2A3148;
+
+  /* Gold/Amber accent palette */
+  --gold: #D4A017;
+  --gold-bright: #F0BA30;
+  --gold-warm: #E8962A;
+  --gold-dim: #A07810;
+  --gold-glow: rgba(212, 160, 23, 0.15);
+  --gold-glow-strong: rgba(212, 160, 23, 0.3);
+
+  /* Status */
+  --green: #22C55E;
+  --green-dim: #166534;
+  --red: #EF4444;
+  --red-dim: #991B1B;
+
+  /* Glass effect */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-bg-hover: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-border-hover: rgba(212, 160, 23, 0.35);
 
   /* shadcn mappings */
   --background: var(--bg);
   --foreground: var(--text);
   --card: var(--surface);
   --card-foreground: var(--text);
-  --popover: var(--surface2);
+  --popover: var(--surface-2);
   --popover-foreground: var(--text);
-  --primary: var(--accent);
-  --primary-foreground: #fff;
-  --secondary: var(--surface2);
+  --primary: var(--gold);
+  --primary-foreground: #0A0D14;
+  --secondary: var(--surface-2);
   --secondary-foreground: var(--text);
   --muted: var(--surface);
   --muted-foreground: var(--muted);
-  --accent: var(--accent-2);
-  --accent-foreground: #fff;
-  --destructive: #A13A3A;
+  --accent: var(--gold-warm);
+  --accent-foreground: #0A0D14;
+  --destructive: #EF4444;
   --border: var(--line);
-  --input: var(--surface2);
-  --ring: var(--accent);
-  --radius: 10px;
+  --input: var(--surface-2);
+  --ring: var(--gold);
+  --radius: 12px;
 }
 
 html {
@@ -51,189 +71,379 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-  line-height: 1.7;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Human cards — varied, not perfect clones. Softer, with real presence. */
+/* ========================================================
+   GLASSMORPHISM CARDS
+   ======================================================== */
+
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 0 24px var(--gold-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.glass-card-static {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Legacy .practice-card and .skill-card — now glassmorphism */
 .practice-card, .skill-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-}
-.practice-card:hover, .skill-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
-  transform: translateY(-1px);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* Simple, human buttons. No heavy gradient shift theater. */
+.practice-card:hover, .skill-card:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 0 20px var(--gold-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ========================================================
+   BUTTONS
+   ======================================================== */
+
 .btn-primary {
-  background: var(--accent);
-  color: #fff;
-  font-weight: 600;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-warm) 100%);
+  color: #0A0D14;
+  font-weight: 700;
   border-radius: 999px;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  transition: background 0.15s ease, transform 0.1s ease;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  letter-spacing: 0.01em;
+  transition: filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 0 0 0 var(--gold-glow-strong);
 }
+
 .btn-primary:hover {
-  background: var(--accent-2);
+  filter: brightness(1.1);
+  box-shadow: 0 0 20px var(--gold-glow-strong);
 }
+
 .btn-primary:active {
   transform: translateY(1px);
+  filter: brightness(0.95);
 }
 
 .btn-ghost {
   background: transparent;
   color: var(--text);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-2);
   border-radius: 999px;
   font-weight: 500;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
+
 .btn-ghost:hover {
-  background: var(--surface2);
-  border-color: var(--accent);
+  background: var(--surface-2);
+  border-color: var(--gold-dim);
 }
 
-/* Quiz options — calm and clear, not flashy */
+/* ========================================================
+   QUIZ OPTIONS
+   ======================================================== */
+
 .quiz-option {
-  background: var(--surface2);
-  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
   color: var(--text);
   padding: 1rem 1.25rem;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 500;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
   text-align: left;
-}
-.quiz-option:hover:not(:disabled) {
-  border-color: var(--accent);
-  background: var(--surface);
-}
-.quiz-option.correct {
-  background: color-mix(in srgb, var(--green) 12%, var(--surface2));
-  border-color: var(--green);
-}
-.quiz-option.wrong {
-  background: color-mix(in srgb, var(--red-soft) 12%, var(--surface2));
-  border-color: var(--red-soft);
+  min-height: 44px;
 }
 
-/* Feedback that feels like a real person explaining */
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--gold-dim);
+  background: rgba(212, 160, 23, 0.06);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.quiz-option.correct {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: var(--green);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+}
+
+.quiz-option.wrong {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--red);
+}
+
+/* ========================================================
+   FEEDBACK
+   ======================================================== */
+
 .feedback {
   padding: 1rem 1.25rem;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--surface2);
-}
-.feedback.correct {
-  border-color: var(--green);
-  background: color-mix(in srgb, var(--green) 8%, var(--surface2));
-}
-.feedback.wrong {
-  border-color: var(--red-soft);
-  background: color-mix(in srgb, var(--red-soft) 8%, var(--surface2));
+  border-radius: 12px;
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
 }
 
-/* Much less "AI label" energy. Humans don't scream uppercase tracking everywhere. */
+.feedback.correct {
+  border-color: var(--green);
+  background: rgba(34, 197, 94, 0.07);
+}
+
+.feedback.wrong {
+  border-color: var(--red);
+  background: rgba(239, 68, 68, 0.07);
+}
+
+/* ========================================================
+   TYPOGRAPHY UTILITIES
+   ======================================================== */
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-warm) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .section-label {
   font-size: 0.7rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 600;
-  opacity: 0.85;
+  color: var(--gold);
+  font-weight: 700;
 }
 
 .section-title {
-  font-size: 1.65rem;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--text);
 }
 
-/* Softer hero, less theatrical */
-.hero {
-  background: var(--bg);
-}
+/* ========================================================
+   LOGO + NAV
+   ======================================================== */
 
-/* Simple, solid logo treatment — no heavy gradient theater */
 .logo-mark {
-  background: var(--accent);
-  color: white;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-warm) 100%);
+  color: #0A0D14;
+  font-weight: 800;
+  border-radius: 10px;
+  box-shadow: 0 0 12px var(--gold-glow);
 }
 
-/* Progress bar — quiet and functional */
-.xp-bar {
-  background: var(--accent);
+.nav-glass {
+  background: rgba(10, 13, 20, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ========================================================
+   PROGRESS / XP BAR
+   ======================================================== */
+
+.xp-bar-track {
+  background: var(--surface-2);
   border-radius: 999px;
+  overflow: hidden;
+  height: 6px;
 }
 
-/* Remove shiny AI effects */
-.practice-card::after,
-.skill-card::after {
-  display: none;
-}
-
-.gradient-text {
-  color: var(--accent);
-  background: none;
-  -webkit-text-fill-color: currentColor;
-}
-
-/* Clean, human overrides */
-html, body { background: var(--bg); color: var(--text); }
-.bg-white, .bg-zinc-50, .bg-gray-100 { background: var(--surface) !important; }
-.text-black, .text-zinc-900, .text-gray-900 { color: var(--text) !important; }
-.border-white, .border-zinc-200 { border-color: var(--line) !important; }
-
-/* Awwwards-level immersive additions */
-.immersive-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.xp-bar {
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-warm) 100%);
+  border-radius: 999px;
   height: 100%;
-  z-index: 1;
-  mix-blend-mode: screen; /* for ethereal feel */
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px var(--gold-glow);
 }
 
-.forge-overlay {
+/* ========================================================
+   ACHIEVEMENT / BADGE
+   ======================================================== */
+
+.achievement-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.achievement-card.unlocked {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 16px var(--gold-glow);
+}
+
+.achievement-card.locked {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+
+/* ========================================================
+   SKILL TREE NODES
+   ======================================================== */
+
+.skill-node {
+  border: 2px solid var(--line-2);
+  border-radius: 16px;
+  background: var(--surface-2);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.skill-node.unlocked {
+  border-color: var(--gold-dim);
+  background: rgba(212, 160, 23, 0.06);
+}
+
+.skill-node.mastered {
+  border-color: var(--gold);
+  background: rgba(212, 160, 23, 0.12);
+  box-shadow: 0 0 16px var(--gold-glow);
+}
+
+.skill-node.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ========================================================
+   STREAK / COMBO
+   ======================================================== */
+
+.streak-flame {
+  color: var(--gold-warm);
+  filter: drop-shadow(0 0 8px rgba(232, 150, 42, 0.6));
+  animation: flicker 2s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(232, 150, 42, 0.6)); }
+  50% { filter: drop-shadow(0 0 14px rgba(240, 186, 48, 0.9)); }
+}
+
+.combo-badge {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-warm) 100%);
+  color: #0A0D14;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  animation: comboPulse 0.3s ease-out;
+}
+
+@keyframes comboPulse {
+  0% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* ========================================================
+   HERO / 3D CANVAS
+   ======================================================== */
+
+.hero-canvas-wrapper {
   position: relative;
-  z-index: 2;
+  width: 100%;
+}
+
+.hero-canvas-wrapper canvas {
   pointer-events: none;
 }
 
-.interactive-3d {
-  cursor: grab;
-}
-.interactive-3d:active {
-  cursor: grabbing;
+/* ========================================================
+   HEATMAP
+   ======================================================== */
+
+.heatmap-cell {
+  border-radius: 3px;
+  transition: opacity 0.15s ease;
 }
 
-/* Game UI overlays */
-.game-ui {
-  position: absolute;
-  z-index: 10;
-  pointer-events: auto;
+.heatmap-cell:hover {
+  opacity: 0.85;
 }
 
-/* Premium typography for awards */
-.award-heading {
-  font-feature-settings: "tnum" "ss01";
-  text-wrap: balance;
+/* ========================================================
+   MISC UTILITIES
+   ======================================================== */
+
+/* Gold glow for featured elements */
+.gold-glow {
+  box-shadow: 0 0 24px var(--gold-glow-strong);
 }
 
-/* Subtle human texture */
+/* Subtle grid texture on dark surfaces */
 .texture-bg {
-  background-image: 
-    linear-gradient(rgba(139, 30, 61, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139, 30, 61, 0.03) 1px, transparent 1px);
-  background-size: 4px 4px;
+  background-image:
+    linear-gradient(rgba(212, 160, 23, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 160, 23, 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Ambient glow orb for hero/backgrounds */
+.orb-gold {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 160, 23, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.orb-blue {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dim);
+}
+
+/* Clean overrides */
+html, body { background: var(--bg); color: var(--text); }
+
+/* shadcn popover / dropdown dark overrides */
+.bg-white, .bg-zinc-50, .bg-gray-100 { background: var(--surface-2) !important; }
+.text-black, .text-zinc-900, .text-gray-900 { color: var(--text) !important; }
+.border-white, .border-zinc-200 { border-color: var(--line) !important; }
+
+/* GSAP will-change optimization */
+.gsap-reveal {
+  will-change: transform, opacity;
 }
