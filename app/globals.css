@@ -15,7 +15,7 @@
   /* Text */
   --text: #F0F2F7;
   --text-2: #C8CEDC;
-  --muted: #7A839A;
+  --muted: #9BA4B8;
 
   /* Borders */
   --line: #1E2538;
@@ -52,8 +52,12 @@
   --primary-foreground: #0A0D14;
   --secondary: var(--surface-2);
   --secondary-foreground: var(--text);
-  --muted: var(--surface);
-  --muted-foreground: var(--muted);
+  --muted: var(--surface-2);
+  --muted-foreground: #9BA4B8;
+
+  /* Custom UI relies on --muted for readable secondary text (labels, subs, descriptions).
+     Ensure it stays the light gray even after shadcn mappings. */
+  --muted: #9BA4B8;
   --accent: var(--gold-warm);
   --accent-foreground: #0A0D14;
   --accent-light: var(--gold-bright);

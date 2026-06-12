@@ -170,7 +170,7 @@ export default function Dashboard() {
                 <span className="text-xl">{s.icon}</span>
               </div>
               <div className="text-3xl sm:text-4xl font-black tracking-tight tabular-nums gradient-text">{s.value}</div>
-              <div className="text-xs text-[var(--muted)] mt-1">{s.sub}</div>
+              <div className="text-xs text-[var(--text-2)] mt-1">{s.sub}</div>
               {s.bar !== null && (
                 <div className="xp-bar-track mt-3">
                   <div className="xp-bar" style={{ width: `${Math.min(s.bar, 100)}%` }} />
@@ -226,11 +226,11 @@ export default function Dashboard() {
                 <div key={i} className={`flex items-start gap-3 text-sm ${q.completed ? 'opacity-60' : ''}`}>
                   <span className="text-base mt-0.5 flex-shrink-0">{q.completed ? '✅' : '○'}</span>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium truncate">{q.title}</div>
+                    <div className="font-medium truncate text-[var(--text-2)]">{q.title}</div>
                     <div className="xp-bar-track mt-1.5" style={{ height: 3 }}>
                       <div className="xp-bar" style={{ width: `${Math.min((q.current / q.target) * 100, 100)}%`, height: '100%' }} />
                     </div>
-                    <div className="text-xs text-[var(--muted)] mt-1">{q.current}/{q.target} · +{q.xpReward} XP</div>
+                    <div className="text-xs text-[var(--text-2)] mt-1">{q.current}/{q.target} · +{q.xpReward} XP</div>
                   </div>
                 </div>
               ))}
