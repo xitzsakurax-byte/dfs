@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Proper quiz data: German → English translation
 const questions = [
@@ -29,6 +30,11 @@ export default function VocabQuiz() {
 
   const q = questions[current];
   const progress = ((current + (isAnswered ? 1 : 0)) / questions.length) * 100;
+
+  // Shuffle options so correct answer isn't always in the same spot
+  const currentOptions = useMemo(() => {
+    return [...q.options].sort(() => Math.random() - 0.5);
+  }, [current]);
 
   function choose(option: string) {
     if (isAnswered) return;
@@ -72,7 +78,14 @@ export default function VocabQuiz() {
 
     return (
       <div className="max-w-xl mx-auto py-10 text-center">
-        <div className="text-7xl mb-4">🎉</div>
+        <motion.div 
+          className="text-7xl mb-4"
+          initial={{ scale: 0.5, rotate: -10 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 12 }}
+        >
+          🎉
+        </motion.div>
         <h1 className="text-6xl font-black tracking-tighter mb-2">Great job!</h1>
         <div className="text-3xl font-bold mb-6">You got {score} out of {questions.length} correct</div>
 
@@ -126,7 +139,7 @@ export default function VocabQuiz() {
         <div className="text-[#64748b] text-center mb-8 text-xl">What does this mean in English?</div>
 
         <div>
-          {q.options.map((opt, idx) => {
+          {currentOptions.map((opt, idx) => {
             const isCorrect = opt === q.en;
             let className = "quiz-option";
 
@@ -136,25 +149,36 @@ export default function VocabQuiz() {
             }
 
             return (
-              <button
+              <motion.button
                 key={idx}
                 onClick={() => choose(opt)}
                 disabled={isAnswered}
                 className={className}
+                whileHover={!isAnswered ? { scale: 1.02 } : {}}
+                whileTap={!isAnswered ? { scale: 0.985 } : {}}
+                animate={isAnswered && isCorrect ? { scale: [1, 1.05, 1] } : {}}
+                transition={{ duration: 0.2 }}
               >
                 {opt}
                 {isAnswered && isCorrect && <span className="text-2xl">✓</span>}
                 {isAnswered && selected === opt && !isCorrect && <span className="text-2xl">✗</span>}
-              </button>
+              </motion.button>
             );
           })}
         </div>
 
-        {isAnswered && (
-          <div className={`feedback ${selected === q.en ? 'correct' : 'wrong'}`}>
-            {selected === q.en ? "Perfect! +15–20 XP" : `Correct answer: ${q.en}`}
-          </div>
-        )}
+        <AnimatePresence>
+          {isAnswered && (
+            <motion.div 
+              className={`feedback ${selected === q.en ? 'correct' : 'wrong'}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              {selected === q.en ? "Perfect! +15-20 XP" : `Correct answer: ${q.en}`}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="mt-6 flex justify-end">

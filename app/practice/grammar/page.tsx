@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Grammar quiz - articles, cases, simple structures
 const questions = [
@@ -25,6 +26,11 @@ export default function GrammarQuiz() {
 
   const q = questions[current];
   const progress = ((current + (isAnswered ? 1 : 0)) / questions.length) * 100;
+
+  // Shuffle options for better quiz experience
+  const currentOptions = useMemo(() => {
+    return [...q.options].sort(() => Math.random() - 0.5);
+  }, [current]);
 
   function choose(option: string) {
     if (isAnswered) return;
@@ -65,7 +71,14 @@ export default function GrammarQuiz() {
     const percent = Math.round((score / questions.length) * 100);
     return (
       <div className="max-w-xl mx-auto py-10 text-center">
-        <div className="text-7xl mb-4">🎉</div>
+        <motion.div 
+          className="text-7xl mb-4"
+          initial={{ scale: 0.5, rotate: -10 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 12 }}
+        >
+          🎉
+        </motion.div>
         <h1 className="text-6xl font-black tracking-tighter mb-2">Nice work!</h1>
         <div className="text-3xl font-bold mb-6">You got {score} out of {questions.length} correct ({percent}%)</div>
 
@@ -80,6 +93,8 @@ export default function GrammarQuiz() {
             <Link href="/dashboard">Back to dashboard</Link>
           </Button>
         </div>
+
+        {hearts === 0 && <div className="mt-6 text-[#ff4b4b] font-bold">You ran out of hearts. Be more careful next time!</div>}
       </div>
     );
   }
@@ -113,7 +128,7 @@ export default function GrammarQuiz() {
         <div className="text-center text-[#64748b] text-xl mb-8">{q.en}</div>
 
         <div className="grid grid-cols-2 gap-3">
-          {q.options.map((opt, idx) => {
+          {currentOptions.map((opt, idx) => {
             const isCorrect = opt === q.correct;
             let className = "quiz-option";
 
@@ -123,25 +138,36 @@ export default function GrammarQuiz() {
             }
 
             return (
-              <button
+              <motion.button
                 key={idx}
                 onClick={() => choose(opt)}
                 disabled={isAnswered}
                 className={className}
+                whileHover={!isAnswered ? { scale: 1.02 } : {}}
+                whileTap={!isAnswered ? { scale: 0.985 } : {}}
+                animate={isAnswered && isCorrect ? { scale: [1, 1.05, 1] } : {}}
+                transition={{ duration: 0.2 }}
               >
                 {opt}
                 {isAnswered && isCorrect && <span className="text-2xl">✓</span>}
                 {isAnswered && selected === opt && !isCorrect && <span className="text-2xl">✗</span>}
-              </button>
+              </motion.button>
             );
           })}
         </div>
 
-        {isAnswered && (
-          <div className={`feedback ${selected === q.correct ? 'correct' : 'wrong'}`}>
-            {selected === q.correct ? `Perfect! +18 XP` : `Correct: ${q.correct} — ${q.hint}`}
-          </div>
-        )}
+        <AnimatePresence>
+          {isAnswered && (
+            <motion.div 
+              className={`feedback ${selected === q.correct ? 'correct' : 'wrong'}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              {selected === q.correct ? `Perfect! +18 XP` : `Correct: ${q.correct} — ${q.hint}`}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="mt-6 flex justify-end">
