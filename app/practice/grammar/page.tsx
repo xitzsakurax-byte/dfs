@@ -24,6 +24,7 @@ export default function GrammarQuiz() {
   const [bankCount, setBankCount] = useState(0);
 
   // Live bank count (3000+ gamification integration visible in every task)
+  // Only ONE declaration to avoid "defined multiple times" error in Turbopack/Next build
   useEffect(() => {
     const updateBank = () => {
       try {
