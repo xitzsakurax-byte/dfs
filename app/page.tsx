@@ -77,24 +77,27 @@ export default function GermanForgeLanding() {
           <div className="grid md:grid-cols-2 gap-6">
             <Link href="/practice/vocab" className="skill-card group p-6 flex flex-col">
               <div className="flex-1">
-                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">VOCABULARY</div>
+                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">VOCABULARY B1-C1</div>
                 <div className="font-semibold text-2xl mb-2 tracking-tight">Từ vựng nâng cao</div>
-                <div className="text-[#A8B3C7] text-[15px]">Thuật ngữ chuyên ngành, collocations, ngôn ngữ nghề nghiệp từ bối cảnh Đức thực tế.</div>
+                <div className="text-[#A8B3C7] text-[15px]">15+ mục Ausbildung-focused, collocations, ngôn ngữ nghề từ tài liệu Goethe B1 thực tế.</div>
               </div>
               <div className="mt-auto text-sm text-[#F4C430] font-medium group-hover:underline">Bắt đầu →</div>
             </Link>
 
             <Link href="/practice/grammar" className="skill-card group p-6 flex flex-col">
               <div className="flex-1">
-                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">GRAMMAR</div>
+                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">GRAMMAR B1-C1</div>
                 <div className="font-semibold text-2xl mb-2 tracking-tight">Cấu trúc phức tạp</div>
-                <div className="text-[#A8B3C7] text-[15px]">Konjunktiv, bị động, mệnh đề quan hệ, câu phức cho giao tiếp nghề và học thuật.</div>
+                <div className="text-[#A8B3C7] text-[15px]">Konjunktiv II, Passive, Relativsätze + giải thích chi tiết cho giao tiếp nghề.</div>
               </div>
               <div className="mt-auto text-sm text-[#F4C430] font-medium group-hover:underline">Bắt đầu →</div>
             </Link>
           </div>
 
-          <div className="mt-6 text-xs text-[#A8B3C7] text-center">Listening &amp; Speaking sẽ sớm cập nhật với audio thực tế từ Đức.</div>
+          <Link href="/resources" className="mt-4 block text-center text-sm text-[#F4C430] hover:underline">Xem Tài nguyên chính thức Goethe + Ngân hàng 3000+ Wortliste (tích hợp gamification đầy đủ) →</Link>
+          <Link href="/practice/bank" className="mt-1 block text-center text-sm text-[#F4C430] hover:underline">Quick Bank Mastery Drill — master từ ngân hàng chính thức, +XP, sync mọi nơi →</Link>
+
+          <div className="mt-3 text-xs text-[#A8B3C7] text-center">Listening &amp; Speaking sẽ sớm cập nhật với audio thực tế từ Đức. Nội dung được tinh chỉnh cho người chuẩn bị Ausbildung. Mọi hoạt động luyện tập đều đóng góp vào Bank Mastery 3000+ (không lặp từ sau khi đúng).</div>
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Flame } from 'lucide-react';
 
 export default function DashboardLayout({
   children,
@@ -9,50 +8,38 @@ export default function DashboardLayout({
 }) {
   // Simple guest mode state (will become real later)
   const streak = 14;
-  const hearts = 4;
   const xp = 2840;
   const level = 12;
 
   return (
-    <div className="min-h-screen bg-[#f0f4f8]">
-      {/* Bright Duolingo-style header */}
-      <header className="duo-header sticky top-0 z-50">
-        <div className="mx-auto max-w-6xl px-6 flex items-center justify-between h-16 text-white">
+    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA]">
+      {/* Professional dark header matching du hoc nghe duc style - no white, no icons, flag accents */}
+      <header className="sticky top-0 z-50 bg-[var(--surface)] border-b border-[var(--line)]">
+        <div className="mx-auto max-w-6xl px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 font-black text-2xl tracking-[-1px]">
-              <div className="bg-white text-[#58cc02] h-9 w-9 rounded-2xl flex items-center justify-center text-3xl font-black">GF</div>
+            <Link href="/" className="flex items-center gap-2 font-semibold text-xl tracking-tight">
+              <div className="logo-mark w-8 h-8 rounded-[9px] bg-gradient-to-br from-[var(--black)] to-[var(--red)] flex items-center justify-center text-white text-sm font-bold border border-[rgba(244,196,48,.35)]">GF</div>
               GermanForge
             </Link>
-            <nav className="hidden md:flex gap-6 text-sm font-bold">
-              <Link href="/dashboard" className="hover:underline">Home</Link>
-              <Link href="/practice" className="hover:underline">Practice</Link>
+            <nav className="hidden md:flex gap-6 text-sm font-medium text-[var(--muted)]">
+              <Link href="/dashboard" className="hover:text-[var(--text)]">Home</Link>
+              <Link href="/practice" className="hover:text-[var(--text)]">Practice</Link>
             </nav>
           </div>
 
-          {/* Colorful top stats */}
-          <div className="flex items-center gap-5 text-sm font-bold">
-            {/* Hearts */}
-            <div className="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-2xl">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className={`heart ${i >= hearts ? 'lost' : ''}`}>❤️</span>
-              ))}
+          {/* Clean top stats - no icons, no white bg, elegant */}
+          <div className="flex items-center gap-5 text-sm font-medium text-[var(--muted)]">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface2)] border border-[var(--line)]">
+              <span className="font-semibold text-[var(--text)]">{streak} ngày streak</span>
             </div>
 
-            {/* Streak */}
-            <div className="flex items-center gap-1.5 bg-white/20 px-3 py-1 rounded-2xl">
-              <Flame className="h-5 w-5" />
-              <span className="font-black tabular-nums">{streak}</span>
-              <span className="text-xs opacity-80">DAY STREAK</span>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface2)] border border-[var(--line)]">
+              <span className="font-semibold text-[var(--text)]">{xp.toLocaleString()} XP</span>
+              <span className="text-[var(--gold)]">Lv.{level}</span>
             </div>
 
-            {/* XP + Level */}
-            <div className="bg-white text-[#1f2937] px-4 py-1 rounded-2xl flex items-center gap-2 font-black">
-              <span>{xp.toLocaleString()} XP</span>
-              <span className="text-[#58cc02]">Lv.{level}</span>
-            </div>
-
-            <Button asChild variant="secondary" size="sm" className="rounded-2xl bg-white text-[#1f2937] font-bold">
-              <Link href="/">Guest mode</Link>
+            <Button asChild variant="ghost" size="sm" className="btn-ghost text-sm">
+              <Link href="/">Anh Kiet</Link>
             </Button>
           </div>
         </div>

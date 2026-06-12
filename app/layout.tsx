@@ -40,11 +40,16 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="vi"
+      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-950 dark:text-zinc-50">
+      <body className="min-h-full flex flex-col">
         {children}
+        <footer className="border-t border-[var(--line)] bg-[var(--surface)] py-6 mt-auto text-center text-sm text-[var(--muted)]">
+          Phối hợp với <a href="http://localhost:3001" target="_blank" rel="noopener" className="text-[var(--gold)] hover:underline">DHND — Du Học Nghề Đức</a> | Khám phá lộ trình Ausbildung đầy đủ, hỗ trợ visa và cuộc sống tại Đức.
+          <br />
+          <a href="http://localhost:3000" className="text-[var(--gold)] hover:underline">GermanForge — Luyện Tiếng Đức B1-C1 (Công cụ hỗ trợ)</a>
+        </footer>
         <Toaster position="top-center" richColors closeButton />
       </body>
     </html>
