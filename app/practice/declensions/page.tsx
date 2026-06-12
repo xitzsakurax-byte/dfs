@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { declensionItems, DeclensionItem, getShuffledDeclensions } from '@/lib/data/declensions';
-import { addToBankMastered } from '@/lib/progress';
+import { addToBankMastered, logPerformance } from '@/lib/progress';
 
 export default function DeclensionsQuiz() {
   const STORAGE_KEY = 'germanforge_declensions_completed';
@@ -80,6 +80,9 @@ export default function DeclensionsQuiz() {
 
       // Unified bank mastery (local + Supabase when signed in)
       addToBankMastered(currentQ.base); // fire and forget — updates both layers
+
+      // Log for analysis (by case)
+      logPerformance('declension', currentQ.case || 'general', true);
     }
   }
 

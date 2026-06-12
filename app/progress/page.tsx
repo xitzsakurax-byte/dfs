@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { getUserStats, getDailyHistory, resetAllToZero } from '@/lib/progress';
+import { getUserStats, getDailyHistory } from '@/lib/progress';
 import { toast } from 'sonner';
 import MobileBottomNav from '@/components/MobileBottomNav';
 
@@ -40,14 +40,6 @@ export default function ProgressDashboard() {
 
   const suggested = stats?.suggestedDailyGoal || 15;
 
-  async function handleReset() {
-    if (confirm('Reset ALL progress to zero? This clears XP, streak, every daily entry, mastered words and writing history.')) {
-      await resetAllToZero();
-      toast.success('Everything reset. Fresh start from zero.');
-      window.location.reload();
-    }
-  }
-
   return (
     <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] pb-20">
       <div className="container max-w-5xl mx-auto px-6 pt-8">
@@ -57,7 +49,7 @@ export default function ProgressDashboard() {
             <h1 className="text-4xl font-semibold tracking-tight mt-2">Progress Tracker</h1>
             <p className="text-[#A8B3C7] mt-1">Vietnam calendar • Daily entries • 30-day history • Real remembered stats</p>
           </div>
-          <Button onClick={handleReset} variant="outline" className="text-sm">Start from zero</Button>
+
         </div>
 
         {loading || !stats ? (

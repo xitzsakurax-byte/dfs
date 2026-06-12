@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { grammarQuestions } from '@/lib/data/grammar';
-import { addToBankMastered } from '@/lib/progress';
+import { addToBankMastered, logPerformance } from '@/lib/progress';
 
 // Rich documented grammar items (B1-C1, Exam preparation focus)
 const questions = grammarQuestions;
@@ -89,6 +89,9 @@ export default function GrammarQuiz() {
 
       // Unified bank mastery (local + Supabase when signed in)
       addToBankMastered(currentQ.q); // fire and forget — updates both layers
+
+      // Log for analysis (grammar structures)
+      logPerformance('grammar', currentQ.topic || 'structure', true);
     }
   }
 

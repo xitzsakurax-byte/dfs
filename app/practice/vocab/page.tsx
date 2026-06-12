@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { vocabQuestions } from '@/lib/data/vocab';
-import { addToBankMastered } from '@/lib/progress';
+import { addToBankMastered, logPerformance } from '@/lib/progress';
 
 // Use the rich data source (expanded, documented, Exam-relevant B1-C1 items)
 const questions = vocabQuestions;
@@ -96,6 +96,9 @@ export default function VocabQuiz() {
 
       // Unified bank mastery (local + Supabase when signed in). No-repeat across the whole site continues to work.
       addToBankMastered(currentQ.de); // fire and forget — updates both layers
+
+      // Log for dashboard performance analysis (by topic)
+      logPerformance('vocab', currentQ.topic || 'general', true);
     }
   }
 

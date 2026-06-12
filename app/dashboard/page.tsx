@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { createClient, hasSupabase } from '@/lib/supabase/client';
-import { getBankMastered, onLoginMerge, getUserStats, resetAllToZero } from '@/lib/progress';
+import { getBankMastered, onLoginMerge, getUserStats, getUserPerformance, getWritingHistory } from '@/lib/progress';
 import { toast } from 'sonner';
 import MobileBottomNav from '@/components/MobileBottomNav';
 
@@ -26,6 +26,9 @@ export default function Dashboard() {
   // Real bank from unified progress layer
   const [bankMastered, setBankMastered] = useState(0);
   const BANK_TOTAL = 3078;
+
+  const [performance, setPerformance] = useState<Record<string, {attempts:number, correct:number, accuracy:number}>>({});
+  const [writingAvg, setWritingAvg] = useState(0);
 
   // Load real stats + auth + bank (merged when signed in)
   useEffect(() => {
@@ -210,6 +213,71 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* NEW: Performance Insights & Analysis - strong/weak points + improvement tips */}
+        {/* Placed in the main dashboard summary area as requested. Uses real performance data from quizzes/game/writing (logged via Supabase when available, local fallback). */}
+        <div className="practice-card p-6 mb-8">
+          <div className="text-sm text-[#8F95A3] mb-1">Performance Insights (B2-C1 Focus)</div>
+          <h3 className="text-2xl font-semibold tracking-tight mb-4">Your Strengths, Weak Points & How to Improve</h3>
+
+          {Object.keys(performance).length === 0 && writingAvg === 0 ? (
+            <div className="text-[#A8B3C7] text-sm">Complete some quizzes, the Game, or writing tasks to see personalized analysis here. The more you practice, the smarter the recommendations become.</div>
+          ) : (
+            <div className="space-y-4">
+              {/* Quick stats row */}
+              <div className="flex flex-wrap gap-4 text-sm">
+                <div>Overall bank mastery: <span className="font-semibold text-[#F4C430]">{bankPercent}%</span></div>
+                {writingAvg > 0 && <div>Writing average: <span className="font-semibold">{writingAvg}/20</span></div>}
+              </div>
+
+              {/* Strong & Weak */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <div className="font-medium text-emerald-400 mb-2">Strengths (high accuracy)</div>
+                  <ul className="text-sm space-y-1 text-[#C5CAD6]">
+                    {(() => {
+                      const entries = Object.entries(performance).filter(([_,v]) => v.accuracy >= 75).sort((a,b)=>b[1].accuracy-a[1].accuracy).slice(0,3);
+                      if (entries.length === 0) return <li>Keep practicing to unlock strengths!</li>;
+                      return entries.map(([k,v]) => <li key={k}>• {k.replace(':',' — ')} ({v.accuracy}% accuracy)</li>);
+                    })()}
+                    {writingAvg >= 16 && <li>• Writing (strong content & structure)</li>}
+                  </ul>
+                </div>
+                <div>
+                  <div className="font-medium text-rose-400 mb-2">Areas to improve (lower accuracy)</div>
+                  <ul className="text-sm space-y-1 text-[#C5CAD6]">
+                    {(() => {
+                      const entries = Object.entries(performance).filter(([_,v]) => v.accuracy < 65 && v.attempts >= 2).sort((a,b)=>a[1].accuracy-b[1].accuracy).slice(0,3);
+                      if (entries.length === 0) return <li>Great job — no major weak spots detected yet!</li>;
+                      return entries.map(([k,v]) => <li key={k}>• {k.replace(':',' — ')} ({v.accuracy}% accuracy, {v.attempts} attempts)</li>);
+                    })()}
+                    {writingAvg > 0 && writingAvg < 14 && <li>• Writing (aim for clearer structure and more advanced connectors/vocab)</li>}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Recommendations - tailored to B2-C1 mix (academic + normal words) */}
+              <div>
+                <div className="font-medium mb-2">How to improve (personalized tips)</div>
+                <ul className="text-sm space-y-2 text-[#C5CAD6]">
+                  {Object.keys(performance).some(k => k.includes('declension') && performance[k].accuracy < 65) && (
+                    <li>• <strong>Genitiv / complex cases weak?</strong> Do the "Fix the Error" mode in the Game daily. Review prepositions requiring Genitiv (wegen, trotz, während, während). Read one C1 article per week and note the case usage.</li>
+                  )}
+                  {Object.keys(performance).some(k => k.includes('vocab') && performance[k].accuracy < 70) && (
+                    <li>• <strong>Vocab range needs work?</strong> Your bank is growing, but focus on the new academic + everyday mix we added (e.g. "empirisch", "die Implikation", "sich beschweren", "die Nachbarschaft"). Use 5 new words in the next writing task.</li>
+                  )}
+                  {writingAvg > 0 && writingAvg < 15 && (
+                    <li>• <strong>Writing below B2-C1 level?</strong> Your ideas are there — work on connectors (obwohl, je nachdem ob, nicht nur...sondern auch) and integrate 2-3 high-level words from the bank per text. Re-do one writing task per week and compare scores.</li>
+                  )}
+                  {bankMastered / BANK_TOTAL < 0.3 && (
+                    <li>• <strong>Overall bank mastery low?</strong> Prioritize the Bank Drill (it already prefers unmastered). 15-20 minutes daily is enough to see big jumps in all modules.</li>
+                  )}
+                  <li>• <strong>General B2-C1 tip:</strong> Mix academic (analysis, hypothesis, relevance) with normal everyday language in every practice. Real exams test both registers.</li>
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="mb-2 text-sm text-[#8F95A3]">The real work</div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
           <Link href="/practice/vocab" className="skill-card group p-6 block">
@@ -244,21 +312,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="mt-6 flex justify-center gap-4">
-          <Button 
-            onClick={async () => {
-              if (confirm('Start completely from zero? This will clear all XP, streak, daily history, mastered words and writing attempts.')) {
-                await resetAllToZero();
-                toast.success('Everything reset to zero. Fresh start!');
-                window.location.reload();
-              }
-            }}
-            variant="outline"
-            className="text-sm"
-          >
-            Start again from zero (reset all stats)
-          </Button>
-        </div>
+
 
         <div className="text-center text-xs text-[#8F95A3] mt-8">Guest mode or logged in — your stats are remembered daily (Vietnam time).</div>
       </div>

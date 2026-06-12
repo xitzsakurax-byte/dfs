@@ -1,7 +1,18 @@
 import { createClient, hasSupabase } from './supabase/client'
 
 // =====================================================
-// GermanForge Progress System - Real persistent stats
+// GermanForge Progress System - Real persistent stats (central backend logic for future scalability)
+// 
+// Core principles for organization/future needs:
+// - All DB writes use auth user.id for strict per-user isolation (no mixing)
+// - Guest mode: localStorage fallback (keys prefixed germanforge_*)
+// - Logged-in: Supabase (profiles for bank/xp/streak, daily_progress for VN calendar history, writing_attempts)
+// - Rewards: awardXp + logDailyActivity called from quizzes/game/writing/bank
+// - Vietnam time: getVietnamDateString for all dates/streaks ("use the vietnam time-date calendar")
+// - Admin friendly: Queries are simple; add RLS policies for elevated access
+// - Extensible: Easy to add new modules (e.g. listening) by calling logDailyActivity/awardXp + update getUserStats
+// - Migrations in supabase/ folder (001_init.sql, 002_daily_progress.sql)
+// 
 // - Starts at zero
 // - Daily tracking with Vietnam (Asia/Ho_Chi_Minh) calendar
 // - XP, Level, Streak that actually remember
@@ -10,6 +21,8 @@ import { createClient, hasSupabase } from './supabase/client'
 // - Full guest fallback + merge on login
 // =====================================================
 
+import { APP } from './config';
+
 const BANK_KEY = 'germanforge_bank_mastered'
 const WRITING_KEY = 'germanforge_writing_attempts'
 const XP_KEY = 'germanforge_total_xp'
@@ -17,7 +30,7 @@ const STREAK_KEY = 'germanforge_current_streak'
 const LAST_DATE_KEY = 'germanforge_last_activity_date'
 const DAILY_LOG_KEY = 'germanforge_daily_log'   // { '2026-06-12': { words: 12, xp: 145, sessions: 2 }, ... }
 
-const XP_PER_LEVEL = 180 // tune for reasonable leveling from zero
+const XP_PER_LEVEL = APP.LEVEL_XP_BASE; // from centralized config for easy future tuning
 
 // --- BANK MASTERY (core for no-repeat + now also feeds daily stats) ---
 export async function getBankMastered(): Promise<string[]> {
@@ -578,6 +591,110 @@ export async function onLoginMerge() {
       }
     }
   }
+}
+
+// =====================================================
+// Performance logging & analysis (for dashboard "strong & weak points + how to improve")
+// Called automatically from quizzes, game, writing, bank when user answers.
+// Data goes to Supabase (user_performance table) or localStorage for guests.
+// Dashboard reads this to generate personalized insights.
+// =====================================================
+
+export async function logPerformance(category: string, subtopic: string, isCorrect: boolean) {
+  if (!category || !subtopic) return;
+
+  const today = getVietnamDateString();
+
+  // Guest: localStorage
+  if (!hasSupabase()) {
+    const key = 'germanforge_performance';
+    const perf = JSON.parse(localStorage.getItem(key) || '{}');
+    const k = `${category}:${subtopic}`;
+    if (!perf[k]) perf[k] = { attempts: 0, correct: 0, last: '' };
+    perf[k].attempts += 1;
+    if (isCorrect) perf[k].correct += 1;
+    perf[k].last = today;
+    localStorage.setItem(key, JSON.stringify(perf));
+    return;
+  }
+
+  const supabase = createClient();
+  if (!supabase) return;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  // Logged-in: upsert to user_performance (table from 003 migration)
+  const { data: existing } = await supabase
+    .from('user_performance')
+    .select('attempts, correct')
+    .eq('user_id', user.id)
+    .eq('category', category)
+    .eq('subtopic', subtopic)
+    .single();
+
+  if (existing) {
+    await supabase
+      .from('user_performance')
+      .update({
+        attempts: existing.attempts + 1,
+        correct: existing.correct + (isCorrect ? 1 : 0),
+        last_practiced: new Date().toISOString(),
+      })
+      .eq('user_id', user.id)
+      .eq('category', category)
+      .eq('subtopic', subtopic);
+  } else {
+    await supabase.from('user_performance').insert({
+      user_id: user.id,
+      category,
+      subtopic,
+      attempts: 1,
+      correct: isCorrect ? 1 : 0,
+    });
+  }
+}
+
+export async function getUserPerformance(): Promise<Record<string, { attempts: number; correct: number; accuracy: number }>> {
+  const result: Record<string, { attempts: number; correct: number; accuracy: number }> = {};
+
+  if (!hasSupabase()) {
+    const key = 'germanforge_performance';
+    const perf = JSON.parse(localStorage.getItem(key) || '{}');
+    Object.entries(perf).forEach(([k, v]: any) => {
+      const acc = v.attempts > 0 ? Math.round((v.correct / v.attempts) * 100) : 0;
+      result[k] = { attempts: v.attempts, correct: v.correct, accuracy: acc };
+    });
+    return result;
+  }
+
+  const supabase = createClient();
+  if (!supabase) {
+    // fallback to local if client issue
+    const key = 'germanforge_performance';
+    const perf = JSON.parse(localStorage.getItem(key) || '{}');
+    Object.entries(perf).forEach(([k, v]: any) => {
+      const acc = v.attempts > 0 ? Math.round((v.correct / v.attempts) * 100) : 0;
+      result[k] = { attempts: v.attempts, correct: v.correct, accuracy: acc };
+    });
+    return result;
+  }
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return result;
+
+  const { data } = await supabase
+    .from('user_performance')
+    .select('category, subtopic, attempts, correct')
+    .eq('user_id', user.id);
+
+  (data || []).forEach((row: any) => {
+    const k = `${row.category}:${row.subtopic}`;
+    const acc = row.attempts > 0 ? Math.round((row.correct / row.attempts) * 100) : 0;
+    result[k] = { attempts: row.attempts, correct: row.correct, accuracy: acc };
+  });
+
+  return result;
 }
 
 // --- Bank sync helper (kept for onLoginMerge) ---

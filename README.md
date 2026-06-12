@@ -11,23 +11,42 @@ Real accounts + cloud sync via Supabase (email/password). Guest mode with localS
   - Auto-sync on correct answers in Vocab, Grammar, and Writing tasks
   - Dedicated **Quick Bank Mastery Drill** (`/practice/bank`) with +XP, no-repeat randomization, prefers unmastered words
   - Interactive browser in Resources with search + batch review
-- **Gamified Practice**
-  - Vocabulary (B1-C1, Ausbildung-focused) with dynamic options + no-repeat after correct
+- **Gamified Practice & Game**
+  - Vocabulary (B1-C1) with dynamic options + no-repeat after correct
   - Grammar structures (Konjunktiv, Passive, Relativsätze, etc.)
   - Writing Mock (TELC + Goethe B1-C1 style) with AI-simulated scoring referencing the 3000+ bank
+  - Dedicated **Interactive Game** (/practice/game): Write forms, Fix grammar errors, Pop Quiz modes. Rewards points + real XP.
 - **Beautiful Professional UI**
-  - Deep dark theme (#0A0D14), warm burgundy accents, fully human non-AI aesthetic
-  - Immersive 3D Case Forge (Three.js + GSAP) with fully functional word-to-case validation and no-repeat
-  - 5 core modules: Vocab, Grammar, Writing (with AI rater), 3000+ Bank Drill, Word Forms (declensions N/A/D/G)
+  - Deep dark theme (#0A0D14), warm burgundy gradient accents, fully human non-AI aesthetic (no 3D on landing)
+  - 6 core modules: Vocab, Grammar, Writing (with AI rater), 3000+ Bank Drill, Word Forms (declensions N/A/D/G), Interactive Game
+  - Separate mobile phone UI (bottom tabs, stacked layouts, touch-friendly)
+- **Full User Accounts & Per-User Tracking (Supabase DB)**
+  - Sign up with: Login Name (username), Full Name, Email, Password
+  - Each user has isolated personal data (mastered bank, XP, streaks, daily history, writing attempts) — no mixing
+  - All tracking/analysis saved in database (not just localStorage)
+- **Admin Features**
+  - Special admin login: kiet.ngn369 / Bunbun12 (total access)
+  - Private /admin dashboard: Website traffic (users, total XP, words mastered), user directory with per-user stats
+  - Secure checks + RLS recommendations for production
 
-## Backend (Supabase)
+## Backend (Supabase) + Admin
 
 Full backend is now live:
-- Auth (sign up / sign in with email + password)
-- Cloud persistence for the 3000+ bank mastery (the single source that powers no-repeat everywhere)
-- Writing mock test history saved per user
-- On sign-in we automatically merge any local progress into your account
-- Guest mode is untouched and works offline
+- Auth (sign up with username/full name/email/password; sign in for normal users)
+- Special hardcoded admin: username `kiet.ngn369` / password `Bunbun12` (signs in as admin and redirects to private dashboard)
+- Per-user isolated data in DB: mastered_bank (JSONB), total_xp, current_streak, daily_progress (date-based for VN calendar), writing_attempts
+- Real-time sync on correct answers across all modules (no-repeat, XP, streaks, daily logs)
+- Admin dashboard shows aggregated traffic + list of users with personal stats (requires RLS policy for full read-all in prod)
+- Guest mode falls back to localStorage (basic functionality; sign up recommended for full personal tracking in DB)
+
+## Setup for Future / Production
+1. Supabase project + run `supabase/001_init.sql` and `supabase/002_daily_progress.sql` (creates tables, RLS, triggers)
+2. For admin full visibility: Add RLS policies e.g. `CREATE POLICY "Admin read all profiles" ON profiles FOR SELECT USING (auth.jwt() ->> 'email' = 'kiet.ngn369@admin.germanforge');` (same for daily_progress/writing_attempts)
+3. Vercel env vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY (and service role only in secure server code)
+4. Create the admin auth user in Supabase with email `kiet.ngn369@admin.germanforge` + password `Bunbun12`
+5. Code organized in: app/ (pages + /admin, /practice/*, /login), lib/ (progress.ts central, supabase clients), supabase/ (migrations), components/ (MobileBottomNav etc.)
+
+All functions use user.id for isolation. Future: Add more modules, real LLM for writing rater, more admin analytics.
 
 **To activate on your own Supabase + Vercel:**
 1. Create a free project at supabase.com

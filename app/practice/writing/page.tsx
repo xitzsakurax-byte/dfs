@@ -13,7 +13,7 @@ import {
 } from '@/lib/data/writing';
 import { vocab } from '@/lib/data/vocab'; // cross-reference the 3000+ bank for suggestions
 import fullVocab from '@/lib/data/full-vocab.json'; // the full 3078 term official bank for gamification integration in rating
-import { saveWritingAttempt } from '@/lib/progress';
+import { saveWritingAttempt, logPerformance } from '@/lib/progress';
 
 type Attempt = {
   id: number;
@@ -106,6 +106,9 @@ export default function WritingMockTest() {
 
     setRating(newRating);
     setIsSubmitted(true);
+
+    // Log for dashboard analysis (writing overall)
+    logPerformance('writing', 'overall', totalScore >= 12); // B2-C1 threshold for "solid"
 
     // Integrate 3000+ bank into gamification: auto-master any bank words used in the writing
     try {

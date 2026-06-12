@@ -4,6 +4,11 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { getUserStats } from '@/lib/progress';
+import { createClient } from '@/lib/supabase/client';
+
+import { ADMIN } from '@/lib/config';
+
+const ADMIN_EMAIL = ADMIN.EMAIL;
 
 export default function DashboardLayout({
   children,
@@ -11,11 +16,22 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [stats, setStats] = useState({ totalXp: 0, level: 1, streak: 0 });
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     getUserStats().then(s => {
       setStats({ totalXp: s.totalXp, level: s.level, streak: s.streak });
     });
+
+    // Check if current user is the admin for private link
+    const supabase = createClient();
+    if (supabase) {
+      supabase.auth.getUser().then(({ data }: { data: { user: any } }) => {
+        if (data?.user && data.user.email === ADMIN_EMAIL) {
+          setIsAdmin(true);
+        }
+      });
+    }
   }, []);
 
   return (
@@ -32,6 +48,7 @@ export default function DashboardLayout({
             <nav className="hidden md:flex gap-6 text-sm font-medium text-[var(--muted)]">
               <Link href="/dashboard" className="hover:text-[var(--text)]">Home</Link>
               <Link href="/practice" className="hover:text-[var(--text)]">Practice</Link>
+              {isAdmin && <Link href="/admin" className="text-[#F4C430] hover:underline">Admin</Link>}
             </nav>
 
             {/* Mobile phone quick link (the bottom nav provides the full separate UI) */}

@@ -192,6 +192,37 @@ export const vocab: VocabItem[] = [
   { de: "der Zug", en: "train", example: "Der Zug fährt direkt zum Flughafen.", topic: "Reise & Verkehr", cefr: "B1" },
   { de: "die Zunge", en: "tongue", example: "Die Zunge ist ein wichtiges Organ für die Aussprache.", topic: "Alltag & Beruf", cefr: "B1" },
   { de: "der Zuschuss", en: "subsidy / grant", example: "Der Zuschuss für die Weiterbildung wird vom Staat gewährt.", topic: "Beruf & Qualifikation", cefr: "B2" },
+
+  // === NEW: Balanced B2-C1 mix for realistic exam prep (high-level academic + normal everyday) ===
+  // Academic / high-level (C1-leaning for B2-C1 exams)
+  { de: "die Analyse", en: "analysis", example: "Eine gründliche Analyse der Daten ist für die Entscheidung unerlässlich.", topic: "Wissenschaft & Forschung", cefr: "B2" },
+  { de: "empirisch", en: "empirical", example: "Empirische Studien liefern die besten Belege für die These.", topic: "Akademisch", cefr: "C1" },
+  { de: "die Hypothese", en: "hypothesis", example: "Die Hypothese wurde durch mehrere Experimente bestätigt.", topic: "Wissenschaft", cefr: "B2" },
+  { de: "konzeptionell", en: "conceptual", example: "Der konzeptionelle Rahmen des Projekts muss noch geschärft werden.", topic: "Planung & Innovation", cefr: "C1" },
+  { de: "die Relevanz", en: "relevance", example: "Die Relevanz dieser Forschung für die Praxis ist sehr hoch.", topic: "Akademisch", cefr: "B2" },
+  { de: "substantiell", en: "substantial", example: "Es gibt substantielle Unterschiede in den Testergebnissen.", topic: "Wissenschaft", cefr: "C1" },
+  { de: "die These", en: "thesis / central claim", example: "Die zentrale These des Artikels wird durch die Daten gestützt.", topic: "Akademisch", cefr: "B2" },
+  { de: "die Implikation", en: "implication", example: "Die Implikationen für die Gesellschaft sind weitreichend.", topic: "Akademisch", cefr: "C1" },
+  { de: "paradigmatisch", en: "paradigmatic", example: "Dieses Beispiel ist paradigmatisch für den aktuellen Wandel.", topic: "Innovation & Wandel", cefr: "C1" },
+  { de: "die Schlussfolgerung", en: "conclusion", example: "Die Schlussfolgerung aus der Studie ist klar und nachvollziehbar.", topic: "Wissenschaft & Forschung", cefr: "B2" },
+
+  // Normal / everyday B2 (general life + communication, not only professional)
+  { de: "sich beschweren", en: "to complain", example: "Der Gast beschwerte sich höflich über das kalte Essen.", topic: "Alltag & Service", cefr: "B2" },
+  { de: "die Nachbarschaft", en: "neighborhood", example: "In unserer Nachbarschaft gibt es viele junge Familien und Grünflächen.", topic: "Wohnen & Alltag", cefr: "B2" },
+  { de: "verpassen", en: "to miss (e.g. bus, opportunity)", example: "Ich habe den letzten Bus verpasst und musste zu Fuß gehen.", topic: "Alltag", cefr: "B2" },
+  { de: "sich erholen", en: "to recover / to relax", example: "Nach der anstrengenden Woche muss ich mich endlich erholen.", topic: "Freizeit & Gesundheit", cefr: "B2" },
+  { de: "die Freizeit", en: "leisure time", example: "In meiner Freizeit treibe ich gerne Sport oder lese Romane.", topic: "Alltag & Hobbys", cefr: "B2" },
+  { de: "umziehen", en: "to move (house)", example: "Wir ziehen nächstes Jahr in eine günstigere Wohnung um.", topic: "Wohnen", cefr: "B2" },
+  { de: "die Miete", en: "rent", example: "Die Miete in der Innenstadt ist in den letzten Jahren stark gestiegen.", topic: "Wohnen & Finanzen", cefr: "B2" },
+  { de: "sich streiten", en: "to argue / quarrel", example: "Die Nachbarn streiten sich oft über den Lärm.", topic: "Alltag & Beziehungen", cefr: "B2" },
+  { de: "die Meinung", en: "opinion / view", example: "Ich respektiere deine Meinung, auch wenn ich nicht derselben Ansicht bin.", topic: "Kommunikation & Diskussion", cefr: "B2" },
+  { de: "der Stress", en: "stress", example: "Der Stress vor wichtigen Terminen ist bei vielen Menschen hoch.", topic: "Gesundheit & Alltag", cefr: "B2" },
+  { de: "sich ausruhen", en: "to rest", example: "Du solltest dich nach der langen Reise erst mal ausruhen.", topic: "Alltag", cefr: "B1" },
+  { de: "die Beziehung", en: "relationship", example: "Eine gute Beziehung zu den Kollegen macht die Arbeit angenehmer.", topic: "Soziales & Arbeit", cefr: "B2" },
+  { de: "verstehen", en: "to understand", example: "Ich verstehe die Anweisungen leider nicht ganz. Kannst du das nochmal erklären?", topic: "Kommunikation", cefr: "B1" },
+  { de: "die Herausforderung", en: "challenge", example: "Die größte Herausforderung war es, pünktlich fertig zu werden.", topic: "Persönliche Entwicklung", cefr: "B2" },
+  { de: "effizient", en: "efficient", example: "Das neue System arbeitet deutlich effizienter als das alte.", topic: "Arbeitsweise", cefr: "B2" },
+
   // Note: This is a substantial expansion (over 100 entries here). For the full ~2400-3000 from the official Goethe B1 Wortliste (including all variants and examples), download the CSV from the GitHub repo above and convert using a simple script (e.g., map German term to English, generate plausible options by sampling other 'en' values, add topic/CEFR based on context). Shuffle the final array for "mix them up". The quiz code below handles large pools efficiently with the remaining + localStorage no-repeat logic.
 ];
 

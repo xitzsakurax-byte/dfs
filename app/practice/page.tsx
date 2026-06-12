@@ -17,7 +17,7 @@ export default function PracticeHub() {
         </div>
 
         {/* Separate phone UI: comfortable 1-2 column cards on mobile. Desktop gets the rich multi-column view */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-6">
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
             <Link href="/practice/vocab" className="skill-card group block p-6">
               <div>
@@ -73,6 +73,18 @@ export default function PracticeHub() {
                 <div className="text-[var(--muted)] text-[15px]">Master the 4 cases with real exam sentences. Prepositions, verbs + case, adjective endings. Essential for B1 writing &amp; speaking.</div>
               </div>
               <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Practice Cases →</div>
+            </Link>
+          </motion.div>
+
+          {/* New dedicated Game section with writing, error fixing, pop quiz, rewards */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+            <Link href="/practice/game" className="skill-card group block p-6 border border-[#8B1E3D]/40">
+              <div>
+                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">INTERACTIVE PRACTICE</div>
+                <div className="font-semibold text-2xl mb-2 tracking-tight">Case &amp; Grammar Game</div>
+                <div className="text-[var(--muted)] text-[15px]">Write forms, fix structure errors, pop quizzes. Earn XP &amp; points. No repeats, real exam focus.</div>
+              </div>
+              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Play the Game →</div>
             </Link>
           </motion.div>
         </div>
