@@ -36,21 +36,6 @@ export default function GrammarQuiz() {
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
   }, []);
-  const [bankCount, setBankCount] = useState(0);
-
-  // Live bank count (3000+ gamification integration visible in every task)
-  useEffect(() => {
-    const updateBank = () => {
-      try {
-        const b = localStorage.getItem('germanforge_bank_mastered');
-        setBankCount(b ? JSON.parse(b).length : 0);
-      } catch {}
-    };
-    updateBank();
-    const onStorage = (e: StorageEvent) => { if (e.key === 'germanforge_bank_mastered') updateBank(); };
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -72,7 +57,7 @@ export default function GrammarQuiz() {
     return [...currentQ.options].sort(() => Math.random() - 0.5);
   }, [currentQ]);
 
-  function pickNext(newRemaining) {
+  function pickNext(newRemaining: any[]) {
     if (newRemaining.length === 0) {
       setFinished(true);
       return;

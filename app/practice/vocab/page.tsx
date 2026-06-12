@@ -64,7 +64,7 @@ export default function VocabQuiz() {
     return [currentQ.en, ...distractors].sort(() => Math.random() - 0.5);
   }, [currentQ]);
 
-  function pickNext(newRemaining) {
+  function pickNext(newRemaining: any[]) {
     if (newRemaining.length === 0) {
       setFinished(true);
       return;
