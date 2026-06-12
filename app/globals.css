@@ -2,359 +2,124 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-}
-
+/* Professional dark theme from du hoc nghe duc (ausbildung-website) */
 :root {
-  --background: #F8F5F0;
-  --foreground: #2C2C2C;
-  --card: #FFFFFF;
-  --card-foreground: #2C2C2C;
-  --popover: #FFFFFF;
-  --popover-foreground: #2C2C2C;
-  --primary: #3D5A5B;
-  --primary-foreground: #FFFFFF;
-  --secondary: #EDE8E0;
-  --secondary-foreground: #2C2C2C;
-  --muted: #F1EDE6;
-  --muted-foreground: #6B6B6B;
-  --accent: #3D5A5B;
-  --accent-foreground: #FFFFFF;
-  --accent-warm: #8B6F47;
-  --destructive: #A65D5D;
-  --border: #D4CFC6;
-  --input: #FFFFFF;
-  --ring: #3D5A5B;
-  --chart-1: #3D5A5B;
-  --chart-2: #8B6F47;
-  --chart-3: #5C7A7B;
-  --chart-4: #A65D5D;
-  --chart-5: #6B6B6B;
+  --bg: #0A0D14;
+  --surface: #12161F;
+  --surface2: #1A1F2B;
+  --text: #F5F7FA;
+  --muted: #A8B3C7;
+  --black: #111418;
+  --red: #C8102E;
+  --gold: #F4C430;
+  --gold2: #D4A017;
+  --blue: #3B82F6;
+  --green: #10B981;
+  --line: rgba(255,255,255,.08);
+  --glow: rgba(244,196,48,.35);
+
+  /* shadcn */
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface2);
+  --popover-foreground: var(--text);
+  --primary: var(--red);
+  --primary-foreground: #fff;
+  --secondary: var(--surface2);
+  --secondary-foreground: var(--text);
+  --muted: var(--surface);
+  --muted-foreground: var(--muted);
+  --accent: var(--gold);
+  --accent-foreground: var(--black);
+  --destructive: #ef4444;
+  --border: var(--line);
+  --input: var(--surface2);
+  --ring: var(--gold);
   --radius: 0.75rem;
-  --sidebar: #F8F5F0;
-  --sidebar-foreground: #2C2C2C;
-  --sidebar-primary: #3D5A5B;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #EDE8E0;
-  --sidebar-accent-foreground: #2C2C2C;
-  --sidebar-border: #D4CFC6;
-  --sidebar-ring: #3D5A5B;
 }
 
-.dark {
-  --background: #2C2C2C;
-  --foreground: #F8F5F0;
-  --card: #3A3A3A;
-  --card-foreground: #F8F5F0;
-  --popover: #3A3A3A;
-  --popover-foreground: #F8F5F0;
-  --primary: #A8B5B5;
-  --primary-foreground: #2C2C2C;
-  --secondary: #4A4A4A;
-  --secondary-foreground: #F8F5F0;
-  --muted: #4A4A4A;
-  --muted-foreground: #A8A8A8;
-  --accent: #A8B5B5;
-  --accent-foreground: #2C2C2C;
-  --accent-warm: #C4A77D;
-  --destructive: #C17A7A;
-  --border: #555555;
-  --input: #3A3A3A;
-  --ring: #A8B5B5;
-  --sidebar: #2C2C2C;
-  --sidebar-foreground: #F8F5F0;
-  --sidebar-primary: #A8B5B5;
-  --sidebar-primary-foreground: #2C2C2C;
-  --sidebar-accent: #4A4A4A;
-  --sidebar-accent-foreground: #F8F5F0;
-  --sidebar-border: #555555;
-  --sidebar-ring: #A8B5B5;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Be Vietnam Pro', var(--font-geist-sans), system-ui, sans-serif;
+  line-height: 1.7;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-[#f0f4f8] text-[#1f2937] font-sans antialiased;
-  }
-  html {
-    @apply font-sans;
-  }
-}
-
-/* ========== DUOLINGO / KAHOOT / QUIZLET STYLE - COLORFUL & FUN ========== */
-
-:root {
-  --duo-green: #58cc02;
-  --duo-blue: #1cb0f6;
-  --duo-orange: #ff9500;
-  --duo-purple: #ce82ff;
-  --duo-red: #ff4b4b;
-  --duo-yellow: #ffc800;
-}
-
-/* Aesthetic professional styles - muted elegant (no bright abuse) */
-.streak-flame {
-  font-size: 2rem;
-  color: var(--accent-warm);
-}
-
-.xp-bar {
-  height: 6px;
-  background: var(--accent);
-  transition: width 400ms ease;
-  border-radius: 999px;
-}
-
-.practice-card, .skill-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.practice-card:hover, .skill-card:hover {
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08);
-  transform: translateY(-1px);
-}
-
-/* Elegant cards with subtle image support */
-.skill-card {
-  position: relative;
-  overflow: hidden;
-  padding: 1.5rem;
-}
-
-.skill-card::before {
+/* Flag stripe */
+body::after {
   content: '';
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.06;
-  z-index: 0;
-  transition: opacity 0.3s;
+  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 200;
+  background: linear-gradient(to right, var(--black) 0%, var(--black) 33%, var(--red) 33%, var(--red) 66%, var(--gold) 66%, var(--gold) 100%);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 
-.skill-card:hover::before {
-  opacity: 0.1;
-}
-
-.skill-card > * {
+/* Cards like previous */
+.practice-card, .skill-card, .feature-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
   position: relative;
-  z-index: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: all .25s cubic-bezier(0.4,0,0.2,1);
+}
+.practice-card::before, .skill-card::before, .feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(to right, var(--red), var(--gold)); opacity: 0.9;
+}
+.practice-card:hover, .skill-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
-/* Stop icon abuse - subtle or text only */
-.skill-card .icon {
-  font-size: 1.1rem;
-  opacity: 0.5;
-  margin-bottom: 0.75rem;
+/* Buttons red-gold */
+.duo-cta, .btn-primary {
+  background: linear-gradient(135deg, var(--red), var(--gold));
+  color: #111418;
+  box-shadow: 0 4px 20px rgba(200,16,46,.35);
+  font-weight: 700;
+  border-radius: 999px;
+  transition: all .2s cubic-bezier(0.4,0,0.2,1);
 }
+.duo-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(200,16,46,.4); }
 
-/* Aesthetic quiz */
+.btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.12); }
+.btn-ghost:hover { background: rgba(255,255,255,.035); border-color: var(--gold); }
+
+/* Quiz */
 .quiz-option {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  color: var(--text);
   padding: 1rem 1.25rem;
-  border-radius: 0.75rem;
-  text-align: left;
+  border-radius: 10px;
   font-weight: 500;
-  transition: all 0.15s;
+  transition: all .2s;
 }
+.quiz-option:hover { border-color: var(--gold); }
+.quiz-option.correct { background: rgba(16,185,129,.1); border-color: var(--green); color: var(--green); }
+.quiz-option.wrong { background: rgba(239,68,68,.1); border-color: #ef4444; color: #fca5a5; }
 
-.quiz-option:hover:not(:disabled) {
-  border-color: var(--accent);
-  background: var(--muted);
-}
+.feedback { padding: .75rem 1rem; border-radius: 8px; font-weight: 500; }
+.feedback.correct { background: rgba(16,185,129,.1); color: var(--green); border: 1px solid rgba(16,185,129,.25); }
+.feedback.wrong { background: rgba(239,68,68,.1); color: #ff8a8a; border: 1px solid rgba(239,68,68,.25); }
 
-.quiz-option.correct {
-  background: #E8F0E8;
-  border-color: var(--accent);
-}
+/* Forms */
+.field input, .field select, .field textarea { background: var(--bg); border: 1px solid var(--line); color: var(--text); border-radius: 10px; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(232,200,74,.4); }
 
-.quiz-option.wrong {
-  background: #F8E8E8;
-  border-color: var(--error);
-}
+/* Headings */
+h1, .section-title { font-family: 'Cormorant Garamond', var(--font-cormorant), serif; letter-spacing: -.01em; }
 
-.feedback {
-  padding: 0.875rem 1rem;
-  border-radius: 0.75rem;
-  font-weight: 500;
-  border: 1px solid;
-}
+/* Minimal icons */
+.skill-card .icon { opacity: .7; font-size: 1.1rem; }
 
-.feedback.correct {
-  background: #E8F0E8;
-  color: #2C4A3A;
-  border-color: var(--accent);
-}
+/* Grain */
+.grain { position: fixed; inset: 0; opacity: .02; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
 
-.feedback.wrong {
-  background: #F8E8E8;
-  color: #6B3A3A;
-  border-color: var(--error);
-}
-
-/* Elegant buttons */
-.duo-cta {
-  background: var(--accent);
-  color: white;
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.625rem;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.duo-cta:hover {
-  background: var(--accent-warm);
-}
-
-/* More breathing room, aesthetic spacing */
-h1, h2 {
-  letter-spacing: -0.02em;
-}
-
-.skill-card .icon { font-size: 3.2rem; margin-bottom: 0.75rem; }
-
-/* Quiz answer buttons - big, tappable, colorful */
-.quiz-option {
-  @apply w-full text-left px-7 py-5 text-2xl font-bold rounded-3xl border-4 transition-all flex items-center justify-between mb-3 shadow-sm;
-  background: white;
-  border-color: #e5e7eb;
-  color: #1f2937;
-  min-height: 78px;
-}
-
-.quiz-option:hover:not(:disabled) {
-  border-color: #58cc02;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgb(88 204 2 / 0.2);
-}
-
-.quiz-option.correct {
-  background: #58cc02 !important;
-  border-color: #58cc02 !important;
-  color: white !important;
-  box-shadow: 0 0 0 6px rgba(88, 204, 2, 0.3);
-}
-
-.quiz-option.wrong {
-  background: #ff4b4b !important;
-  border-color: #ff4b4b !important;
-  color: white !important;
-}
-
-.quiz-option:disabled {
-  cursor: default;
-  opacity: 1;
-}
-
-/* Feedback */
-.feedback {
-  @apply mt-4 p-5 rounded-3xl text-xl font-semibold flex gap-3 items-start;
-}
-.feedback.correct { background: #dcfce7; color: #166534; border: 3px solid #58cc02; }
-.feedback.wrong { background: #fee2e2; color: #991b1b; border: 3px solid #ff4b4b; }
-
-/* Hearts */
-.heart {
-  font-size: 2.25rem;
-  line-height: 1;
-  transition: all 0.2s;
-}
-.heart.lost {
-  opacity: 0.25;
-  transform: scale(0.7);
-}
-
-/* Dashboard header - bright gradient like Duolingo */
-.duo-header {
-  background: linear-gradient(135deg, #58cc02 0%, #1cb0f6 100%);
-  color: white;
-}
-
-/* Big friendly action buttons */
-.duo-cta {
-  @apply px-10 py-4 rounded-3xl font-extrabold text-2xl shadow-lg active:scale-[0.96] transition-all;
-  background: #58cc02;
-  color: white;
-}
-
-.duo-cta:hover {
-  background: #4aa302;
-}
-
-/* Question area */
-.question-box {
-  @apply bg-white rounded-3xl p-8 shadow-2xl border-[6px] border-[#e5e7eb];
-}
-
-.question-text {
-  @apply text-5xl md:text-6xl font-black tracking-tighter text-center mb-3;
-}
-
-/* Progress pills */
-.progress-pill {
-  @apply h-3 rounded-full bg-[#e5e7eb] flex-1 overflow-hidden;
-}
-.progress-pill .fill {
-  @apply h-full bg-[#58cc02] transition-all duration-500;
-}
-
-/* Remove boring borders on cards */
-.practice-card, .feature-card {
-  @apply border-0 shadow-xl;
-  background: white;
-}
-
-/* Make everything pop */
-h1, h2, .text-4xl, .text-5xl, .text-6xl {
-  font-weight: 900 !important;
-  letter-spacing: -0.03em;
-}
+/* Fix remnants */
+.bg-white, .bg-\[#f0f4f8\], .text-\[#1f2937\], .text-zinc-950 { background: var(--surface) !important; color: var(--text) !important; }
+.border-\[#e5e7eb\] { border-color: var(--line) !important; }

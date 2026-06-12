@@ -15,9 +15,19 @@ const geistMono = Geist_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
+// Add elegant fonts inspired by du hoc nghe duc project for professional Vietnamese/German audience
+import { Cormorant_Garamond } from "next/font/google";
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
-  title: "GermanForge • Fun German Practice",
-  description: "Colorful, Duolingo-style German quizzes. Earn XP, keep your streak, actually learn. Perfect for Ausbildung and real life.",
+  title: "Luyện Tiếng Đức B1-C1 | DHND GermanForge",
+  description: "Luyện tiếng Đức chuyên nghiệp B1-C1 cho du học nghề Đức (Ausbildung). Bài tập tinh gọn, hình ảnh thực tế, tiến độ rõ ràng. Phối hợp với DHND – Du Học Nghề Đức.",
   icons: {
     icon: "/favicon.ico",
   },

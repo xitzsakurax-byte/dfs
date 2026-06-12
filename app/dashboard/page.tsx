@@ -2,127 +2,104 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Flame, Target, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Dashboard() {
-  // Guest mode mock data (local only for now)
   const streak = 14;
   const todayXP = 85;
   const dailyGoal = 120;
-  const hearts = 4;
   const level = 12;
   const xpToNext = 420;
 
   return (
-    <div className="space-y-10 pb-16">
-      {/* Welcome header */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-        <div>
-          <div className="text-[#58cc02] font-black tracking-[2px] text-sm">GUTEN MORGEN!</div>
-          <h1 className="text-6xl font-black tracking-[-2.5px]">Ready to keep the streak alive, Alex?</h1>
+    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] pb-16">
+      {/* Nav */}
+      <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4 bg-[rgba(10,13,20,.92)] backdrop-blur border-b border-[var(--line)]">
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-2 font-semibold">
+            <div className="logo-mark w-8 h-8 rounded-[9px] bg-gradient-to-br from-[#111418] to-[#C8102E] flex items-center justify-center text-white text-sm font-bold border border-[rgba(244,196,48,.35)]">GF</div>
+            GermanForge
+          </Link>
+          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">Practice</Link>
         </div>
-        <div className="text-right">
-          <div className="text-5xl font-black tabular-nums text-[#58cc02]">{streak}</div>
-          <div className="font-bold -mt-1">DAY STREAK 🔥</div>
-        </div>
-      </div>
+        <div className="text-sm text-[#A8B3C7]">Guest • Alex</div>
+      </nav>
 
-      {/* Big colorful daily goal + hearts */}
-      <motion.div 
-        className="bg-white rounded-3xl p-8 shadow-xl border-4 border-[#e5e7eb]"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div className="flex flex-col md:flex-row gap-8 items-center">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <Target className="h-7 w-7 text-[#58cc02]" />
-              <span className="font-black text-2xl">Today’s Goal</span>
-            </div>
-            <div className="flex items-baseline gap-2 mb-3">
-              <span className="text-7xl font-black tabular-nums">{todayXP}</span>
-              <span className="text-3xl text-[#64748b]">/ {dailyGoal} XP</span>
-            </div>
-            <div className="h-5 bg-[#e5e7eb] rounded-full overflow-hidden">
-              <div className="xp-bar" style={{ width: `${Math.min((todayXP / dailyGoal) * 100, 100)}%` }} />
-            </div>
-          </div>
-
+      <div className="pt-20 container max-w-5xl mx-auto px-6">
+        {/* Header - clean like previous KPIs */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-8">
           <div>
-            <Button asChild className="px-10 py-4 text-xl font-semibold rounded-2xl bg-[#3D5A5B] text-white hover:bg-[#8B6F47]">
-              <Link href="/practice">Start advanced practice</Link>
-            </Button>
-            <div className="text-center text-sm font-bold text-[#64748b] mt-2">8–12 questions • ~5 minutes</div>
+            <div className="text-[#F4C430] text-xs tracking-[2px]">GUTEN MORGEN!</div>
+            <h1 className="text-4xl font-semibold tracking-tight">Sẵn sàng giữ streak, Alex?</h1>
+          </div>
+          <div className="text-right">
+            <div className="text-4xl font-bold text-[#F4C430] tabular-nums">{streak}</div>
+            <div className="text-sm text-[#A8B3C7] -mt-1">NGÀY STREAK</div>
           </div>
         </div>
-      </motion.div>
 
-      {/* Hearts + Level quick row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div 
-          className="bg-white rounded-3xl p-7 border-4 border-[#e5e7eb]"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="font-black text-2xl flex items-center gap-2"><Flame className="text-[#ff9500]" /> Streak &amp; Lives</div>
-            <div className="text-sm font-bold text-[#64748b]">Don’t lose all hearts!</div>
+        {/* Goal card - elegant, flag accent */}
+        <div className="practice-card p-8 mb-6">
+          <div className="flex flex-col md:flex-row gap-8 items-center">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-[#F4C430]">📈</span>
+                <span className="font-semibold">Mục tiêu hôm nay</span>
+              </div>
+              <div className="flex items-baseline gap-2 mb-3">
+                <span className="text-6xl font-bold tabular-nums text-[#F4C430]">{todayXP}</span>
+                <span className="text-2xl text-[#A8B3C7]">/ {dailyGoal} XP</span>
+              </div>
+              <div className="h-2 bg-[var(--surface2)] rounded-full overflow-hidden">
+                <div className="xp-bar h-2" style={{ width: `${Math.min((todayXP / dailyGoal) * 100, 100)}%` }} />
+              </div>
+            </div>
+            <div>
+              <Button asChild className="btn-primary px-8 py-3 text-lg">
+                <Link href="/practice">Bắt đầu luyện tập</Link>
+              </Button>
+              <div className="text-center text-xs text-[#A8B3C7] mt-2">8–12 câu • ~5 phút</div>
+            </div>
           </div>
-          <div className="flex gap-2 text-5xl">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <span key={i} className={`heart ${i >= hearts ? 'lost' : ''}`}>❤️</span>
-            ))}
-          </div>
-          <div className="mt-3 text-[#64748b] font-medium">You have <span className="font-black text-[#1f2937]">{hearts} hearts</span> left today.</div>
-        </motion.div>
-
-        <motion.div 
-          className="bg-white rounded-3xl p-7 border-4 border-[#e5e7eb]"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div className="font-black text-2xl mb-1 flex items-center gap-2"><Award className="text-[#ce82ff]" /> Level {level}</div>
-          <div className="text-5xl font-black tabular-nums mb-3">{xpToNext} <span className="text-2xl font-bold text-[#64748b]">XP to next level</span></div>
-          <div className="h-4 bg-[#e5e7eb] rounded-full overflow-hidden">
-            <div className="xp-bar" style={{ width: '68%' }} />
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Skill cards - colorful and clickable */}
-      <div>
-        <div className="font-black text-3xl mb-4 tracking-tight">What do you want to practice?</div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {[
-            { title: "Vocabulary", desc: "Translate 10 words. Multiple choice. Fast XP.", href: "/practice/vocab", icon: "📚", color: "vocabulary" },
-            { title: "Grammar", desc: "Cases, verbs, word order. 6 quick questions.", href: "/practice/grammar", icon: "✍️", color: "grammar" },
-            { title: "Listening", desc: "Coming very soon — real audio drills.", href: "/practice", icon: "🎧", color: "listening" },
-            { title: "Speaking", desc: "Coming very soon — record & score.", href: "/practice", icon: "🎤", color: "speaking" },
-          ].map((s, index) => (
-            <motion.div
-              key={s.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + index * 0.08 }}
-            >
-              <Link href={s.href} className={`skill-card ${s.color} group`}>
-                <div className="icon">{s.icon}</div>
-                <div>
-                  <div className="font-black text-4xl mb-1 group-active:scale-95 transition">{s.title}</div>
-                  <div className="text-white/90 text-[17px] leading-tight">{s.desc}</div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
         </div>
-      </div>
 
-      <div className="text-center text-sm text-[#6B6B6B] pt-4">
-        Guest mode • Your progress is saved locally. Sign in later to sync.
+        {/* Progress row - clean cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="practice-card p-6">
+            <div className="font-semibold mb-3 flex items-center gap-2">Streak &amp; Tiến độ</div>
+            <div className="text-5xl font-bold tabular-nums text-[#F4C430] mb-1">{streak}</div>
+            <div className="text-sm text-[#A8B3C7]">ngày liên tục • Giữ đều đặn cho Ausbildung</div>
+          </div>
+          <div className="practice-card p-6">
+            <div className="font-semibold mb-3 flex items-center gap-2">Cấp độ</div>
+            <div className="text-5xl font-bold tabular-nums text-[#F4C430] mb-1">{level}</div>
+            <div className="text-sm text-[#A8B3C7] mb-2">{xpToNext} XP đến cấp tiếp theo</div>
+            <div className="h-2 bg-[var(--surface2)] rounded-full overflow-hidden">
+              <div className="xp-bar h-2" style={{ width: '68%' }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Practice launcher - clean, image friendly */}
+        <div>
+          <div className="font-semibold text-xl mb-4">Chọn kỹ năng luyện tập</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <Link href="/practice/vocab" className="skill-card group p-6">
+              <div className="text-[#F4C430] text-xs tracking-widest mb-1">VOCABULARY B1-C1</div>
+              <div className="font-semibold text-2xl mb-2">Từ vựng nâng cao</div>
+              <div className="text-[#A8B3C7] text-sm">10 câu • Multiple choice • Ngữ cảnh nghề</div>
+              <div className="mt-4 text-sm text-[#F4C430] group-hover:underline">Bắt đầu →</div>
+            </Link>
+            <Link href="/practice/grammar" className="skill-card group p-6">
+              <div className="text-[#F4C430] text-xs tracking-widest mb-1">GRAMMAR B1-C1</div>
+              <div className="font-semibold text-2xl mb-2">Cấu trúc phức tạp</div>
+              <div className="text-[#A8B3C7] text-sm">6 câu • Konjunktiv, bị động, relative</div>
+              <div className="mt-4 text-sm text-[#F4C430] group-hover:underline">Bắt đầu →</div>
+            </Link>
+          </div>
+        </div>
+
+        <div className="text-center text-xs text-[#A8B3C7] mt-8">Guest mode • Tiến độ lưu local. Sign in sau để sync với DHND.</div>
       </div>
     </div>
   );

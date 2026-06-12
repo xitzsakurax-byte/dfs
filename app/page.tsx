@@ -3,147 +3,100 @@ import { Button } from '@/components/ui/button';
 
 export default function GermanForgeLanding() {
   return (
-    <div className="min-h-screen bg-[#F8F5F0] text-[#2C2C2C]">
-      {/* Elegant nav */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-[#D4CFC6]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3D5A5B] text-white font-semibold text-xl tracking-tight">GF</div>
-            <div className="font-semibold text-2xl tracking-tight">GermanForge</div>
+    <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA]">
+      {/* Nav - professional like du hoc nghe duc */}
+      <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4 bg-[rgba(10,13,20,.92)] backdrop-blur border-b border-[var(--line)]">
+        <div className="flex items-center gap-3">
+          <div className="logo-mark w-9 h-9 rounded-[9px] bg-gradient-to-br from-[#111418] to-[#C8102E] flex items-center justify-center text-white text-lg font-bold border border-[rgba(244,196,48,.35)] relative overflow-hidden">
+            GF
+            <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-[#111418] via-[#C8102E] to-[#F4C430] opacity-90"></div>
           </div>
-          <div className="flex items-center gap-6 text-sm font-medium">
-            <Link href="/dashboard" className="hover:text-[#3D5A5B] transition-colors">Dashboard</Link>
-            <Link href="/practice" className="hover:text-[#3D5A5B] transition-colors">Practice</Link>
-            <Button asChild className="px-5 py-2 rounded-xl text-sm font-semibold bg-[#3D5A5B] text-white hover:bg-[#8B6F47]">
-              <Link href="/dashboard">Begin practice</Link>
-            </Button>
+          <div>
+            <strong className="text-lg font-semibold tracking-tight">GermanForge</strong>
+            <span className="block text-[10px] text-[#A8B3C7] -mt-1 tracking-[.07em] uppercase">DHND • B1-C1</span>
           </div>
+        </div>
+        <div className="flex items-center gap-6 text-sm font-medium">
+          <Link href="/dashboard" className="text-[#A8B3C7] hover:text-[#F5F7FA]">Dashboard</Link>
+          <Link href="/practice" className="text-[#A8B3C7] hover:text-[#F5F7FA]">Practice</Link>
+          <Button asChild className="btn-primary px-5 py-2 text-sm">
+            <Link href="/dashboard">Bắt đầu luyện tập</Link>
+          </Button>
         </div>
       </nav>
 
-      {/* Aesthetic hero with image */}
-      <div className="mx-auto max-w-6xl px-6 pt-16 pb-20 grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <div className="inline-block px-3 py-1 rounded-full bg-[#EDE8E0] text-[#6B6B6B] text-xs tracking-[2px] mb-6">B1 • B2 • C1</div>
-          
-          <h1 className="text-6xl md:text-7xl font-semibold tracking-tighter leading-[1.05] mb-6">
-            Master advanced German.<br />With precision.
-          </h1>
-          
-          <p className="text-xl text-[#6B6B6B] max-w-md mb-8">
-            Elegant, focused practice for B1–C1 learners. Real-world vocabulary, nuanced grammar, and visual context.
-          </p>
-
-          <div className="flex gap-4">
-            <Button asChild className="px-8 py-3 rounded-2xl text-base font-semibold bg-[#3D5A5B] text-white hover:bg-[#8B6F47]">
-              <Link href="/dashboard">Start practicing</Link>
-            </Button>
-            <Button asChild variant="outline" className="px-8 py-3 rounded-2xl text-base font-medium border-[#D4CFC6] hover:bg-[#EDE8E0]">
-              <Link href="#skills">Explore skills</Link>
-            </Button>
+      {/* Hero - strong, flag inspired, professional */}
+      <div className="hero min-h-[100vh] pt-20">
+        <div className="container max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <div className="section-label text-[#F4C430]">B1 • B2 • C1 | CHO DU HỌC NGHỀ ĐỨC</div>
+            <h1 className="slogan-de text-6xl md:text-[4.2rem] leading-[1.05]">
+              Luyện tiếng Đức<br />chuyên nghiệp.<br />
+              <em className="text-[#F4C430]">Tương lai tại Đức.</em>
+            </h1>
+            <p className="hero-lead max-w-md mt-4 text-[#A8B3C7]">
+              Bài tập tinh gọn B1-C1, hình ảnh thực tế, tiến độ rõ ràng. Phối hợp hoàn hảo với DHND – Du Học Nghề Đức.
+            </p>
+            <div className="hero-actions mt-6">
+              <Button asChild className="btn-primary px-6 py-3 text-base">
+                <Link href="/dashboard">Bắt đầu miễn phí</Link>
+              </Button>
+              <Button asChild className="btn-ghost px-6 py-3 text-base">
+                <Link href="#skills">Xem kỹ năng</Link>
+              </Button>
+            </div>
+            <p className="mt-3 text-xs text-[#A8B3C7]">Guest mode • Tiến độ lưu local • Sẵn sàng cho Ausbildung 2026</p>
           </div>
-          <p className="mt-3 text-xs text-[#6B6B6B]">Guest access • Progress saved locally</p>
-        </div>
 
-        {/* Hero image */}
-        <div className="relative rounded-3xl overflow-hidden shadow-xl aspect-[16/10] bg-[#EDE8E0]">
-          <img 
-            src="https://picsum.photos/id/1015/1200/750" 
-            alt="Elegant study space with German books and natural light" 
-            className="object-cover w-full h-full" 
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        </div>
-      </div>
-
-      {/* Subtle stats */}
-      <div className="border-y border-[#D4CFC6] bg-white py-6">
-        <div className="mx-auto max-w-5xl px-6 grid grid-cols-2 md:grid-cols-4 text-center text-sm font-medium text-[#6B6B6B]">
-          <div>Designed for serious learners</div>
-          <div>Context-rich exercises</div>
-          <div>Visual learning support</div>
-          <div>CEFR-aligned B1–C1</div>
-        </div>
-      </div>
-
-      {/* Skills with images - aesthetic, less icons */}
-      <div id="skills" className="mx-auto max-w-6xl px-6 py-16">
-        <div className="mb-10">
-          <div className="text-xs tracking-[3px] text-[#8B6F47] mb-2">FOCUSED PRACTICE</div>
-          <h2 className="text-5xl font-semibold tracking-tight">Advanced skills for B1–C1</h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <Link href="/practice/vocab" className="skill-card group flex flex-col">
-            <div className="flex-1">
-              <div className="text-[#8B6F47] text-xs tracking-widest mb-2">VOCABULARY</div>
-              <div className="font-semibold text-3xl mb-3 tracking-tight">Advanced Vocabulary</div>
-              <div className="text-[#6B6B6B] leading-snug">Nuanced terms, collocations, and professional language from real German contexts.</div>
-            </div>
-            <div className="mt-6 text-sm text-[#8B6F47] font-medium group-hover:underline">Start →</div>
-          </Link>
-
-          <Link href="/practice/grammar" className="skill-card group flex flex-col">
-            <div className="flex-1">
-              <div className="text-[#8B6F47] text-xs tracking-widest mb-2">GRAMMAR</div>
-              <div className="font-semibold text-3xl mb-3 tracking-tight">Complex Structures</div>
-              <div className="text-[#6B6B6B] leading-snug">Subjunctive, passive constructions, relative clauses, and sophisticated sentence building.</div>
-            </div>
-            <div className="mt-6 text-sm text-[#8B6F47] font-medium group-hover:underline">Start →</div>
-          </Link>
-        </div>
-
-        <div className="mt-6 grid md:grid-cols-2 gap-6">
-          <div className="skill-card flex flex-col opacity-70">
-            <div className="flex-1">
-              <div className="text-[#8B6F47] text-xs tracking-widest mb-2">LISTENING</div>
-              <div className="font-semibold text-3xl mb-3 tracking-tight">Authentic Audio</div>
-              <div className="text-[#6B6B6B]">Coming soon. Podcasts, interviews, and lectures at B2–C1 level.</div>
-            </div>
-          </div>
-          <div className="skill-card flex flex-col opacity-70">
-            <div className="flex-1">
-              <div className="text-[#8B6F47] text-xs tracking-widest mb-2">SPEAKING</div>
-              <div className="font-semibold text-3xl mb-3 tracking-tight">Fluent Expression</div>
-              <div className="text-[#6B6B6B]">Coming soon. Pronunciation and structured speaking practice.</div>
-            </div>
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[16/10] border border-[var(--line)]">
+            <img src="https://picsum.photos/id/1015/1200/750" alt="Không gian học tập chuyên nghiệp với sách tiếng Đức" className="object-cover w-full h-full" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,13,20,.6)] to-transparent"></div>
+            <div className="absolute bottom-6 left-6 text-sm text-[#F4C430] font-semibold tracking-widest">DHND • GERMANFORGE</div>
           </div>
         </div>
       </div>
 
-      {/* Simple loop explanation */}
-      <div className="bg-white py-12 border-y">
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <div className="text-[#58cc02] font-black tracking-widest mb-3 text-sm">THE LOOP THAT ACTUALLY WORKS</div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left text-xl font-semibold">
-            {[
-              ["1", "Open the app", "See your big flaming streak"],
-              ["2", "Do 8–12 questions", "Green = XP. Red = lose a heart"],
-              ["3", "Watch numbers go up", "Level up. Feel good."],
-              ["4", "Close the tab", "Come back tomorrow. Streak protected."]
-            ].map(([num, title, desc]) => (
-              <div key={num}>
-                <div className="font-black text-[#58cc02] text-6xl mb-1">{num}</div>
-                <div className="font-black mb-1">{title}</div>
-                <div className="text-[#64748b] text-lg">{desc}</div>
+      {/* Stats bar - clean KPIs */}
+      <div className="border-y border-[var(--line)] bg-[var(--surface)] py-5">
+        <div className="container max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 text-center text-sm font-medium text-[#A8B3C7]">
+          <div>Thiết kế cho người nghiêm túc</div>
+          <div>Bài tập có ngữ cảnh thực</div>
+          <div>Hỗ trợ hình ảnh chuyên nghiệp</div>
+          <div>Phù hợp lộ trình Ausbildung</div>
+        </div>
+      </div>
+
+      {/* Skills - clean, image focused, no icon spam */}
+      <div id="skills" className="section">
+        <div className="container max-w-6xl mx-auto">
+          <div className="mb-8">
+            <div className="section-label">KỸ NĂNG B1-C1</div>
+            <h2 className="section-title">Luyện tập tinh gọn cho Ausbildung</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <Link href="/practice/vocab" className="skill-card group p-6 flex flex-col">
+              <div className="flex-1">
+                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">VOCABULARY</div>
+                <div className="font-semibold text-2xl mb-2 tracking-tight">Từ vựng nâng cao</div>
+                <div className="text-[#A8B3C7] text-[15px]">Thuật ngữ chuyên ngành, collocations, ngôn ngữ nghề nghiệp từ bối cảnh Đức thực tế.</div>
               </div>
-            ))}
+              <div className="mt-auto text-sm text-[#F4C430] font-medium group-hover:underline">Bắt đầu →</div>
+            </Link>
+
+            <Link href="/practice/grammar" className="skill-card group p-6 flex flex-col">
+              <div className="flex-1">
+                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">GRAMMAR</div>
+                <div className="font-semibold text-2xl mb-2 tracking-tight">Cấu trúc phức tạp</div>
+                <div className="text-[#A8B3C7] text-[15px]">Konjunktiv, bị động, mệnh đề quan hệ, câu phức cho giao tiếp nghề và học thuật.</div>
+              </div>
+              <div className="mt-auto text-sm text-[#F4C430] font-medium group-hover:underline">Bắt đầu →</div>
+            </Link>
           </div>
+
+          <div className="mt-6 text-xs text-[#A8B3C7] text-center">Listening &amp; Speaking sẽ sớm cập nhật với audio thực tế từ Đức.</div>
         </div>
       </div>
-
-      {/* Final CTA */}
-      <div className="mx-auto max-w-2xl px-6 py-20 text-center">
-        <h2 className="text-6xl font-black tracking-[-2px] mb-6">Ready to actually get good?</h2>
-        <Button asChild className="duo-cta text-3xl px-16 py-8 rounded-3xl mb-4">
-          <Link href="/dashboard">Start practicing right now (guest mode)</Link>
-        </Button>
-        <div className="text-[#64748b]">No login. Progress stays in this browser until you sign up later.</div>
-      </div>
-
-      <footer className="text-center text-xs py-8 text-[#64748b] border-t">
-        Made for people who need real German (Ausbildung, jobs, life). Inspired by Duolingo + Kahoot + Quizlet.
-      </footer>
     </div>
   );
 }
