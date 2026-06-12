@@ -100,7 +100,7 @@ export default function WritingMockTest() {
     const newRating = {
       overall: totalScore,
       perTask: results,
-      fullFeedback: fullFeedback + `\n\n💡 Gợi ý từ ngân hàng 3000+ Wortliste để cải thiện: ${suggestions.join(', ')}`,
+      fullFeedback: fullFeedback + `\n\n💡 Suggested 3000+ Wortliste terms to improve: ${suggestions.join(', ')}`,
       suggestions,
     };
 
@@ -123,6 +123,16 @@ export default function WritingMockTest() {
       });
       localStorage.setItem(bankKey, JSON.stringify(bankMastered));
     } catch (e) {}
+
+    // Trigger first_writing achievement (external per gamification.ts design — generic checker always sets false)
+    try {
+      const achKey = 'germanforge_achievements';
+      const stored = JSON.parse(localStorage.getItem(achKey) || '{}');
+      if (!stored.first_writing) {
+        stored.first_writing = new Date().toISOString();
+        localStorage.setItem(achKey, JSON.stringify(stored));
+      }
+    } catch {}
 
     // Save attempt (local only)
     const newAttempt: Attempt = {
@@ -317,7 +327,7 @@ export default function WritingMockTest() {
               <div className="practice-card p-8">
                 <div className="text-[var(--gold)] text-xs tracking-[2px] mb-1">AI RATING RESULTS</div>
                 <h2 className="text-3xl font-semibold tracking-tight mb-2">Overall: {rating.overall}/20</h2>
-                <p className="text-[var(--text-2)]">Scored by AI rater (heuristic simulation of official Goethe &amp; TELC B1 Schreiben criteria)</p>
+                <p className="text-[var(--text-2)]">Scored by a local heuristic rater (length + keyword match against the 3000+ bank). This is a training simulation only — not a real LLM or official examiner.</p>
 
                 {/* Mobile: single column results for phone UI */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
@@ -348,7 +358,7 @@ export default function WritingMockTest() {
 
               {showHistory && attempts.length > 1 && (
                 <div className="practice-card p-6">
-                  <h4 className="font-semibold mb-3">Lịch sử gần đây</h4>
+                  <h4 className="font-semibold mb-3">Recent history</h4>
                   <div className="space-y-2 text-sm">
                     {attempts.slice(1).map(a => (
                       <div key={a.id} className="p-3 bg-[var(--surface)] rounded">{a.promptTitle} — {a.totalScore}/20 — {a.date}</div>

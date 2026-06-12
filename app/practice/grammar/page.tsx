@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { grammarQuestions } from '@/lib/data/grammar';
 import { addToBankMastered, logPerformance } from '@/lib/progress';
+import { resetCombo, addToSRS } from '@/lib/gamification';
 
 // Rich documented grammar items (B1-C1, Exam preparation focus)
 const questions = grammarQuestions;
@@ -92,6 +93,11 @@ export default function GrammarQuiz() {
 
       // Log for analysis (grammar structures)
       logPerformance('grammar', currentQ.topic || 'structure', true);
+    } else {
+      resetCombo();
+      // SRS for spaced repetition on errors
+      addToSRS(currentQ.q, 'grammar');
+      logPerformance('grammar', currentQ.topic || 'structure', false);
     }
   }
 

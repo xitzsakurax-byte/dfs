@@ -287,7 +287,7 @@ export default function GermanForgeLanding() {
               {
                 num: '06',
                 title: 'Interactive Game',
-                desc: 'Three game modes: Write Forms, Fix the Error, Pop Quiz. Combo multipliers, real XP, leaderboard-ready.',
+                desc: 'Three game modes: Write Forms, Fix the Error, Pop Quiz. Combo multipliers, real XP, SRS reviews.',
                 link: '/practice/game',
               },
             ].map((f, i) => (

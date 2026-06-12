@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { declensionItems, DeclensionItem } from '@/lib/data/declensions';
 import { addToBankMastered, awardXp, logDailyActivity, logPerformance } from '@/lib/progress';
+import { resetCombo, addToSRS } from '@/lib/gamification';
 import MobileBottomNav from '@/components/MobileBottomNav';
 
 type GameMode = 'write' | 'fix' | 'quiz';
@@ -154,6 +155,10 @@ export default function PracticeGame() {
       logPerformance('case-practice', current.case || 'general', true);
     } else {
       message = `Not quite. The correct form is: ${current.correct}`;
+      resetCombo();
+      // SRS for spaced repetition on errors
+      addToSRS(current.base || current.correct, 'game');
+      logPerformance('case-practice', current.case || 'general', false);
     }
 
     setFeedback({

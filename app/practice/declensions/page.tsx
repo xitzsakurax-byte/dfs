@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { declensionItems, DeclensionItem, getShuffledDeclensions } from '@/lib/data/declensions';
 import { addToBankMastered, logPerformance } from '@/lib/progress';
+import { resetCombo, addToSRS } from '@/lib/gamification';
 
 export default function DeclensionsQuiz() {
   const STORAGE_KEY = 'germanforge_declensions_completed';
@@ -83,6 +84,11 @@ export default function DeclensionsQuiz() {
 
       // Log for analysis (by case)
       logPerformance('declension', currentQ.case || 'general', true);
+    } else {
+      resetCombo();
+      // SRS for spaced repetition on errors
+      addToSRS(currentQ.base, 'declension');
+      logPerformance('declension', currentQ.case || 'general', false);
     }
   }
 
