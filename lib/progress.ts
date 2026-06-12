@@ -1,24 +1,8 @@
-import { createClient, hasSupabase } from './supabase/client'
-
 // =====================================================
-// GermanForge Progress System - Real persistent stats (central backend logic for future scalability)
-// 
-// Core principles for organization/future needs:
-// - All DB writes use auth user.id for strict per-user isolation (no mixing)
-// - Guest mode: localStorage fallback (keys prefixed germanforge_*)
-// - Logged-in: Supabase (profiles for bank/xp/streak, daily_progress for VN calendar history, writing_attempts)
-// - Rewards: awardXp + logDailyActivity called from quizzes/game/writing/bank
-// - Vietnam time: getVietnamDateString for all dates/streaks ("use the vietnam time-date calendar")
-// - Admin friendly: Queries are simple; add RLS policies for elevated access
-// - Extensible: Easy to add new modules (e.g. listening) by calling logDailyActivity/awardXp + update getUserStats
-// - Migrations in supabase/ folder (001_init.sql, 002_daily_progress.sql)
-// 
-// - Starts at zero
-// - Daily tracking with Vietnam (Asia/Ho_Chi_Minh) calendar
-// - XP, Level, Streak that actually remember
-// - 30-day history for the separate Progress dashboard
-// - Routine suggestions based on your real entries
-// - Full guest fallback + merge on login
+// GermanForge Progress System - Pure localStorage only (no backend, no login, no lag)
+// All progress for Anh Kiet stays in browser (fast, offline, private).
+// Vietnam time calendar for streaks/daily.
+// No Supabase, no network calls, no auth checks anywhere.
 // =====================================================
 
 import { APP } from './config';
@@ -32,42 +16,14 @@ const DAILY_LOG_KEY = 'germanforge_daily_log'   // { '2026-06-12': { words: 12, 
 
 const XP_PER_LEVEL = APP.LEVEL_XP_BASE; // from centralized config for easy future tuning
 
-// --- BANK MASTERY (core for no-repeat + now also feeds daily stats) ---
+// --- BANK MASTERY (core for no-repeat + feeds daily stats) - pure local, instant ---
 export async function getBankMastered(): Promise<string[]> {
-  if (!hasSupabase()) {
-    try {
-      const raw = localStorage.getItem(BANK_KEY)
-      return raw ? JSON.parse(raw) : []
-    } catch {
-      return []
-    }
-  }
-
-  const supabase = createClient()
-  if (!supabase) {
+  try {
     const raw = localStorage.getItem(BANK_KEY)
     return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
   }
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    const raw = localStorage.getItem(BANK_KEY)
-    return raw ? JSON.parse(raw) : []
-  }
-
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('mastered_bank')
-    .eq('id', user.id)
-    .single()
-
-  if (error || !data) {
-    const raw = localStorage.getItem(BANK_KEY)
-    return raw ? JSON.parse(raw) : []
-  }
-
-  const serverBank: string[] = Array.isArray(data.mastered_bank) ? data.mastered_bank : []
-  return serverBank
 }
 
 // --- Vietnam timezone helpers (no extra deps) ---
@@ -112,7 +68,7 @@ export function xpToNextLevel(totalXp: number): { current: number; needed: numbe
   return { current: xpInLevel, needed, percent }
 }
 
-// --- Core: get full user stats (server or guest) ---
+// --- Core: get full user stats - pure localStorage, fast, no network ---
 export async function getUserStats(): Promise<{
   totalXp: number
   level: number
@@ -124,68 +80,19 @@ export async function getUserStats(): Promise<{
 }> {
   const today = getVietnamDateString()
 
-  if (!hasSupabase()) {
-    // Guest mode - all from localStorage, start at zero if nothing
-    const totalXp = parseInt(localStorage.getItem(XP_KEY) || '0', 10)
-    const streak = parseInt(localStorage.getItem(STREAK_KEY) || '0', 10)
-    const dailyLog = getLocalDailyLog()
-    const todayData = dailyLog[today] || { words: 0, xp: 0, sessions: 0 }
-    const suggested = computeSuggestedGoal(dailyLog)
-    return {
-      totalXp,
-      level: calculateLevel(totalXp),
-      streak,
-      todayWords: todayData.words,
-      todayXp: todayData.xp,
-      todaySessions: todayData.sessions,
-      suggestedDailyGoal: suggested,
-    }
-  }
-
-  const supabase = createClient()
-  if (!supabase) {
-    // fallback to guest logic
-    return getUserStats() // will hit the guest branch above
-  }
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return getUserStats() // guest
-  }
-
-  // Logged in - prefer server
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('total_xp, current_streak, last_activity_date, daily_goal_words')
-    .eq('id', user.id)
-    .single()
-
-  const totalXp = profile?.total_xp || 0
-  const streak = profile?.current_streak || 0
-
-  // Today's daily row
-  const { data: todayRow } = await supabase
-    .from('daily_progress')
-    .select('words_mastered, xp_earned, sessions_completed')
-    .eq('user_id', user.id)
-    .eq('date', today)
-    .single()
-
-  const todayWords = todayRow?.words_mastered || 0
-  const todayXp = todayRow?.xp_earned || 0
-  const todaySessions = todayRow?.sessions_completed || 0
-
-  // Suggested goal: average of last 7 days + small uplift, or default 15
-  const history = await getDailyHistory(7)
-  const suggested = computeSuggestedGoalFromHistory(history) || (profile?.daily_goal_words || 15)
+  const totalXp = parseInt(localStorage.getItem(XP_KEY) || '0', 10)
+  const streak = parseInt(localStorage.getItem(STREAK_KEY) || '0', 10)
+  const dailyLog = getLocalDailyLog()
+  const todayData = dailyLog[today] || { words: 0, xp: 0, sessions: 0 }
+  const suggested = computeSuggestedGoal(dailyLog)
 
   return {
     totalXp,
     level: calculateLevel(totalXp),
     streak,
-    todayWords,
-    todayXp,
-    todaySessions,
+    todayWords: todayData.words,
+    todayXp: todayData.xp,
+    todaySessions: todayData.sessions,
     suggestedDailyGoal: suggested,
   }
 }
@@ -214,119 +121,38 @@ function computeSuggestedGoalFromHistory(history: any[]): number {
   return Math.max(8, Math.min(40, Math.round(avg * 1.15)))
 }
 
-// --- Log activity + award XP + update streak/daily (central function) ---
+// --- Log activity + award XP + update streak/daily - pure local, instant ---
 export async function logDailyActivity(wordsDelta = 0, xpDelta = 0, sessionsDelta = 0) {
   if (wordsDelta === 0 && xpDelta === 0 && sessionsDelta === 0) return
 
   const today = getVietnamDateString()
   const yesterday = getYesterdayVN()
 
-  // === GUEST MODE ===
-  if (!hasSupabase()) {
-    // XP
-    const currentXp = parseInt(localStorage.getItem(XP_KEY) || '0', 10)
-    const newXp = currentXp + xpDelta
-    localStorage.setItem(XP_KEY, String(newXp))
+  // XP
+  const currentXp = parseInt(localStorage.getItem(XP_KEY) || '0', 10)
+  const newXp = currentXp + xpDelta
+  localStorage.setItem(XP_KEY, String(newXp))
 
-    // Streak
-    const lastDate = localStorage.getItem(LAST_DATE_KEY) || ''
-    let currentStreak = parseInt(localStorage.getItem(STREAK_KEY) || '0', 10)
-    if (lastDate !== today) {
-      if (lastDate === yesterday) {
-        currentStreak += 1
-      } else {
-        currentStreak = 1
-      }
-      localStorage.setItem(STREAK_KEY, String(currentStreak))
-      localStorage.setItem(LAST_DATE_KEY, today)
-    }
-
-    // Daily log
-    const log = getLocalDailyLog()
-    if (!log[today]) log[today] = { words: 0, xp: 0, sessions: 0 }
-    log[today].words += wordsDelta
-    log[today].xp += xpDelta
-    log[today].sessions += sessionsDelta
-    localStorage.setItem(DAILY_LOG_KEY, JSON.stringify(log))
-
-    return
-  }
-
-  // === LOGGED IN ===
-  const supabase = createClient()
-  if (!supabase) {
-    // fallback to guest
-    return logDailyActivity(wordsDelta, xpDelta, sessionsDelta)
-  }
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return logDailyActivity(wordsDelta, xpDelta, sessionsDelta)
-  }
-
-  // 1. Update profile XP + streak + last date
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('total_xp, current_streak, last_activity_date')
-    .eq('id', user.id)
-    .single()
-
-  const currentXp = profile?.total_xp || 0
-  const newTotalXp = currentXp + xpDelta
-
-  let newStreak = profile?.current_streak || 0
-  const lastDate = profile?.last_activity_date || ''
-
+  // Streak (Vietnam calendar)
+  const lastDate = localStorage.getItem(LAST_DATE_KEY) || ''
+  let currentStreak = parseInt(localStorage.getItem(STREAK_KEY) || '0', 10)
   if (lastDate !== today) {
     if (lastDate === yesterday) {
-      newStreak = (newStreak || 0) + 1
+      currentStreak += 1
     } else {
-      newStreak = 1
+      currentStreak = 1
     }
+    localStorage.setItem(STREAK_KEY, String(currentStreak))
+    localStorage.setItem(LAST_DATE_KEY, today)
   }
 
-  await supabase
-    .from('profiles')
-    .update({
-      total_xp: newTotalXp,
-      current_streak: newStreak,
-      last_activity_date: today,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', user.id)
-
-  // 2. Upsert today's daily row
-  const { data: existingDaily } = await supabase
-    .from('daily_progress')
-    .select('words_mastered, xp_earned, sessions_completed')
-    .eq('user_id', user.id)
-    .eq('date', today)
-    .single()
-
-  const newWords = (existingDaily?.words_mastered || 0) + wordsDelta
-  const newXp = (existingDaily?.xp_earned || 0) + xpDelta
-  const newSessions = (existingDaily?.sessions_completed || 0) + sessionsDelta
-
-  if (existingDaily) {
-    await supabase
-      .from('daily_progress')
-      .update({
-        words_mastered: newWords,
-        xp_earned: newXp,
-        sessions_completed: newSessions,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', user.id)
-      .eq('date', today)
-  } else {
-    await supabase.from('daily_progress').insert({
-      user_id: user.id,
-      date: today,
-      words_mastered: newWords,
-      xp_earned: newXp,
-      sessions_completed: newSessions,
-    })
-  }
+  // Daily log
+  const log = getLocalDailyLog()
+  if (!log[today]) log[today] = { words: 0, xp: 0, sessions: 0 }
+  log[today].words += wordsDelta
+  log[today].xp += xpDelta
+  log[today].sessions += sessionsDelta
+  localStorage.setItem(DAILY_LOG_KEY, JSON.stringify(log))
 }
 
 // --- Award XP helper (used by quizzes/bank) ---
@@ -334,11 +160,10 @@ export async function awardXp(amount: number) {
   await logDailyActivity(0, amount, 0)
 }
 
-// --- Enhanced addToBankMastered that also logs daily words + awards XP ---
+// --- addToBankMastered: instant local only + XP + daily ---
 export async function addToBankMastered(word: string): Promise<void> {
   if (!word) return
 
-  // Always local for no-repeat (instant)
   try {
     const current = JSON.parse(localStorage.getItem(BANK_KEY) || '[]')
     if (!current.includes(word)) {
@@ -347,41 +172,16 @@ export async function addToBankMastered(word: string): Promise<void> {
     }
   } catch {}
 
-  // Award XP + log daily word (this is where real tracking happens)
-  const xpForWord = 12 + Math.floor(Math.random() * 5) // 12-16 XP per new word
+  const xpForWord = 12 + Math.floor(Math.random() * 5)
   await logDailyActivity(1, xpForWord, 0)
-
-  if (!hasSupabase()) return
-
-  const supabase = createClient()
-  if (!supabase) return
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
-
-  const { data } = await supabase
-    .from('profiles')
-    .select('mastered_bank')
-    .eq('id', user.id)
-    .single()
-
-  const serverList: string[] = Array.isArray(data?.mastered_bank) ? data.mastered_bank : []
-  if (!serverList.includes(word)) {
-    const newList = [...serverList, word]
-    await supabase
-      .from('profiles')
-      .update({ mastered_bank: newList, updated_at: new Date().toISOString() })
-      .eq('id', user.id)
-  }
 }
 
-// --- Writing now also awards XP based on score ---
+// --- saveWritingAttempt: local history + XP (no cloud) ---
 export async function saveWritingAttempt(attempt: {
   promptTitle: string
   totalScore: number
   fullFeedback: string
 }) {
-  // local history
   try {
     const raw = localStorage.getItem(WRITING_KEY)
     const list = raw ? JSON.parse(raw) : []
@@ -390,27 +190,11 @@ export async function saveWritingAttempt(attempt: {
     localStorage.setItem(WRITING_KEY, JSON.stringify(updated))
   } catch {}
 
-  // Award XP for completing a writing test (score based)
-  const xpFromWriting = Math.max(30, attempt.totalScore * 6) // roughly 30-120 XP
-  await logDailyActivity(0, xpFromWriting, 1) // +1 session
-
-  if (!hasSupabase()) return
-
-  const supabase = createClient()
-  if (!supabase) return
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
-
-  await supabase.from('writing_attempts').insert({
-    user_id: user.id,
-    prompt_title: attempt.promptTitle,
-    score: attempt.totalScore,
-    full_feedback: attempt.fullFeedback,
-  })
+  const xpFromWriting = Math.max(30, attempt.totalScore * 6)
+  await logDailyActivity(0, xpFromWriting, 1)
 }
 
-// --- 30-day history for the separate progress dashboard ---
+// --- 30-day history - pure local ---
 export async function getDailyHistory(days = 30): Promise<Array<{
   date: string
   words_mastered: number
@@ -418,179 +202,38 @@ export async function getDailyHistory(days = 30): Promise<Array<{
   sessions_completed: number
 }>> {
   const dateList = getLastNDaysVN(days)
-
-  if (!hasSupabase()) {
-    const log = getLocalDailyLog()
-    return dateList.map(d => ({
-      date: d,
-      words_mastered: log[d]?.words || 0,
-      xp_earned: log[d]?.xp || 0,
-      sessions_completed: log[d]?.sessions || 0,
-    }))
-  }
-
-  const supabase = createClient()
-  if (!supabase) {
-    const log = getLocalDailyLog()
-    return dateList.map(d => ({
-      date: d,
-      words_mastered: log[d]?.words || 0,
-      xp_earned: log[d]?.xp || 0,
-      sessions_completed: log[d]?.sessions || 0,
-    }))
-  }
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    const log = getLocalDailyLog()
-    return dateList.map(d => ({
-      date: d,
-      words_mastered: log[d]?.words || 0,
-      xp_earned: log[d]?.xp || 0,
-      sessions_completed: log[d]?.sessions || 0,
-    }))
-  }
-
-  const { data } = await supabase
-    .from('daily_progress')
-    .select('date, words_mastered, xp_earned, sessions_completed')
-    .eq('user_id', user.id)
-    .in('date', dateList)
-    .order('date', { ascending: true })
-
-  const map = new Map((data || []).map((row: any) => [row.date, row]))
-
-  return dateList.map(date => {
-    const row: any = map.get(date)
-    return {
-      date,
-      words_mastered: row?.words_mastered || 0,
-      xp_earned: row?.xp_earned || 0,
-      sessions_completed: row?.sessions_completed || 0,
-    }
-  })
+  const log = getLocalDailyLog()
+  return dateList.map(d => ({
+    date: d,
+    words_mastered: log[d]?.words || 0,
+    xp_earned: log[d]?.xp || 0,
+    sessions_completed: log[d]?.sessions || 0,
+  }))
 }
 
 export async function getWritingHistory(): Promise<any[]> {
-  if (!hasSupabase()) {
-    try {
-      const raw = localStorage.getItem(WRITING_KEY)
-      return raw ? JSON.parse(raw) : []
-    } catch {
-      return []
-    }
-  }
-
-  const supabase = createClient()
-  if (!supabase) {
+  try {
     const raw = localStorage.getItem(WRITING_KEY)
     return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
   }
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    const raw = localStorage.getItem(WRITING_KEY)
-    return raw ? JSON.parse(raw) : []
-  }
-
-  const { data } = await supabase
-    .from('writing_attempts')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(20)
-
-  return data || []
 }
 
-// --- Reset everything to zero (for "start again from zero") ---
+// --- Reset everything to zero (local only) ---
 export async function resetAllToZero() {
-  // Clear local always
   const keysToClear = [
     BANK_KEY, WRITING_KEY, XP_KEY, STREAK_KEY, LAST_DATE_KEY, DAILY_LOG_KEY,
     'germanforge_bank_mastered', 'germanforge_vocab_completed', 'germanforge_grammar_completed',
-    'germanforge_declensions_completed', 'germanforge_writing_attempts'
+    'germanforge_declensions_completed', 'germanforge_writing_attempts',
+    'germanforge_performance'
   ]
   keysToClear.forEach(k => localStorage.removeItem(k))
-
-  if (!hasSupabase()) {
-    // Guest only - done
-    return
-  }
-
-  const supabase = createClient()
-  if (!supabase) return
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
-
-  // Clear server data for this user
-  await supabase.from('daily_progress').delete().eq('user_id', user.id)
-  await supabase.from('writing_attempts').delete().eq('user_id', user.id)
-
-  // Reset profile
-  await supabase
-    .from('profiles')
-    .update({
-      mastered_bank: [],
-      total_xp: 0,
-      current_streak: 0,
-      last_activity_date: null,
-      daily_goal_words: 15,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', user.id)
-
-  // Note: We keep the auth account itself
 }
 
-// --- Merge on login (extended) ---
+// --- onLoginMerge stub (no login/backend anymore) ---
 export async function onLoginMerge() {
-  await syncLocalBankToServer()
-
-  // Also merge some local XP / daily if the server is at zero (first time login)
-  if (!hasSupabase()) return
-  const supabase = createClient()
-  if (!supabase) return
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('total_xp')
-    .eq('id', user.id)
-    .single()
-
-  const localXp = parseInt(localStorage.getItem(XP_KEY) || '0', 10)
-  if ((profile?.total_xp || 0) === 0 && localXp > 0) {
-    // First time - push local stats
-    const localStreak = parseInt(localStorage.getItem(STREAK_KEY) || '0', 10)
-    const localLast = localStorage.getItem(LAST_DATE_KEY)
-    const localDaily = getLocalDailyLog()
-
-    await supabase
-      .from('profiles')
-      .update({
-        total_xp: localXp,
-        current_streak: localStreak,
-        last_activity_date: localLast,
-      })
-      .eq('id', user.id)
-
-    // Push recent daily logs
-    for (const [dateStr, vals] of Object.entries(localDaily)) {
-      if ((vals as any).words > 0) {
-        await supabase.from('daily_progress').upsert({
-          user_id: user.id,
-          date: dateStr,
-          words_mastered: (vals as any).words,
-          xp_earned: (vals as any).xp,
-          sessions_completed: (vals as any).sessions || 0,
-        })
-      }
-    }
-  }
+  // No-op: everything is local only now
 }
 
 // =====================================================
@@ -605,130 +248,32 @@ export async function logPerformance(category: string, subtopic: string, isCorre
 
   const today = getVietnamDateString();
 
-  // Guest: localStorage
-  if (!hasSupabase()) {
-    const key = 'germanforge_performance';
-    const perf = JSON.parse(localStorage.getItem(key) || '{}');
-    const k = `${category}:${subtopic}`;
-    if (!perf[k]) perf[k] = { attempts: 0, correct: 0, last: '' };
-    perf[k].attempts += 1;
-    if (isCorrect) perf[k].correct += 1;
-    perf[k].last = today;
-    localStorage.setItem(key, JSON.stringify(perf));
-    return;
-  }
-
-  const supabase = createClient();
-  if (!supabase) return;
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
-
-  // Logged-in: upsert to user_performance (table from 003 migration)
-  const { data: existing } = await supabase
-    .from('user_performance')
-    .select('attempts, correct')
-    .eq('user_id', user.id)
-    .eq('category', category)
-    .eq('subtopic', subtopic)
-    .single();
-
-  if (existing) {
-    await supabase
-      .from('user_performance')
-      .update({
-        attempts: existing.attempts + 1,
-        correct: existing.correct + (isCorrect ? 1 : 0),
-        last_practiced: new Date().toISOString(),
-      })
-      .eq('user_id', user.id)
-      .eq('category', category)
-      .eq('subtopic', subtopic);
-  } else {
-    await supabase.from('user_performance').insert({
-      user_id: user.id,
-      category,
-      subtopic,
-      attempts: 1,
-      correct: isCorrect ? 1 : 0,
-    });
-  }
+  const key = 'germanforge_performance';
+  const perf = JSON.parse(localStorage.getItem(key) || '{}');
+  const k = `${category}:${subtopic}`;
+  if (!perf[k]) perf[k] = { attempts: 0, correct: 0, last: '' };
+  perf[k].attempts += 1;
+  if (isCorrect) perf[k].correct += 1;
+  perf[k].last = today;
+  localStorage.setItem(key, JSON.stringify(perf));
 }
 
 export async function getUserPerformance(): Promise<Record<string, { attempts: number; correct: number; accuracy: number }>> {
   const result: Record<string, { attempts: number; correct: number; accuracy: number }> = {};
-
-  if (!hasSupabase()) {
-    const key = 'germanforge_performance';
-    const perf = JSON.parse(localStorage.getItem(key) || '{}');
-    Object.entries(perf).forEach(([k, v]: any) => {
-      const acc = v.attempts > 0 ? Math.round((v.correct / v.attempts) * 100) : 0;
-      result[k] = { attempts: v.attempts, correct: v.correct, accuracy: acc };
-    });
-    return result;
-  }
-
-  const supabase = createClient();
-  if (!supabase) {
-    // fallback to local if client issue
-    const key = 'germanforge_performance';
-    const perf = JSON.parse(localStorage.getItem(key) || '{}');
-    Object.entries(perf).forEach(([k, v]: any) => {
-      const acc = v.attempts > 0 ? Math.round((v.correct / v.attempts) * 100) : 0;
-      result[k] = { attempts: v.attempts, correct: v.correct, accuracy: acc };
-    });
-    return result;
-  }
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return result;
-
-  const { data } = await supabase
-    .from('user_performance')
-    .select('category, subtopic, attempts, correct')
-    .eq('user_id', user.id);
-
-  (data || []).forEach((row: any) => {
-    const k = `${row.category}:${row.subtopic}`;
-    const acc = row.attempts > 0 ? Math.round((row.correct / row.attempts) * 100) : 0;
-    result[k] = { attempts: row.attempts, correct: row.correct, accuracy: acc };
+  const key = 'germanforge_performance';
+  const perf = JSON.parse(localStorage.getItem(key) || '{}');
+  Object.entries(perf).forEach(([k, v]: any) => {
+    const acc = v.attempts > 0 ? Math.round((v.correct / v.attempts) * 100) : 0;
+    result[k] = { attempts: v.attempts, correct: v.correct, accuracy: acc };
   });
-
   return result;
 }
 
-// --- Bank sync helper (kept for onLoginMerge) ---
+// Stubs for removed backend (kept for compat if any old calls)
 export async function syncLocalBankToServer(): Promise<number> {
-  if (!hasSupabase()) return 0
-  const supabase = createClient()
-  if (!supabase) return 0
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return 0
-
-  let local: string[] = []
-  try { local = JSON.parse(localStorage.getItem(BANK_KEY) || '[]') } catch {}
-  if (local.length === 0) return 0
-
-  const { data } = await supabase
-    .from('profiles')
-    .select('mastered_bank')
-    .eq('id', user.id)
-    .single()
-
-  const server: string[] = Array.isArray(data?.mastered_bank) ? data.mastered_bank : []
-  const merged = Array.from(new Set([...server, ...local]))
-
-  if (merged.length > server.length) {
-    await supabase
-      .from('profiles')
-      .update({ mastered_bank: merged, updated_at: new Date().toISOString() })
-      .eq('id', user.id)
-    localStorage.setItem(BANK_KEY, JSON.stringify(merged))
-  }
-  return merged.length
+  return 0
 }
 
-// Helper for quizzes
 export async function masterTermAndSync(term: string) {
   await addToBankMastered(term)
 }

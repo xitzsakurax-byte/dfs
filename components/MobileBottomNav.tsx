@@ -10,7 +10,7 @@ export default function MobileBottomNav() {
     { href: '/dashboard', label: 'Home' },
     { href: '/practice', label: 'Practice' },
     { href: '/practice/bank', label: 'Bank' },
-    { href: '/profile', label: 'Profile' },
+    { href: '/progress', label: 'Progress' },
   ];
 
   const isActive = (href: string) => {

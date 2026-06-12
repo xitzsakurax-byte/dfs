@@ -64,7 +64,7 @@ export default function GermanForgeLanding() {
             </a>
           </div>
 
-          <div className="mt-6 sm:mt-8 text-xs text-[#8F95A3]">Guest mode • No sign-up required • Progress saved in your browser</div>
+          <div className="mt-6 sm:mt-8 text-xs text-[#8F95A3]">Progress saved locally for Anh Kiet • No sign-up • Instant in your browser</div>
         </div>
       </div>
 
@@ -156,7 +156,7 @@ export default function GermanForgeLanding() {
         <Link href="/dashboard" className="inline-block bg-gradient-to-r from-[#8B1E3D] to-[#C24A3A] hover:brightness-105 active:brightness-95 transition-all text-white text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl font-medium w-full sm:w-auto">
           Enter GermanForge
         </Link>
-        <div className="mt-3 sm:mt-4 text-xs text-[#8F95A3]">Guest mode • Everything stays on your device until you sign in</div>
+        <div className="mt-3 sm:mt-4 text-xs text-[#8F95A3]">Everything stays on your device • For Anh Kiet</div>
       </div>
 
     </div>

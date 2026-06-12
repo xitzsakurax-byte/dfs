@@ -4,15 +4,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { createClient, hasSupabase } from '@/lib/supabase/client';
-import { getBankMastered, onLoginMerge, getUserStats, getUserPerformance, getWritingHistory } from '@/lib/progress';
-import { toast } from 'sonner';
+import { getBankMastered, getUserStats, getUserPerformance } from '@/lib/progress';
 import MobileBottomNav from '@/components/MobileBottomNav';
 
 export default function Dashboard() {
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [isGuest, setIsGuest] = useState(true);
-
   const [stats, setStats] = useState({
     totalXp: 0,
     level: 1,
@@ -30,43 +25,28 @@ export default function Dashboard() {
   const [performance, setPerformance] = useState<Record<string, {attempts:number, correct:number, accuracy:number}>>({});
   const [writingAvg, setWritingAvg] = useState(0);
 
-  // Load real stats + auth + bank (merged when signed in)
+  // Pure local load - fast, no auth, no network, always Anh Kiet
   useEffect(() => {
     let mounted = true;
 
     async function load() {
-      // Auth
-      if (hasSupabase()) {
-        const supabase = createClient();
-        if (supabase) {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user && mounted) {
-            setUserEmail(user.email || null);
-            setIsGuest(false);
-            await onLoginMerge();
-          }
-        }
-      }
-
-      // Real stats from the new system (XP, level, streak, daily, suggested goal)
       const realStats = await getUserStats();
       if (mounted) {
         setStats(realStats);
       }
 
-      // Bank
       const bank = await getBankMastered();
       if (mounted) setBankMastered(bank.length);
 
-      // Live updates
+      // Live updates from localStorage (other tabs or after practice)
       const onStorage = (e: StorageEvent) => {
         if (!mounted) return;
         if (e.key === 'germanforge_bank_mastered' && e.newValue) {
           try { setBankMastered(JSON.parse(e.newValue).length); } catch {}
         }
-        // Also refresh stats on any progress change
-        if (['germanforge_total_xp', 'germanforge_daily_log'].includes(e.key || '')) {
+        if (['germanforge_total_xp', 'germanforge_daily_log', 'germanforge_performance'].includes(e.key || '')) {
           getUserStats().then(s => mounted && setStats(s));
+          getUserPerformance().then(p => mounted && setPerformance(p));
         }
       };
       window.addEventListener('storage', onStorage);
@@ -75,46 +55,11 @@ export default function Dashboard() {
 
     load();
 
-    if (hasSupabase()) {
-      const supabase = createClient();
-      if (supabase) {
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
-          if (!mounted) return;
-          if (session?.user) {
-            setUserEmail(session.user.email || null);
-            setIsGuest(false);
-            await onLoginMerge();
-            const s = await getUserStats();
-            setStats(s);
-            const bank = await getBankMastered();
-            setBankMastered(bank.length);
-          } else {
-            setUserEmail(null);
-            setIsGuest(true);
-            const s = await getUserStats();
-            setStats(s);
-            try {
-              const raw = localStorage.getItem('germanforge_bank_mastered');
-              setBankMastered(raw ? JSON.parse(raw).length : 0);
-            } catch {}
-          }
-        });
-        return () => subscription.unsubscribe();
-      }
-    }
+    // Also load performance for insights (local only)
+    getUserPerformance().then(p => {
+      if (mounted) setPerformance(p);
+    });
   }, []);
-
-  async function handleSignOut() {
-    if (!hasSupabase()) return;
-    const supabase = createClient();
-    if (supabase) {
-      await supabase.auth.signOut();
-      setUserEmail(null);
-      setIsGuest(true);
-      toast.success('Signed out. Your local progress is still here.');
-      // Stay on dashboard (guest mode continues to work perfectly)
-    }
-  }
 
   const bankPercent = ((bankMastered / BANK_TOTAL) * 100).toFixed(1);
   const bankContribXP = bankMastered * 3; // every mastered bank word boosts effective progress
@@ -123,7 +68,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] pb-16">
-      {/* Nav */}
+      {/* Nav - no login, no profile, pure local for Anh Kiet */}
       <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4 bg-[#171A21] border-b border-[#2C303A]">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 font-semibold">
@@ -133,35 +78,16 @@ export default function Dashboard() {
           <Link href="/practice" className="text-sm text-[#8F95A3] hover:text-[#EDEEF2]">Practice</Link>
         </div>
 
-        <div className="flex items-center gap-4 text-sm">
-          {userEmail ? (
-            <>
-              <span className="text-[#8F95A3] hidden sm:inline">{userEmail}</span>
-              <button
-                onClick={handleSignOut}
-                className="text-[#8F95A3] hover:text-[#EDEEF2] underline"
-              >
-                Sign out
-              </button>
-              <Link href="/profile" className="text-[#F4C430] hover:underline">Profile</Link>
-            </>
-          ) : (
-            <>
-              <span className="text-[#8F95A3]">Guest</span>
-              <Link href="/login" className="text-[#F4C430] hover:underline">Sign in</Link>
-            </>
-          )}
+        <div className="flex items-center gap-4 text-sm text-[#8F95A3]">
+          <span>Anh Kiet</span>
         </div>
       </nav>
 
       <div className="pt-20 container max-w-5xl mx-auto px-6">
         <div className="mb-8">
-          <div className="text-sm text-[#8F95A3]">
-            {userEmail ? `Good to see you, ${userEmail.split('@')[0]}.` : 'Good to see you, Anh Kiet.'}
-          </div>
+          <div className="text-sm text-[#8F95A3]">Good to see you, Anh Kiet.</div>
           <h1 className="text-3xl font-semibold tracking-tight mt-1">Ready to do some real work today?</h1>
           <div className="mt-1 text-sm text-[#8F95A3]">{stats.streak} days in a row. That’s the kind of consistency that shows up on exam day.</div>
-          {userEmail && <div className="mt-1 text-xs text-[#F4C430]">Progress is now syncing to the cloud.</div>}
         </div>
 
         {/* Today’s focus — now real + uses your suggested goal from history */}
@@ -314,7 +240,7 @@ export default function Dashboard() {
 
 
 
-        <div className="text-center text-xs text-[#8F95A3] mt-8">Guest mode or logged in — your stats are remembered daily (Vietnam time).</div>
+        <div className="text-center text-xs text-[#8F95A3] mt-8">All progress saved locally in your browser (Vietnam time). For Anh Kiet.</div>
       </div>
 
       {/* Mobile phone UI — thumb-friendly bottom tabs (hidden on desktop) */}
