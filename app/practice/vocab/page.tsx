@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { vocabQuestions } from '@/lib/data/vocab';
+import { addToBankMastered } from '@/lib/progress';
 
-// Use the rich data source (expanded, documented, Ausbildung-relevant B1-C1 items)
+// Use the rich data source (expanded, documented, Exam-relevant B1-C1 items)
 const questions = vocabQuestions;
 
 export default function VocabQuiz() {
@@ -93,16 +94,8 @@ export default function VocabQuiz() {
       const newRemaining = remaining.filter(item => item !== currentQ);
       setRemaining(newRemaining);
 
-      // Integrate the 3000+ word bank into gamification: auto-master in bank too (syncs with Resources & dashboard)
-      try {
-        const bankKey = 'germanforge_bank_mastered';
-        const bankSaved = localStorage.getItem(bankKey);
-        const bankMastered = bankSaved ? JSON.parse(bankSaved) : [];
-        if (!bankMastered.includes(currentQ.de)) {
-          const newBankMastered = [...bankMastered, currentQ.de];
-          localStorage.setItem(bankKey, JSON.stringify(newBankMastered));
-        }
-      } catch (e) {}
+      // Unified bank mastery (local + Supabase when signed in). No-repeat across the whole site continues to work.
+      addToBankMastered(currentQ.de); // fire and forget — updates both layers
     }
   }
 
@@ -150,7 +143,7 @@ export default function VocabQuiz() {
   if (!currentQ && !finished) {
     return (
       <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
-        Đang tải...
+        Loading...
       </div>
     );
   }
@@ -159,22 +152,22 @@ export default function VocabQuiz() {
     return (
       <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
         <div className="max-w-md w-full text-center">
-          <h1 className="text-4xl font-semibold tracking-tight mb-2">Hoàn thành!</h1>
-          <div className="text-xl mb-6">Bạn đã hoàn thành tất cả {questions.length} từ vựng (đúng {score} lần trong phiên này)</div>
+          <h1 className="text-4xl font-semibold tracking-tight mb-2">Session complete!</h1>
+          <div className="text-xl mb-6">You finished the round with {score} correct out of this pool.</div>
           <div className="practice-card p-8 mb-6">
             <div className="text-5xl font-bold text-[#F4C430] mb-1">+{earnedXP} XP</div>
-            <div>Đã nắm vững {completed.size}/{questions.length} từ vựng. Kiến thức B1-C1 đang vững dần.</div>
-            <div className="mt-3 text-sm text-[#A8B3C7]">Bank Mastery (3000+ Goethe) đã cập nhật: {bankCount} từ. Mọi câu đúng đều tự động sync vào ngân hàng chung — không lặp lại ở bất kỳ bài tập nào (Vocab/Grammar/Writing/Bank Drill).</div>
+            <div>Mastered in this bank: {completed.size}/{questions.length} terms. Your B1-C1 knowledge is solidifying.</div>
+            <div className="mt-3 text-sm text-[#A8B3C7]">Bank Mastery (3000+ Goethe) updated: {bankCount} terms. Every correct answer syncs to the shared bank — no repeats across Vocab, Grammar, Writing, or Bank Drill.</div>
           </div>
           <div className="flex gap-4 justify-center">
-            <Button onClick={restart} className="btn-primary px-8 py-3">Làm lại phiên này</Button>
+            <Button onClick={restart} className="btn-primary px-8 py-3">Practice this round again</Button>
             <Button asChild className="btn-ghost px-8 py-3">
-              <Link href="/dashboard">Về Dashboard</Link>
+              <Link href="/dashboard">Back to Dashboard</Link>
             </Button>
           </div>
           <div className="mt-4">
             <Button onClick={resetAllProgress} className="btn-ghost px-6 py-2 text-sm">
-              Xóa toàn bộ tiến độ đã nắm (reset all mastered)
+              Reset all mastered progress
             </Button>
           </div>
         </div>
@@ -186,18 +179,18 @@ export default function VocabQuiz() {
     <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
       <div className="container max-w-2xl mx-auto px-6">
         <div className="flex items-center justify-between mb-6">
-          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Quay lại</Link>
+          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Back to Practice</Link>
           <div className="flex items-center gap-4">
             <div className="font-mono text-sm text-[var(--muted)]">
-              {score} đúng / {remaining.length} còn lại • Đã nắm: {completed.size}/{questions.length} • Bank 3000+: <span className="text-[#F4C430]">{bankCount}</span>
+              {score} correct / {remaining.length} left • Mastered: {completed.size}/{questions.length} • Bank 3000+: <span className="text-[#F4C430]">{bankCount}</span>
             </div>
           </div>
         </div>
 
         <div className="practice-card p-8">
-          <div className="text-xs tracking-[2px] text-[#F4C430] mb-1">TỪ VỰNG B1-C1</div>
+          <div className="text-xs tracking-[2px] text-[#F4C430] mb-1">B1-C1 EXAM VOCABULARY</div>
           <div className="text-4xl font-semibold tracking-tight mb-4">{currentQ.de}</div>
-          <div className="text-[#A8B3C7] mb-6">Nghĩa tiếng Anh là gì?</div>
+          <div className="text-[#A8B3C7] mb-6">What is the English meaning?</div>
 
           <div className="space-y-3">
             {currentOptions.map((opt, idx) => {
@@ -208,7 +201,7 @@ export default function VocabQuiz() {
                 else if (selected === opt) cls += " wrong";
               }
               return (
-                <button key={idx} onClick={() => choose(opt)} disabled={isAnswered} className={cls}>
+                <button key={idx} onClick={() => choose(opt)} disabled={isAnswered} className={`${cls} min-h-[52px] sm:min-h-[44px]`}>
                   {opt}
                 </button>
               );
@@ -220,14 +213,14 @@ export default function VocabQuiz() {
               <motion.div className={`feedback mt-4 ${selected === currentQ.en ? 'correct' : 'wrong'}`} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}}>
                 {selected === currentQ.en ? (
                   <>
-                    Đúng! +15-20 XP
+                    Correct! +15–20 XP
                     {currentQ.example && (
-                      <div className="mt-2 text-sm opacity-90">Ví dụ: <span className="font-medium">{currentQ.example}</span></div>
+                      <div className="mt-2 text-sm opacity-90">Example: <span className="font-medium">{currentQ.example}</span></div>
                     )}
-                    {currentQ.topic && <div className="text-xs mt-1 opacity-70">Chủ đề: {currentQ.topic} • {currentQ.cefr}</div>}
+                    {currentQ.topic && <div className="text-xs mt-1 opacity-70">Topic: {currentQ.topic} • {currentQ.cefr}</div>}
                   </>
                 ) : (
-                  `Đáp án đúng: ${currentQ.en}`
+                  `Correct answer: ${currentQ.en}`
                 )}
               </motion.div>
             )}
@@ -236,7 +229,7 @@ export default function VocabQuiz() {
 
         <div className="mt-6 flex justify-end">
           <Button onClick={next} disabled={!isAnswered} className="btn-primary px-8 py-3 disabled:opacity-50">
-            {isAnswered && selected === currentQ.en ? "Tiếp tục (không lặp lại từ này)" : "Tiếp tục"}
+            {isAnswered && selected === currentQ.en ? "Continue (no repeat this term)" : "Continue"}
           </Button>
         </div>
       </div>

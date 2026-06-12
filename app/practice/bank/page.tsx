@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import fullVocab from '@/lib/data/full-vocab.json';
+import { getBankMastered, addToBankMastered } from '@/lib/progress';
 
 const BANK_TOTAL = 3078;
 const DRILL_SIZE = 12;
@@ -20,39 +21,42 @@ export default function BankDrill() {
   const [finished, setFinished] = useState(false);
   const [lastAction, setLastAction] = useState<'master' | 'skip' | null>(null);
 
-  // Load shared bank mastery (synced from quizzes, resources, dashboard)
+  // Load shared bank mastery (now unified: Supabase when logged in, localStorage for guests + instant)
   useEffect(() => {
-    const saved = localStorage.getItem(BANK_KEY);
-    const mastered = saved ? JSON.parse(saved) : [];
-    setBankMastered(mastered);
+    async function load() {
+      const mastered = await getBankMastered();
+      setBankMastered(mastered);
 
-    // Build drill: prefer unmastered for gamification progress, then random fill
-    const unmastered = [...fullVocab].sort(() => Math.random() - 0.5).filter(w => !mastered.includes(w));
-    let drill = unmastered.slice(0, DRILL_SIZE);
-    if (drill.length < DRILL_SIZE) {
-      const fillers = [...fullVocab].sort(() => Math.random() - 0.5).filter(w => !drill.includes(w)).slice(0, DRILL_SIZE - drill.length);
-      drill = [...drill, ...fillers];
+      // Build drill preferring unmastered
+      const unmastered = [...fullVocab].sort(() => Math.random() - 0.5).filter(w => !mastered.includes(w));
+      let drill = unmastered.slice(0, DRILL_SIZE);
+      if (drill.length < DRILL_SIZE) {
+        const fillers = [...fullVocab].sort(() => Math.random() - 0.5).filter(w => !drill.includes(w)).slice(0, DRILL_SIZE - drill.length);
+        drill = [...drill, ...fillers];
+      }
+      setDrillWords(drill);
     }
-    setDrillWords(drill);
+    load();
   }, []);
 
   const currentWord = drillWords[currentIndex] || '';
   const progress = drillWords.length > 0 ? Math.round(((currentIndex + (lastAction ? 1 : 0)) / drillWords.length) * 100) : 0;
   const masteryPercent = ((bankMastered.length / BANK_TOTAL) * 100).toFixed(1);
 
-  function masterWord() {
+  async function masterWord() {
     if (!currentWord || finished) return;
 
     const isNew = !bankMastered.includes(currentWord);
-    let newMastered = bankMastered;
     if (isNew) {
-      newMastered = [...bankMastered, currentWord];
+      const newMastered = [...bankMastered, currentWord];
       setBankMastered(newMastered);
-      localStorage.setItem(BANK_KEY, JSON.stringify(newMastered));
       setSessionNew(s => s + 1);
+
+      // This handles localStorage + Supabase (when signed in) in one call
+      await addToBankMastered(currentWord);
     }
 
-    const points = 8 + Math.floor(Math.random() * 7); // 8-14 XP per bank mastery action
+    const points = 8 + Math.floor(Math.random() * 7);
     setEarnedXP(e => e + points);
     setLastAction('master');
 
@@ -100,7 +104,7 @@ export default function BankDrill() {
   if (!currentWord && !finished) {
     return (
       <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
-        Đang tải ngân hàng 3000+ từ...
+        Loading the 3000+ bank...
       </div>
     );
   }
@@ -109,34 +113,34 @@ export default function BankDrill() {
     return (
       <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] flex items-center justify-center p-6">
         <div className="max-w-md w-full text-center">
-          <h1 className="text-4xl font-semibold tracking-tight mb-2">Bank Drill Hoàn thành!</h1>
-          <div className="text-xl mb-6">Bạn đã xử lý {drillWords.length} từ từ ngân hàng chính thức Goethe.</div>
+          <h1 className="text-4xl font-semibold tracking-tight mb-2">Bank Drill complete!</h1>
+          <div className="text-xl mb-6">You processed {drillWords.length} terms from the official Goethe bank.</div>
 
           <div className="practice-card p-8 mb-6">
             <div className="text-5xl font-bold text-[#F4C430] mb-1">+{earnedXP} XP</div>
-            <div className="text-[#A8B3C7] mb-3">Đã nắm mới trong drill: <span className="font-semibold text-[#F5F7FA]">{sessionNew}</span></div>
-            <div className="text-sm">Tổng Bank Mastery: <span className="font-mono text-[#F4C430]">{bankMastered.length}/{BANK_TOTAL}</span> ({masteryPercent}%)</div>
-            <div className="mt-2 text-xs text-[#A8B3C7]">Mỗi từ đã master đóng góp trực tiếp vào gamification, level và độ sẵn sàng Ausbildung của bạn.</div>
+            <div className="text-[#A8B3C7] mb-3">Newly mastered this drill: <span className="font-semibold text-[#F5F7FA]">{sessionNew}</span></div>
+            <div className="text-sm">Total Bank Mastery: <span className="font-mono text-[#F4C430]">{bankMastered.length}/{BANK_TOTAL}</span> ({masteryPercent}%)</div>
+            <div className="mt-2 text-xs text-[var(--muted)]">Every mastered term directly improves your readiness for the TELC and Goethe B1-C1 exams.</div>
           </div>
 
           <div className="flex gap-3 justify-center mb-4">
-            <Button onClick={restartDrill} className="btn-primary px-8 py-3">Làm drill mới (không lặp từ đã biết)</Button>
+            <Button onClick={restartDrill} className="btn-primary px-8 py-3">New drill (avoid already known)</Button>
             <Button asChild className="btn-ghost px-8 py-3">
-              <Link href="/dashboard">Về Dashboard</Link>
+              <Link href="/dashboard">Back to Dashboard</Link>
             </Button>
           </div>
 
           <div className="flex gap-3 justify-center">
             <Button asChild className="btn-ghost px-6 py-2 text-sm">
-              <Link href="/resources">Xem toàn bộ ngân hàng &amp; Resources</Link>
+              <Link href="/resources">View full bank &amp; Resources</Link>
             </Button>
             <Button onClick={resetBank} className="btn-ghost px-6 py-2 text-sm text-[#A8B3C7]">
-              Reset toàn bộ Bank Mastery
+              Reset entire Bank Mastery
             </Button>
           </div>
 
           <div className="mt-6 text-xs text-[#A8B3C7]">
-            Tiếp tục: các bài Vocab / Grammar / Writing cũng tự động sync từ đúng vào ngân hàng này (không lặp lại sau khi đúng).
+            Continue: Vocab / Grammar / Writing quizzes also auto-sync correct answers into this bank (no repeats after correct).
           </div>
         </div>
       </div>
@@ -148,7 +152,7 @@ export default function BankDrill() {
       <div className="container max-w-2xl mx-auto px-6">
         {/* Header with live bank gamification stat */}
         <div className="flex items-center justify-between mb-6">
-          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Quay lại Practice</Link>
+          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Back to Practice</Link>
           <div className="flex items-center gap-4 text-sm font-mono text-[var(--muted)]">
             Bank: <span className="text-[#F4C430]">{bankMastered.length}/{BANK_TOTAL}</span> • Drill {currentIndex + 1}/{drillWords.length}
           </div>
@@ -156,8 +160,8 @@ export default function BankDrill() {
 
         <div className="mb-4">
           <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">OFFICIAL GOETHE 3000+ WORTLISTE • GAMIFICATION</div>
-          <h1 className="text-3xl font-semibold tracking-tight">Ngân hàng từ vựng chính thức — Quick Mastery Drill</h1>
-          <p className="text-[#A8B3C7] mt-1 text-sm">Master từng từ → +8–14 XP • Tự động sync với Vocab, Grammar, Writing • Không lặp từ đã nắm • Góp phần level &amp; Ausbildung readiness</p>
+          <h1 className="text-3xl font-semibold tracking-tight">Official Vocabulary Bank — Quick Mastery Drill</h1>
+          <p className="text-[var(--muted)] mt-1 text-sm">Master terms → +XP • Real-time sync with all training modules • No-repeat system • Builds direct exam readiness</p>
         </div>
 
         {/* Progress bar for this drill + global */}
@@ -174,7 +178,7 @@ export default function BankDrill() {
 
         {/* Main card - clean, no icons, high contrast */}
         <div className="practice-card p-8 mb-6">
-          <div className="text-xs tracking-[2px] text-[#F4C430] mb-2">TỪ TỪ NGÂN HÀNG CHÍNH THỨC (B1-C1+)</div>
+          <div className="text-xs tracking-[2px] text-[#F4C430] mb-2">OFFICIAL BANK TERMS (B1-C1+)</div>
 
           <AnimatePresence mode="wait">
             <motion.div
@@ -188,29 +192,29 @@ export default function BankDrill() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="text-[#A8B3C7] text-sm mb-6">Nhận diện / nắm từ này? Nhấn Master để ghi nhận vào ngân hàng 3000+ (không lặp lại sau này ở mọi bài tập).</div>
+          <div className="text-[#A8B3C7] text-sm mb-6">Recognize and own this term? Tap Master to record it in the 3000+ bank (it will not repeat later in any exercise).</div>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Button onClick={masterWord} className="btn-primary flex-1 py-4 text-lg">
-              Master từ này (+8–14 XP)
+              Master this term (+8–14 XP)
             </Button>
             <Button onClick={skipWord} className="btn-ghost flex-1 py-4 text-lg border border-[var(--line)]">
-              Bỏ qua (luyện sau)
+              Skip (practice later)
             </Button>
           </div>
 
           <div className="mt-4 text-xs text-[#A8B3C7] text-center">
-            Mỗi lần Master góp phần streak, level và % Bank Mastery toàn cục. Dữ liệu sync real-time với Dashboard &amp; các quiz.
+            Each Master contributes to streak, level and global Bank Mastery %. Data syncs live with Dashboard and all quizzes.
           </div>
         </div>
 
         <div className="text-center">
-          <Button onClick={restartDrill} className="btn-ghost px-6 py-2 text-sm mr-3">Bắt đầu drill mới</Button>
-          <Link href="/resources" className="text-sm text-[#F4C430] hover:underline">Xem danh sách đầy đủ &amp; tìm kiếm →</Link>
+          <Button onClick={restartDrill} className="btn-ghost px-6 py-2 text-sm mr-3">Start new drill</Button>
+          <Link href="/resources" className="text-sm text-[#F4C430] hover:underline">View full list &amp; search →</Link>
         </div>
 
         <div className="mt-8 text-xs text-[#A8B3C7] text-center">
-          Random hóa hoàn toàn • Ưu tiên từ chưa nắm • Tích hợp đầy đủ vào gamification (dashboard, mọi bài tập, writing mock).
+          Fully randomized • Prioritizes unmastered • Fully integrated into gamification (dashboard, every quiz, writing).
         </div>
       </div>
     </div>

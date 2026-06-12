@@ -1,12 +1,9 @@
 // GermanForge — Writing Mock Tests (TELC + Goethe B1-C1)
-// This is part of the "database" for language learning, focused on professional/Ausbildung writing.
-// Sources: Inspired by official Goethe-Zertifikat B1 and TELC B1 Schreiben tasks (emails, reports, opinions).
-// Prompts are mixed (random selection on start). Real exams have time limits (~30-45 min total for 2 tasks) and specific criteria.
-// AI Rating: Client-side simulation (word count, keyword match from prompt + 3000+ Wortliste bank, sentence variety, coherence heuristics).
-// In production: Call real LLM (e.g. Grok/xAI API or OpenAI) with the prompt + user text + official rubric for accurate scoring + corrections.
-// Criteria aligned with Goethe/TELC B1: Content (task fulfilment), Structure/Coherence, Vocabulary (range + accuracy), Grammar (range + accuracy).
-// Each prompt encourages use of words from the full 3000+ bank (see resources + vocab data).
-// "Mix them up": Random prompt pair (TELC-style or Goethe-style) on each test start. Multiple variants for replayability.
+// Professional exam preparation only. Authentic TELC and Goethe B1-C1 writing tasks (emails, reports, opinion texts).
+// Prompts follow official exam formats and criteria. Random selection on start. Time limits match real exams.
+// AI Rating: Heuristic simulation based on official criteria + cross-reference to the 3000+ B1 exam vocabulary bank.
+// In production: Use real LLM with official TELC/Goethe rubric for accurate scoring and corrections.
+// All tasks encourage use of high-frequency B1 exam vocabulary from the official bank.
 
 export type WritingTask = {
   title: string;
@@ -30,74 +27,74 @@ export const writingPromptSets: WritingPromptSet[] = [
   {
     id: 1,
     type: 'Goethe',
-    title: 'Goethe B1 Schreiben – Email + Bericht (Ausbildung)',
-    description: 'Mô phỏng bài thi viết Goethe B1: Email chuyên nghiệp + bài báo cáo ngắn về trải nghiệm đào tạo nghề.',
+    title: 'Goethe B1 Writing – Formal Email + Short Report',
+    description: 'Authentic Goethe B1 writing simulation: a professional email followed by a concise report or article on work experience, training or sustainability.',
     totalTimeMin: 45,
     tasks: [
       {
-        title: 'Task 1: Formal Email (80-100 từ)',
-        instructions: 'Bạn là học viên Ausbildung. Viết email cho người phụ trách nhân sự (HR) của công ty để hỏi về cơ hội tiếp tục làm việc sau khi hoàn thành Ausbildung. Sử dụng ngôn ngữ lịch sự, nêu rõ lý do và hỏi về các bước tiếp theo. Đề cập đến kỹ năng bạn đã học (ví dụ: làm việc nhóm, bền vững).',
+        title: 'Task 1: Formal Email (80-100 words)',
+        instructions: 'Write a polite formal email to the HR manager of a company. Inquire about possibilities to continue working after completing vocational training. Clearly state your reasons, mention key skills you have acquired (e.g. teamwork, sustainability practices), and ask about next steps.',
         targetWords: 90,
         keywords: ['bewerben', 'Ausbildung', 'Weiterbildung', 'Teamgeist', 'Nachhaltigkeit', 'Verantwortung'],
         modelSnippet: 'Sehr geehrte Frau/Herr ..., ich wende mich an Sie, weil ... Während meiner Ausbildung habe ich gelernt, ... Ich würde mich freuen, wenn ...',
       },
       {
-        title: 'Task 2: Short Report / Article (120-150 từ)',
-        instructions: 'Dựa trên các điểm gợi ý: Mô tả một dự án hoặc trải nghiệm trong Ausbildung của bạn (ví dụ: tham gia cải thiện quy trình bền vững tại nơi làm việc). Nêu ưu điểm, thách thức và bài học. Viết như bài đăng trên nội bộ công ty hoặc blog nghề nghiệp.',
+        title: 'Task 2: Short Report / Article (120-150 words)',
+        instructions: 'Describe a project or experience during your training (for example, participating in a sustainability improvement at the workplace). Mention advantages, challenges and what you learned. Write in the style of an internal company post or professional blog entry.',
         targetWords: 130,
         keywords: ['Nachhaltigkeit', 'Projekt', 'Verantwortung', 'Team', 'Erfolg', 'Zukunft'],
         modelSnippet: 'In meinem Ausbildungsprojekt haben wir ... Das hat zu ... geführt. Die Herausforderung war ... Am Ende habe ich gelernt, dass ...',
       },
     ],
-    tips: 'Sử dụng từ vựng từ ngân hàng 3000+ Wortliste (ví dụ: Nachhaltigkeit, Fachkraft). Cấu trúc rõ ràng: mở đầu - nội dung - kết luận. Kiểm tra ngữ pháp (Konjunktiv nếu cần).',
+    tips: 'Use vocabulary from the 3000+ official Wortliste (e.g. Nachhaltigkeit, Fachkraft). Structure clearly: introduction, main points, conclusion. Check grammar (subjunctive where appropriate for polite requests or hypotheticals).',
   },
   {
     id: 2,
     type: 'TELC',
-    title: 'TELC B1 Schreiben – Email + Forum Post (Beruf & Alltag)',
-    description: 'Mô phỏng TELC B1: Email cho đồng nghiệp + bài viết ý kiến trên diễn đàn về cuộc sống làm việc tại Đức (phù hợp người chuẩn bị Ausbildung).',
+    title: 'TELC B1 Writing – Email to Colleague + Forum Opinion',
+    description: 'TELC B1 style simulation: a practical email to a colleague plus a short opinion post on a forum about working life in Germany.',
     totalTimeMin: 40,
     tasks: [
       {
-        title: 'Task 1: Email to Colleague (70-90 từ)',
-        instructions: 'Viết email cho đồng nghiệp mới (bằng tiếng Đức lịch sự) để sắp xếp lịch họp về dự án đào tạo nghề. Đề cập đến lý do, thời gian đề xuất và hỏi ý kiến. Giả sử bạn đang ở giai đoạn giữa Ausbildung.',
+        title: 'Task 1: Email to Colleague (70-90 words)',
+        instructions: 'Write a polite email in German to a new colleague to arrange a meeting about a training project. Include the reason, suggest a time, and ask for their opinion. Assume you are in the middle of a training program.',
         targetWords: 80,
         keywords: ['Ausbildung', 'Projekt', 'Termin', 'Kollege', 'Verabredung', 'Information'],
         modelSnippet: 'Hallo [Name], ich hoffe, es geht dir gut. Ich möchte mit dir über ... sprechen. Können wir uns am ... treffen? Was hältst du davon?',
       },
       {
-        title: 'Task 2: Opinion Text for Forum (100-130 từ)',
-        instructions: 'Viết bài đăng trên diễn đàn dành cho người nước ngoài làm việc tại Đức: "Làm thế nào để cân bằng công việc và cuộc sống trong Ausbildung?" Nêu ý kiến cá nhân, ví dụ từ trải nghiệm, và lời khuyên. Sử dụng connectors (deshalb, trotzdem, außerdem).',
+        title: 'Task 2: Opinion Text for Forum (100-130 words)',
+        instructions: 'Write a forum post for foreigners working in Germany on the topic: "How to balance work and personal life during vocational training?" Give your personal view, an example from experience, and practical advice. Use connectors such as deshalb, trotzdem, außerdem.',
         targetWords: 115,
         keywords: ['Arbeitsplatz', 'Freizeit', 'Gesundheit', 'Zukunft', 'Team', 'Stress'],
         modelSnippet: 'Meiner Meinung nach ist es wichtig, ... Deshalb versuche ich, ... Ein guter Tipp ist ... Am Ende hilft das, motiviert zu bleiben.',
       },
     ],
-    tips: 'TELC chú trọng giao tiếp thực tế. Sử dụng từ ngân hàng Wortliste để làm phong phú từ vựng. Đếm từ chính xác. AI sẽ đánh giá theo tiêu chí TELC/Goethe B1.',
+    tips: 'TELC emphasizes practical everyday and professional communication. Enrich vocabulary with terms from the official Wortliste. Count words accurately. The rater evaluates against TELC/Goethe B1 criteria.',
   },
   {
     id: 3,
     type: 'Mixed',
-    title: 'Mixed TELC + Goethe B1-C1 – Professional Writing (Sustainability Focus)',
-    description: 'Kết hợp: Email nội bộ (TELC-style) + bài phân tích ngắn (Goethe-style) về chủ đề bền vững trong doanh nghiệp – rất phổ biến trong Ausbildung kỹ thuật/môi trường.',
+    title: 'Mixed TELC + Goethe B1-C1 – Professional & Sustainability Writing',
+    description: 'Combined format: internal email (TELC-style) + short analysis/report (Goethe-style) on a sustainability topic in a company – a frequent theme in B1-C1 exams.',
     totalTimeMin: 50,
     tasks: [
       {
-        title: 'Task 1: Internal Email (90-110 từ)',
-        instructions: 'Bạn là Ausbildung ở bộ phận sản xuất. Viết email cho quản lý đề xuất một thay đổi nhỏ để tăng tính bền vững (ví dụ: giảm rác thải, tiết kiệm năng lượng). Nêu lý do, lợi ích và đề nghị họp.',
+        title: 'Task 1: Internal Email (90-110 words)',
+        instructions: 'Write an email to your manager proposing a small change to improve sustainability in the production department (e.g. reduce waste or save energy). State the reason, expected benefits, and suggest a short meeting to discuss.',
         targetWords: 100,
         keywords: ['Nachhaltigkeit', 'Projekt', 'Verantwortung', 'Idee', 'Zukunft', 'Kosten'],
         modelSnippet: 'Sehr geehrter Herr/Frau ..., ich habe eine Idee für ... Das würde ... verbessern. Können wir darüber sprechen?',
       },
       {
-        title: 'Task 2: Short Analysis / Report (110-140 từ)',
-        instructions: 'Viết đoạn văn mô tả tác động của một biện pháp bền vững mà bạn quan sát được trong công ty (hoặc giả định). So sánh trước/sau, nêu ưu/nhược, và kết luận cho tương lai Ausbildung.',
+        title: 'Task 2: Short Analysis / Report (110-140 words)',
+        instructions: 'Write a paragraph describing the impact of a sustainability measure you observed (or imagine) in a company. Compare before and after, note pros/cons, and conclude with the broader value for the future of professional training.',
         targetWords: 125,
         keywords: ['Umwelt', 'Veränderung', 'Erfolg', 'Teamgeist', 'Betrieb', 'Zukunft'],
         modelSnippet: 'Vor der Maßnahme ... Danach hat sich ... verbessert. Die Mitarbeiter haben ... gelernt. Insgesamt ist das ein Schritt in die richtige Richtung für die Ausbildung.',
       },
     ],
-    tips: 'Kết hợp hai định dạng thi. Sử dụng từ vựng chuyên sâu từ 3000+ bank (bắt buộc đề cập ít nhất 3-4 từ như Nachhaltigkeit, Verantwortung). AI rating sẽ kiểm tra việc sử dụng từ vựng thực tế.',
+    tips: 'Combine both exam formats in one sitting. Must incorporate at least 3-4 advanced terms from the 3000+ bank (e.g. Nachhaltigkeit, Verantwortung). The rating checks realistic vocabulary use and coherence.',
   },
 ];
 
@@ -108,7 +105,7 @@ export function getRandomWritingPrompt(): WritingPromptSet {
 }
 
 // Simple client-side "AI" rater (heuristic + templates).
-// Production: Replace with real LLM call (prompt = rubric + userText + "Rate like official Goethe/TELC examiner. Give score 0-20 per criterion, detailed feedback in German + Vietnamese if needed, corrections.").
+// Production: Replace with real LLM call (prompt = rubric + userText + "Rate like official Goethe/TELC examiner. Give score 0-20 per criterion, detailed feedback and corrections.").
 export function rateWritingAI(text: string, task: WritingTask, allBankWords: string[] = []) {
   const cleanText = text.trim();
   const wordCount = cleanText.split(/\s+/).filter(Boolean).length;
@@ -129,22 +126,22 @@ export function rateWritingAI(text: string, task: WritingTask, allBankWords: str
   const total = Math.round(((contentScore + structureScore + vocabScore + grammarScore) / 20) * 20);
 
   // "AI-written" feedback (varied templates, professional tone, references to official criteria and the word bank)
-  let feedback = `🤖 AI Rater (mô phỏng theo tiêu chí chính thức Goethe-Zertifikat B1 & TELC B1 Schreiben)\n\n`;
-  feedback += `Điểm tổng: ${total}/20\n\n`;
-  feedback += `• Nội dung (Content): ${contentScore}/5 — ${contentScore >= 4 ? 'Hoàn thành tốt nhiệm vụ, có ví dụ cụ thể.' : 'Cần chi tiết hơn hoặc bám sát yêu cầu prompt.'}\n`;
-  feedback += `• Cấu trúc & Liên kết (Structure/Coherence): ${structureScore}/5 — ${structureScore >= 4 ? 'Đoạn văn rõ ràng, dùng connectors tốt.' : 'Nên chia đoạn và dùng từ nối nhiều hơn (deshalb, trotzdem, außerdem).'}\n`;
-  feedback += `• Từ vựng (Vocabulary): ${vocabScore}/5 — ${vocabScore >= 4 ? 'Đa dạng, dùng được từ chuyên ngành Ausbildung.' : 'Hãy thử dùng thêm từ từ ngân hàng 3000+ Wortliste như "Nachhaltigkeit", "Teamgeist", "Verantwortung".'}\n`;
-  feedback += `• Ngữ pháp (Grammar): ${grammarScore}/5 — ${grammarScore >= 4 ? 'Câu đúng, ít lỗi cơ bản.' : 'Kiểm tra thì (Präsens/Perfekt) và cấu trúc phức (Relativsätze, Konjunktiv nếu phù hợp).'}\n\n`;
+  let feedback = `🤖 AI Rater (simulated according to official Goethe-Zertifikat B1 & TELC B1 writing criteria)\n\n`;
+  feedback += `Total score: ${total}/20\n\n`;
+  feedback += `• Content: ${contentScore}/5 — ${contentScore >= 4 ? 'Task completed well with specific examples.' : 'Add more detail and stay closer to the prompt requirements.'}\n`;
+  feedback += `• Structure & Coherence: ${structureScore}/5 — ${structureScore >= 4 ? 'Clear paragraphs and good use of connectors.' : 'Divide into paragraphs and use more linking words (deshalb, trotzdem, außerdem).'}\n`;
+  feedback += `• Vocabulary: ${vocabScore}/5 — ${vocabScore >= 4 ? 'Varied and appropriate professional terms used.' : 'Try integrating more terms from the 3000+ Wortliste such as "Nachhaltigkeit", "Teamgeist", "Verantwortung".'}\n`;
+  feedback += `• Grammar: ${grammarScore}/5 — ${grammarScore >= 4 ? 'Correct sentences, few basic errors.' : 'Check tenses (Präsens/Perfekt) and complex structures (relative clauses, Konjunktiv where suitable).'}\n\n`;
 
   if (total >= 16) {
-    feedback += `Điểm mạnh: Bài viết chuyên nghiệp, phù hợp môi trường làm việc Đức. Tiếp tục luyện với các prompt khác để đạt B2.\n`;
+    feedback += `Strengths: Professional tone suitable for a German workplace context. Continue with other prompts to reach B2 level.\n`;
   } else {
-    feedback += `Điểm cần cải thiện: ${wordCount < task.targetWords * 0.8 ? 'Tăng độ dài (nhắm đúng target words).' : ''} ${matchedBank < 2 ? 'Tích hợp thêm từ vựng từ ngân hàng Wortliste (xem Resources).' : ''}\n`;
+    feedback += `Areas to improve: ${wordCount < task.targetWords * 0.8 ? 'Increase length to better match target word count.' : ''} ${matchedBank < 2 ? 'Integrate more vocabulary from the Wortliste bank (see Resources).' : ''}\n`;
   }
 
-  feedback += `\nGợi ý từ ngân hàng 3000+ (dùng trong bài sau): ${task.keywords.slice(0, 3).join(', ')}.\n`;
-  feedback += `Phiên bản gợi ý cải tiến (mẫu): ${task.modelSnippet}\n\n`;
-  feedback += `Lưu ý: Đây là mô phỏng AI (heuristic + template). Trong môi trường thương mại thực tế sẽ gọi LLM (Grok/xAI hoặc tương đương) với rubric đầy đủ để chấm điểm chính xác + sửa chi tiết + giải thích theo tiêu chuẩn thi.`;
+  feedback += `\nSuggested Wortliste terms for your next piece: ${task.keywords.slice(0, 3).join(', ')}.\n`;
+  feedback += `Model improvement snippet: ${task.modelSnippet}\n\n`;
+  feedback += `Note: This is a heuristic simulation. In a real commercial version a full LLM (Grok/xAI or equivalent) would be called with the complete official rubric for accurate scoring, detailed corrections and explanations aligned to the exam standards.`;
 
   return {
     total,

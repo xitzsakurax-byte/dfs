@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
-// Add elegant fonts inspired by du hoc nghe duc project for professional Vietnamese/German audience
+// Professional elegant fonts for GermanForge B1-C1 TELC & Goethe exam prep
 import { Cormorant_Garamond } from "next/font/google";
 
 const cormorant = Cormorant_Garamond({
@@ -26,8 +26,8 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Luyện Tiếng Đức B1-C1 | DHND GermanForge",
-  description: "Luyện tiếng Đức chuyên nghiệp B1-C1 cho du học nghề Đức (Ausbildung). Bài tập tinh gọn, hình ảnh thực tế, tiến độ rõ ràng. Phối hợp với DHND – Du Học Nghề Đức.",
+  title: "GermanForge | B1-C1 TELC & Goethe Exam Prep",
+  description: "Professional B1-C1 exam preparation for TELC and Goethe-Zertifikat. Authentic exam tasks, targeted training, measurable progress. Master the exams with confidence.",
   icons: {
     icon: "/favicon.ico",
   },
@@ -46,9 +46,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <footer className="border-t border-[var(--line)] bg-[var(--surface)] py-6 mt-auto text-center text-sm text-[var(--muted)]">
-          Phối hợp với <a href="http://localhost:3001" target="_blank" rel="noopener" className="text-[var(--gold)] hover:underline">DHND — Du Học Nghề Đức</a> | Khám phá lộ trình Ausbildung đầy đủ, hỗ trợ visa và cuộc sống tại Đức.
+          GermanForge — Professional Preparation for TELC B1 &amp; Goethe B1-C1 Exams
           <br />
-          <a href="http://localhost:3000" className="text-[var(--gold)] hover:underline">GermanForge — Luyện Tiếng Đức B1-C1 (Công cụ hỗ trợ)</a>
+          Authentic exam tasks • Official vocabulary bank • Targeted skill training
         </footer>
         <Toaster position="top-center" richColors closeButton />
       </body>

@@ -1,94 +1,100 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Professional dark theme from du hoc nghe duc (ausbildung-website) */
-:root {
-  --bg: #0A0D14;
-  --surface: #12161F;
-  --surface2: #1A1F2B;
-  --text: #F5F7FA;
-  --muted: #A8B3C7;
-  --black: #111418;
-  --red: #C8102E;
-  --gold: #F4C430;
-  --gold2: #D4A017;
-  --blue: #3B82F6;
-  --green: #10B981;
-  --line: rgba(255,255,255,.08);
-  --glow: rgba(244,196,48,.35);
+/* Human, warm, thoughtful dark theme for people actually studying for TELC & Goethe exams.
+   Less "AI dashboard", more like a calm, serious study room someone put care into.
+   Warm red/gold heritage (German exam feel) mixed with soft, readable neutrals. */
 
-  /* shadcn */
+:root {
+  --bg: #0F1116;
+  --surface: #171A21;
+  --surface2: #20242D;
+  --text: #EDEEF2;
+  --muted: #8F95A3;
+  --line: #2C303A;
+
+  /* Warmer, more human accent — deep exam red with a touch of gold warmth */
+  --accent: #8B1E3D;
+  --accent-2: #C24A3A;
+  --accent-warm: #B76E3E;
+
+  --green: #2A6B4E;
+  --red-soft: #A13A3A;
+
+  /* shadcn mappings */
   --background: var(--bg);
   --foreground: var(--text);
   --card: var(--surface);
   --card-foreground: var(--text);
   --popover: var(--surface2);
   --popover-foreground: var(--text);
-  --primary: var(--red);
+  --primary: var(--accent);
   --primary-foreground: #fff;
   --secondary: var(--surface2);
   --secondary-foreground: var(--text);
   --muted: var(--surface);
   --muted-foreground: var(--muted);
-  --accent: var(--gold);
-  --accent-foreground: var(--black);
-  --destructive: #ef4444;
+  --accent: var(--accent-2);
+  --accent-foreground: #fff;
+  --destructive: #A13A3A;
   --border: var(--line);
   --input: var(--surface2);
-  --ring: var(--gold);
-  --radius: 0.75rem;
+  --ring: var(--accent);
+  --radius: 10px;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Be Vietnam Pro', var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   line-height: 1.7;
 }
 
-/* Flag stripe */
-body::after {
-  content: '';
-  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 200;
-  background: linear-gradient(to right, var(--black) 0%, var(--black) 33%, var(--red) 33%, var(--red) 66%, var(--gold) 66%, var(--gold) 100%);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.6);
-}
-
-/* Cards like previous */
-.practice-card, .skill-card, .feature-card {
+/* Human cards — varied, not perfect clones. Softer, with real presence. */
+.practice-card, .skill-card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 12px;
-  position: relative;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: all .25s cubic-bezier(0.4,0,0.2,1);
-}
-.practice-card::before, .skill-card::before, .feature-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(to right, var(--red), var(--gold)); opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 .practice-card:hover, .skill-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--gold);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  border-color: var(--accent);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+  transform: translateY(-1px);
 }
 
-/* Buttons red-gold */
-.duo-cta, .btn-primary {
-  background: linear-gradient(135deg, var(--red), var(--gold));
-  color: #111418;
-  box-shadow: 0 4px 20px rgba(200,16,46,.35);
-  font-weight: 700;
+/* Simple, human buttons. No heavy gradient shift theater. */
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
   border-radius: 999px;
-  transition: all .2s cubic-bezier(0.4,0,0.2,1);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
-.duo-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(200,16,46,.4); }
+.btn-primary:hover {
+  background: var(--accent-2);
+}
+.btn-primary:active {
+  transform: translateY(1px);
+}
 
-.btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.12); }
-.btn-ghost:hover { background: rgba(255,255,255,.035); border-color: var(--gold); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-weight: 500;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.btn-ghost:hover {
+  background: var(--surface2);
+  border-color: var(--accent);
+}
 
-/* Quiz */
+/* Quiz options — calm and clear, not flashy */
 .quiz-option {
   background: var(--surface2);
   border: 1px solid var(--line);
@@ -96,48 +102,134 @@ body::after {
   padding: 1rem 1.25rem;
   border-radius: 10px;
   font-weight: 500;
-  transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.15s ease, background 0.15s ease;
   text-align: left;
 }
-.quiz-option:hover { 
-  border-color: var(--gold); 
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--surface);
 }
-.quiz-option:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
+.quiz-option.correct {
+  background: color-mix(in srgb, var(--green) 12%, var(--surface2));
+  border-color: var(--green);
 }
-.quiz-option.correct { 
-  background: rgba(16,185,129,.12); 
-  border-color: var(--green); 
-  color: var(--green); 
+.quiz-option.wrong {
+  background: color-mix(in srgb, var(--red-soft) 12%, var(--surface2));
+  border-color: var(--red-soft);
+}
+
+/* Feedback that feels like a real person explaining */
+.feedback {
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface2);
+}
+.feedback.correct {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 8%, var(--surface2));
+}
+.feedback.wrong {
+  border-color: var(--red-soft);
+  background: color-mix(in srgb, var(--red-soft) 8%, var(--surface2));
+}
+
+/* Much less "AI label" energy. Humans don't scream uppercase tracking everywhere. */
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
   font-weight: 600;
-}
-.quiz-option.wrong { 
-  background: rgba(239,68,68,.12); 
-  border-color: #ef4444; 
-  color: #fca5a5; 
+  opacity: 0.85;
 }
 
-.feedback { padding: .75rem 1rem; border-radius: 8px; font-weight: 500; }
-.feedback.correct { background: rgba(16,185,129,.1); color: var(--green); border: 1px solid rgba(16,185,129,.25); }
-.feedback.wrong { background: rgba(239,68,68,.1); color: #ff8a8a; border: 1px solid rgba(239,68,68,.25); }
+.section-title {
+  font-size: 1.65rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
 
-/* Forms */
-.field input, .field select, .field textarea { background: var(--bg); border: 1px solid var(--line); color: var(--text); border-radius: 10px; }
-.field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(232,200,74,.4); }
+/* Softer hero, less theatrical */
+.hero {
+  background: var(--bg);
+}
 
-/* Headings */
-h1, .section-title { font-family: 'Cormorant Garamond', var(--font-cormorant), serif; letter-spacing: -.01em; }
+/* Simple, solid logo treatment — no heavy gradient theater */
+.logo-mark {
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border-radius: 8px;
+}
 
-/* Clean overrides - no light mode, no icon spam, no white space */
+/* Progress bar — quiet and functional */
+.xp-bar {
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+/* Remove shiny AI effects */
+.practice-card::after,
+.skill-card::after {
+  display: none;
+}
+
+.gradient-text {
+  color: var(--accent);
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Clean, human overrides */
 html, body { background: var(--bg); color: var(--text); }
 .bg-white, .bg-zinc-50, .bg-gray-100 { background: var(--surface) !important; }
 .text-black, .text-zinc-900, .text-gray-900 { color: var(--text) !important; }
 .border-white, .border-zinc-200 { border-color: var(--line) !important; }
 
-/* Remove any leftover bright accent */
-button, .btn, [class*="bg-amber"], [class*="bg-yellow"], [class*="bg-orange"] {
-  background-image: none;
+/* Awwwards-level immersive additions */
+.immersive-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  mix-blend-mode: screen; /* for ethereal feel */
+}
+
+.forge-overlay {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.interactive-3d {
+  cursor: grab;
+}
+.interactive-3d:active {
+  cursor: grabbing;
+}
+
+/* Game UI overlays */
+.game-ui {
+  position: absolute;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Premium typography for awards */
+.award-heading {
+  font-feature-settings: "tnum" "ss01";
+  text-wrap: balance;
+}
+
+/* Subtle human texture */
+.texture-bg {
+  background-image: 
+    linear-gradient(rgba(139, 30, 61, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 30, 61, 0.03) 1px, transparent 1px);
+  background-size: 4px 4px;
 }

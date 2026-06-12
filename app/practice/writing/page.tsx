@@ -13,6 +13,7 @@ import {
 } from '@/lib/data/writing';
 import { vocab } from '@/lib/data/vocab'; // cross-reference the 3000+ bank for suggestions
 import fullVocab from '@/lib/data/full-vocab.json'; // the full 3078 term official bank for gamification integration in rating
+import { saveWritingAttempt } from '@/lib/progress';
 
 type Attempt = {
   id: number;
@@ -120,19 +121,26 @@ export default function WritingMockTest() {
       localStorage.setItem(bankKey, JSON.stringify(bankMastered));
     } catch (e) {}
 
-    // Save attempt
+    // Save attempt (local always + Supabase when logged in via unified layer)
     const newAttempt: Attempt = {
       id: Date.now(),
-      date: new Date().toLocaleString('vi-VN'),
+      date: new Date().toLocaleString(),
       promptTitle: currentPrompt.title,
       totalScore,
       wordCounts: answers.map(getWordCount),
       feedback: newRating.fullFeedback,
     };
 
-    const updatedAttempts = [newAttempt, ...attempts].slice(0, 10); // keep last 10
+    const updatedAttempts = [newAttempt, ...attempts].slice(0, 10);
     setAttempts(updatedAttempts);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedAttempts));
+
+    // Persist to backend if user is signed in
+    saveWritingAttempt({
+      promptTitle: currentPrompt.title,
+      totalScore,
+      fullFeedback: newRating.fullFeedback,
+    });
   };
 
   const resetTest = () => {
@@ -159,19 +167,20 @@ export default function WritingMockTest() {
             <div>
               <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">B1-C1 | TELC + GOETHE</div>
               <h1 className="text-4xl font-semibold tracking-tight">Writing Mock Test</h1>
-              <p className="text-[#A8B3C7] mt-2">Luyện viết chuyên nghiệp cho Ausbildung • Chấm điểm &amp; phản hồi bởi AI (mô phỏng theo tiêu chí chính thức)</p>
+              <p className="text-[var(--muted)] mt-2">Professional exam writing practice for TELC B1 and Goethe B1-C1 • AI feedback aligned with official criteria</p>
             </div>
-            <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Quay lại Practice Hub</Link>
+            <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Back to Practice Hub</Link>
           </div>
 
           <div className="practice-card p-8 mb-8">
-            <h2 className="font-semibold text-xl mb-4">Chọn bài thi viết (TELC + Goethe B1-C1)</h2>
+            <h2 className="font-semibold text-xl mb-4">Choose a writing test (TELC + Goethe B1-C1)</h2>
             <p className="text-sm text-[#A8B3C7] mb-6">
-              Các đề thi mô phỏng thực tế: Email chuyên nghiệp + Bài báo cáo/ý kiến. Tập trung chủ đề Ausbildung, bền vững, làm việc nhóm. 
-              Sử dụng từ vựng từ ngân hàng <strong>3000+ Wortliste</strong> (xem Resources) để đạt điểm cao.
+              Realistic exam simulations: professional email + report/opinion piece. Focus on standard TELC and Goethe B1-C1 topics: environment, work, society, personal experiences. 
+              Use vocabulary from the <strong>3000+ Wortliste</strong> bank (see Resources) to score high.
             </p>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            {/* Phone UI: stack the test cards vertically for clarity */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {writingPromptSets.map((set) => (
                 <button
                   key={set.id}
@@ -181,14 +190,14 @@ export default function WritingMockTest() {
                   <div className="text-[#F4C430] text-xs tracking-widest mb-1">{set.type}</div>
                   <div className="font-semibold text-lg mb-2">{set.title}</div>
                   <div className="text-sm text-[#A8B3C7] line-clamp-3">{set.description}</div>
-                  <div className="mt-3 text-xs text-[#F4C430]">~{set.totalTimeMin} phút • 2 tasks</div>
+                  <div className="mt-3 text-xs text-[#F4C430]">~{set.totalTimeMin} min • 2 tasks</div>
                 </button>
               ))}
             </div>
 
             <div className="mt-6">
               <Button onClick={() => startNewTest()} className="btn-primary px-8 py-3 text-lg w-full md:w-auto">
-                Bắt đầu bài thi ngẫu nhiên (Mix TELC + Goethe)
+                Start a random test (Mix TELC + Goethe)
               </Button>
             </div>
           </div>
@@ -197,9 +206,9 @@ export default function WritingMockTest() {
           {attempts.length > 0 && (
             <div className="practice-card p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-semibold">Lịch sử luyện viết gần đây</h3>
+                <h3 className="font-semibold">Recent writing attempts</h3>
                 <button onClick={() => setShowHistory(!showHistory)} className="text-sm text-[#F4C430] hover:underline">
-                  {showHistory ? 'Ẩn' : 'Xem tất cả'}
+                  {showHistory ? 'Hide' : 'Show all'}
                 </button>
               </div>
               {showHistory && (
@@ -219,8 +228,8 @@ export default function WritingMockTest() {
           )}
 
           <div className="text-xs text-[#A8B3C7] mt-8 text-center">
-            Lưu ý thương mại: Đây là công cụ luyện tập mô phỏng. Đánh giá AI dùng heuristic + template (sẽ được thay bằng LLM thực tế trong phiên bản production). 
-            Tham khảo tài liệu chính thức Goethe &amp; TELC. Sử dụng từ ngân hàng 3000+ để cải thiện nhanh.
+            Note: This is a practice simulation tool. The AI rating uses heuristics + templates (will be replaced by a real LLM in production). 
+            Always cross-reference official Goethe &amp; TELC materials. Use the 3000+ bank to improve quickly.
           </div>
         </div>
       </div>
@@ -240,12 +249,12 @@ export default function WritingMockTest() {
             {isTimerRunning && timer > 0 && (
               <div className="font-mono text-2xl text-[#F4C430]">{formatTime(timer)}</div>
             )}
-            <button onClick={resetTest} className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">Kết thúc &amp; chọn đề khác</button>
+            <button onClick={resetTest} className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">End &amp; choose another test</button>
           </div>
         </div>
 
         <div className="mb-4 text-sm text-[#A8B3C7]">
-          {currentPrompt.description} • Mỗi task có mục tiêu từ vựng. Dùng từ từ ngân hàng 3000+ Wortliste (Resources) để đạt điểm cao.
+          {currentPrompt.description} • Each task has a word target. Use terms from the 3000+ Wortliste bank (Resources) to score high.
         </div>
 
         {!isSubmitted && (
@@ -258,7 +267,7 @@ export default function WritingMockTest() {
                     <h3 className="font-semibold text-xl">{task.title}</h3>
                   </div>
                   <div className="text-right text-sm text-[#A8B3C7]">
-                    Mục tiêu: {task.targetWords} từ
+                    Target: {task.targetWords} words
                   </div>
                 </div>
 
@@ -267,18 +276,18 @@ export default function WritingMockTest() {
                 </div>
 
                 <div className="text-xs text-[#A8B3C7] mb-2">
-                  Gợi ý từ vựng (từ ngân hàng 3000+): {task.keywords.join(', ')}
+                  Suggested vocabulary (from 3000+ bank): {task.keywords.join(', ')}
                 </div>
 
                 <textarea
                   value={answers[index]}
                   onChange={(e) => handleAnswerChange(index, e.target.value)}
-                  placeholder="Viết câu trả lời của bạn ở đây..."
+                  placeholder="Write your answer here in German..."
                   className="w-full h-48 p-4 rounded-lg bg-[var(--surface2)] border border-[var(--line)] text-[var(--text)] font-mono text-sm resize-y focus:border-[var(--gold)]"
                 />
                 <div className="text-right text-xs mt-1 text-[#A8B3C7]">
-                  {getWordCount(answers[index])} / {task.targetWords} từ
-                  {getWordCount(answers[index]) < task.targetWords * 0.7 && <span className="text-[#F4C430]"> (quá ngắn)</span>}
+                  {getWordCount(answers[index])} / {task.targetWords} words
+                  {getWordCount(answers[index]) < task.targetWords * 0.7 && <span className="text-[#F4C430]"> (too short)</span>}
                 </div>
               </div>
             ))}
@@ -289,10 +298,10 @@ export default function WritingMockTest() {
                 className="btn-primary px-8 py-3 text-lg flex-1"
                 disabled={answers.some(a => getWordCount(a) < 20)}
               >
-                Nộp bài cho AI Rating (TELC + Goethe criteria)
+                Submit for AI Rating (TELC + Goethe criteria)
               </Button>
               <Button onClick={() => setIsTimerRunning(!isTimerRunning)} className="btn-ghost px-6">
-                {isTimerRunning ? 'Tạm dừng' : 'Bắt đầu'} đồng hồ
+                {isTimerRunning ? 'Pause' : 'Start'} timer
               </Button>
             </div>
           </>
@@ -303,34 +312,35 @@ export default function WritingMockTest() {
           {isSubmitted && rating && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
               <div className="practice-card p-8">
-                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">KẾT QUẢ CHẤM ĐIỂM</div>
-                <h2 className="text-3xl font-semibold tracking-tight mb-2">Điểm tổng: {rating.overall}/20</h2>
-                <p className="text-[#A8B3C7]">Đánh giá bởi AI rater (mô phỏng chính xác tiêu chí Goethe &amp; TELC B1 Schreiben)</p>
+                <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">AI RATING RESULTS</div>
+                <h2 className="text-3xl font-semibold tracking-tight mb-2">Overall: {rating.overall}/20</h2>
+                <p className="text-[#A8B3C7]">Scored by AI rater (heuristic simulation of official Goethe &amp; TELC B1 Schreiben criteria)</p>
 
-                <div className="grid md:grid-cols-2 gap-4 mt-6">
+                {/* Mobile: single column results for phone UI */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                   {rating.perTask.map((r: any, i: number) => (
                     <div key={i} className="bg-[var(--surface2)] p-4 rounded">
                       <div className="font-semibold mb-1">{currentPrompt.tasks[i].title}</div>
                       <div className="text-2xl font-bold text-[#F4C430] mb-2">{r.total}/20</div>
-                      <div className="text-sm">Số từ: {r.wordCount} • Từ chuyên ngành khớp: {r.matchedKeywords}</div>
+                      <div className="text-sm">Words: {r.wordCount} • Professional terms matched: {r.matchedKeywords}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className="practice-card p-8">
-                <h3 className="font-semibold text-xl mb-4">Phản hồi chi tiết từ AI</h3>
+                <h3 className="font-semibold text-xl mb-4">Detailed AI feedback</h3>
                 <div className="whitespace-pre-line text-sm leading-relaxed bg-[var(--surface2)] p-6 rounded border border-[var(--line)]">
                   {rating.fullFeedback}
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <Button onClick={resetTest} className="btn-primary px-6">Làm bài thi mới (trộn đề)</Button>
-                  <Button onClick={() => setShowHistory(!showHistory)} className="btn-ghost">Xem lịch sử</Button>
-                  <Link href="/resources" className="btn-ghost px-6 py-3 inline-flex items-center rounded-full border border-[var(--line)] text-sm hover:border-[var(--gold)]">Xem ngân hàng 3000+ từ</Link>
-                  <Link href="/practice/bank" className="btn-ghost px-6 py-3 inline-flex items-center rounded-full border border-[var(--gold)] text-sm hover:border-[var(--gold)]">Quick Bank Drill (thêm mastery ngay)</Link>
+                  <Button onClick={resetTest} className="btn-primary px-6">Start a new mixed test</Button>
+                  <Button onClick={() => setShowHistory(!showHistory)} className="btn-ghost">View history</Button>
+                  <Link href="/resources" className="btn-ghost px-6 py-3 inline-flex items-center rounded-full border border-[var(--line)] text-sm hover:border-[var(--gold)]">View 3000+ bank</Link>
+                  <Link href="/practice/bank" className="btn-ghost px-6 py-3 inline-flex items-center rounded-full border border-[var(--gold)] text-sm hover:border-[var(--gold)]">Quick Bank Drill (add mastery now)</Link>
                 </div>
-                <div className="mt-4 text-xs text-[#A8B3C7]">Viết của bạn đã được chấm với tham chiếu trực tiếp 3000+ Wortliste bank. Các từ chuyên ngành khớp được ghi nhận và góp phần Bank Mastery chung (sync với dashboard + mọi quiz).</div>
+                <div className="mt-4 text-xs text-[#A8B3C7]">Your writing was rated with direct reference to the 3000+ Wortliste bank. Matched professional terms are recorded and contribute to global Bank Mastery (synced to dashboard + all quizzes).</div>
               </div>
 
               {showHistory && attempts.length > 1 && (

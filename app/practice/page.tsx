@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import MobileBottomNav from '@/components/MobileBottomNav';
 
 export default function PracticeHub() {
   return (
@@ -9,32 +10,33 @@ export default function PracticeHub() {
       <div className="container max-w-5xl mx-auto px-6">
         <div className="mb-8 flex items-end justify-between">
           <div>
-            <div className="text-[#F4C430] text-xs tracking-[2px]">B1-C1 | CHO AUSBUILDUNG</div>
-            <h1 className="text-4xl font-semibold tracking-tight">Chọn kỹ năng</h1>
+            <div className="text-[var(--accent-light)] text-xs tracking-[2px]">TELC B1 • GOETHE B1-C1</div>
+            <h1 className="text-4xl font-semibold tracking-tight">Exam Skills</h1>
           </div>
-          <Link href="/dashboard" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">← Về Dashboard</Link>
+          <Link href="/dashboard" className="text-sm text-[#8F95A3] hover:text-[#EDEEF2]">← Back</Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+        {/* Separate phone UI: comfortable 1-2 column cards on mobile. Desktop gets the rich multi-column view */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mb-6">
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
             <Link href="/practice/vocab" className="skill-card group block p-6">
               <div>
-                <div className="text-[#F4C430] text-xs tracking-widest mb-1">VOCABULARY B1-C1</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">Từ vựng nâng cao</div>
-                <div className="text-[#A8B3C7] text-[15px]">100+ mục (mở rộng từ Goethe B1 Wortliste, sẵn sàng cho 3000+ từ) • Ví dụ thực tế • Chủ đề Ausbildung &amp; nghề • Trộn ngẫu nhiên • Tự sync Bank Mastery</div>
+                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">VOCABULARY FOR EXAMS</div>
+                <div className="font-semibold text-2xl mb-2 tracking-tight">B1-C1 Exam Lexicon</div>
+                <div className="text-[var(--muted)] text-[15px]">3,000+ official terms for TELC &amp; Goethe. Theme-based for all sections. Mastery tracking with no repeats.</div>
               </div>
-              <div className="mt-6 text-sm text-[#F4C430] font-medium group-hover:underline">Bắt đầu bài tập →</div>
+              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Start Training →</div>
             </Link>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
             <Link href="/practice/grammar" className="skill-card group block p-6">
               <div>
-                <div className="text-[#F4C430] text-xs tracking-widest mb-1">GRAMMAR B1-C1</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">Cấu trúc phức tạp</div>
-                <div className="text-[#A8B3C7] text-[15px]">8+ cấu trúc • Konjunktiv, Passive, Relativsätze + giải thích chi tiết • Tự sync Bank Mastery</div>
+                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">GRAMMAR FOR EXAMS</div>
+                <div className="font-semibold text-2xl mb-2 tracking-tight">Complex Structures</div>
+                <div className="text-[var(--muted)] text-[15px]">Key B1-C1 structures tested in TELC and Goethe. Clear explanations + exam-focused practice.</div>
               </div>
-              <div className="mt-6 text-sm text-[#F4C430] font-medium group-hover:underline">Bắt đầu bài tập →</div>
+              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Start Training →</div>
             </Link>
           </motion.div>
 
@@ -42,11 +44,11 @@ export default function PracticeHub() {
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
             <Link href="/practice/writing" className="skill-card group block p-6">
               <div>
-                <div className="text-[#F4C430] text-xs tracking-widest mb-1">WRITING MOCK • TELC + GOETHE B1-C1</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">Luyện viết chuyên nghiệp</div>
-                <div className="text-[#A8B3C7] text-[15px]">Email + Báo cáo/ý kiến (Ausbildung focus) • Chấm điểm &amp; phản hồi chi tiết bởi AI (mô phỏng tiêu chí chính thức) • Tích hợp 3000+ Wortliste bank • Trộn đề ngẫu nhiên</div>
+                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">WRITING • TELC &amp; GOETHE B1-C1</div>
+                <div className="font-semibold text-2xl mb-2 tracking-tight">Exam Writing Tasks</div>
+                <div className="text-[var(--muted)] text-[15px]">Authentic email, report and opinion tasks scored by AI against official TELC &amp; Goethe criteria. Integrated exam vocabulary.</div>
               </div>
-              <div className="mt-6 text-sm text-[#F4C430] font-medium group-hover:underline">Bắt đầu thi viết →</div>
+              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Start Writing Practice →</div>
             </Link>
           </motion.div>
 
@@ -54,11 +56,23 @@ export default function PracticeHub() {
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}>
             <Link href="/practice/bank" className="skill-card group block p-6 border border-[var(--gold)]/60">
               <div>
-                <div className="text-[#F4C430] text-xs tracking-widest mb-1">OFFICIAL 3000+ WORTLISTE BANK</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">Ngân hàng từ vựng chính thức</div>
-                <div className="text-[#A8B3C7] text-[15px]">Quick Mastery Drill • 3078 từ Goethe B1 • Ưu tiên từ chưa nắm • +8–14 XP mỗi từ • Sync real-time với mọi quiz &amp; dashboard • Random không lặp</div>
+                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">OFFICIAL B1 EXAM VOCABULARY BANK</div>
+                <div className="font-semibold text-2xl mb-2 tracking-tight">3,000+ Terms for TELC &amp; Goethe</div>
+                <div className="text-[var(--muted)] text-[15px]">Quick Mastery Drills • Prioritizes unmastered terms • +XP per mastered word • Real-time sync across all training • Smart no-repeat system</div>
               </div>
-              <div className="mt-6 text-sm text-[#F4C430] font-medium group-hover:underline">Bắt đầu Bank Drill →</div>
+              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Start Vocabulary Drill →</div>
+            </Link>
+          </motion.div>
+
+          {/* New: Word Forms / Declensions (Nominativ, Akkusativ, Dativ, Genitiv) */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.30 }}>
+            <Link href="/practice/declensions" className="skill-card group block p-6">
+              <div>
+                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">WORD FORMS • CASES</div>
+                <div className="font-semibold text-2xl mb-2 tracking-tight">Declensions (N/A/D/G)</div>
+                <div className="text-[var(--muted)] text-[15px]">Master the 4 cases with real exam sentences. Prepositions, verbs + case, adjective endings. Essential for B1 writing &amp; speaking.</div>
+              </div>
+              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Practice Cases →</div>
             </Link>
           </motion.div>
         </div>
@@ -67,16 +81,18 @@ export default function PracticeHub() {
         <Link href="/resources" className="practice-card group block p-6 mb-8 hover:border-[var(--gold)] transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[#F4C430] text-xs tracking-widest mb-1">OFFICIAL + ENRICHED</div>
-              <div className="font-semibold text-2xl tracking-tight">Tài nguyên chính thức &amp; Ngân hàng học liệu</div>
-              <div className="text-[#A8B3C7] mt-1 text-[15px]">Link Goethe-Institut B1 (model &amp; practice exercises) • Ví dụ Ausbildung • Giải thích chi tiết • Mẹo thi &amp; nghề</div>
+              <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">OFFICIAL + ENRICHED</div>
+              <div className="font-semibold text-2xl tracking-tight">TELC &amp; Goethe Official Materials</div>
+              <div className="text-[var(--muted)] mt-1 text-[15px]">Direct links to model tests and marking criteria • Complete B1 exam vocabulary bank • Targeted skill resources</div>
             </div>
-            <div className="text-[#F4C430] text-sm font-medium group-hover:underline">Xem ngay →</div>
+            <div className="text-[var(--accent-light)] text-sm font-medium group-hover:underline">Browse now →</div>
           </div>
         </Link>
 
-        <div className="text-xs text-[#A8B3C7] text-center">Listening &amp; Speaking sẽ cập nhật sớm với audio thực từ Đức. Nội dung được xây dựng dựa trên tài liệu chính thức Goethe + yêu cầu thực tế Ausbildung.</div>
+        <div className="text-xs text-[var(--muted)] text-center">Listening &amp; Speaking modules with authentic exam audio coming soon. Word forms (declensions) are now included as a core B1-C1 skill for TELC &amp; Goethe.</div>
       </div>
+
+      <MobileBottomNav />
     </div>
   );
 }

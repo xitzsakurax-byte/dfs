@@ -7,6 +7,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { vocab } from '@/lib/data/vocab';
 import { grammar } from '@/lib/data/grammar';
 import fullVocab from '@/lib/data/full-vocab.json'; // 3078+ terms from official Goethe B1 Wortliste (mixed/shuffled for the bank)
+import { addToBankMastered, getBankMastered } from '@/lib/progress';
+import MobileBottomNav from '@/components/MobileBottomNav';
 
 // Client-side searchable + shuffled display for the full 3000+ official word bank (performance safe)
 // Now fully gamified: track mastery with localStorage, progress bar, "Master" buttons, review batches for XP-like rewards.
@@ -15,10 +17,9 @@ function FullVocabBank({ list }: { list: string[] }) {
   const [bankMastered, setBankMastered] = useState<string[]>([]);
   const [reviewList, setReviewList] = useState<string[]>([]);
 
-  // Load mastery from localStorage (shared with quizzes for integration)
+  // Load mastery from unified layer (Supabase when signed in + localStorage)
   useEffect(() => {
-    const saved = localStorage.getItem('germanforge_bank_mastered');
-    if (saved) setBankMastered(JSON.parse(saved));
+    getBankMastered().then(setBankMastered);
   }, []);
 
   const shuffled = useMemo(() => [...list].sort(() => Math.random() - 0.5), [list]);
@@ -38,8 +39,14 @@ function FullVocabBank({ list }: { list: string[] }) {
       ? bankMastered.filter(w => w !== word)
       : [...bankMastered, word];
     setBankMastered(newMastered);
-    localStorage.setItem('germanforge_bank_mastered', JSON.stringify(newMastered));
-    // "Gamification reward" - visual only for now, but contributes to overall mastery
+
+    if (!isMastered) {
+      // This writes to local + Supabase (if signed in)
+      addToBankMastered(word);
+    } else {
+      // For un-master we keep simple local-only for now (rare action)
+      localStorage.setItem('germanforge_bank_mastered', JSON.stringify(newMastered));
+    }
   }
 
   function startReviewBatch() {
@@ -81,14 +88,14 @@ function FullVocabBank({ list }: { list: string[] }) {
             </button>
           )}
         </div>
-        <div className="text-xs text-[#A8B3C7] mt-2">
-          Master words by marking them learned. Contributes to your overall gamification progress (streak, level, Ausbildung prep).
+        <div className="text-xs text-[var(--muted)] mt-2">
+          Master words by marking them learned. Directly builds your readiness for TELC and Goethe B1-C1 certification.
         </div>
       </div>
 
       <input 
         type="text" 
-        placeholder="Tìm từ khóa (ví dụ: Ausbildung, Bewerbung, Nachhaltigkeit, Verantwortung...)"
+        placeholder="Search exam vocabulary (e.g. Umwelt, Beruf, Technik, Gesellschaft...)"
         className="w-full p-3 mb-4 rounded-lg border border-[var(--line)] bg-[var(--surface2)] text-[var(--text)] focus:border-[var(--gold)]"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -115,8 +122,8 @@ function FullVocabBank({ list }: { list: string[] }) {
       </div>
 
       <div className="text-xs text-[#A8B3C7] mt-3">
-        Hiển thị {displayList.length} kết quả / {list.length} từ (toàn bộ danh sách chính thức đã trộn ngẫu nhiên). 
-        Tìm kiếm để lọc nhanh. Nhấn "Master" để gamify your progress. Dùng để ôn tập, tạo flashcard hoặc luyện nghe/đọc.
+        Showing {displayList.length} results / {list.length} terms (official list fully shuffled). 
+        Use search to filter quickly. Click "Master" to gamify your progress. Use for review, flashcards or reading/listening practice.
         {reviewList.length > 0 && ' (Review mode active)'}
       </div>
     </div>
@@ -126,7 +133,7 @@ function FullVocabBank({ list }: { list: string[] }) {
 // Commercial-grade Resources page
 // - Official Goethe Institut links (pulled from goethe.de practice materials for B1 adults)
 // - Curated, documented B1-C1 items with examples, explanations, topics (our "database" / seed content)
-// - Ausbildung-focused tips
+// - Exam preparation tips
 // Every detail considered: clean dark theme, readable cards, no icon spam, strong professional value, bidirectional navigation.
 
 export default function ResourcesPage() {
@@ -137,16 +144,16 @@ export default function ResourcesPage() {
         <div className="mb-10">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[#F4C430] text-xs tracking-[2px] mb-1">CHÍNH THỨC • B1-C1</div>
-              <h1 className="text-4xl font-semibold tracking-tight">Tài nguyên & Ngân hàng từ vựng / Cấu trúc</h1>
-              <p className="mt-2 max-w-2xl text-[#A8B3C7]">
-                Nội dung được xây dựng dựa trên tài liệu luyện thi chính thức của Goethe-Institut (B1 adults & Beruf). 
-                Phù hợp cho người chuẩn bị Ausbildung / du học nghề Đức. Mỗi mục có ví dụ thực tế, giải thích và chủ đề nghề nghiệp.
+              <div className="text-[var(--accent-light)] text-xs tracking-[2px] mb-1">OFFICIAL • TELC B1 &amp; GOETHE B1-C1</div>
+              <h1 className="text-4xl font-semibold tracking-tight">Exam Resources &amp; Vocabulary Bank</h1>
+              <p className="mt-2 max-w-2xl text-[var(--muted)]">
+                Official-level preparation materials for TELC and Goethe-Zertifikat B1-C1. 
+                Authentic exam tasks, detailed explanations, and the complete B1 exam vocabulary bank.
               </p>
             </div>
             <div className="hidden md:block">
               <Button asChild className="btn-primary px-6 py-3">
-                <Link href="/practice">Bắt đầu luyện tập ngay</Link>
+                <Link href="/practice">Start practicing now</Link>
               </Button>
             </div>
           </div>
@@ -154,9 +161,9 @@ export default function ResourcesPage() {
 
         {/* Official Goethe Links — real value for commercial users */}
         <section className="mb-12">
-          <div className="text-[#F4C430] text-xs tracking-[2px] mb-3">NGUỒN CHÍNH THỨC</div>
+          <div className="text-[#F4C430] text-xs tracking-[2px] mb-3">OFFICIAL SOURCES</div>
           <div className="practice-card p-6">
-            <h2 className="font-semibold text-xl mb-4">Goethe-Zertifikat B1 — Exam training & Practice materials (miễn phí)</h2>
+            <h2 className="font-semibold text-xl mb-4">Goethe-Zertifikat B1 — Exam training & Practice materials (free)</h2>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href="https://www.goethe.de/en/spr/prf/ueb/pb1.html" target="_blank" rel="noopener" className="text-[#F4C430] hover:underline">
@@ -170,11 +177,11 @@ export default function ResourcesPage() {
                 </a>
               </li>
               <li className="text-[#A8B3C7]">
-                Khuyến nghị: Làm full “Exam training 1 + 2” + Vocabulary list trước khi thi thật. Nội dung rất sát với yêu cầu visa Ausbildung.
+                Recommendation: Complete the full official model tests and practice sets before the real exam. Content is aligned with TELC and Goethe B1-C1 requirements.
               </li>
             </ul>
             <div className="mt-4 text-xs text-[#A8B3C7]">
-              Nguồn: goethe.de (cập nhật 2026). GermanForge bổ sung thêm ví dụ thực tế và ngân hàng từ vựng/cấu trúc chuyên sâu hơn cho người đi làm / học nghề.
+              Source: goethe.de (2026). GermanForge adds realistic examples and deeper vocabulary/structure banks for professional and exam-focused learners.
             </div>
           </div>
         </section>
@@ -183,10 +190,10 @@ export default function ResourcesPage() {
         <section className="mb-12">
           <div className="flex items-end justify-between mb-4">
             <div>
-              <div className="text-[#F4C430] text-xs tracking-[2px]">TỪ VỰNG B1-C1 (AUSBILDUNG FOCUS)</div>
-              <h2 className="text-2xl font-semibold tracking-tight">Ngân hàng từ vựng & ví dụ</h2>
+              <div className="text-[var(--accent-light)] text-xs tracking-[2px]">B1-C1 EXAM VOCABULARY</div>
+              <h2 className="text-2xl font-semibold tracking-tight">Vocabulary bank &amp; examples</h2>
             </div>
-            <Link href="/practice/vocab" className="text-sm text-[#F4C430] hover:underline">Luyện ngay →</Link>
+            <Link href="/practice/vocab" className="text-sm text-[#F4C430] hover:underline">Practice now →</Link>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -206,22 +213,22 @@ export default function ResourcesPage() {
                   <div className="text-right text-xs text-[#F4C430] font-mono">{item.cefr} • {item.topic}</div>
                 </div>
                 <div className="mt-3 text-sm border-t border-[var(--line)] pt-3">
-                  <span className="text-[#A8B3C7]">Ví dụ:</span> {item.example}
+                  <span className="text-[#A8B3C7]">Example:</span> {item.example}
                 </div>
               </motion.div>
             ))}
           </div>
-          <div className="text-xs text-[#A8B3C7] mt-3">Mỗi mục được chọn lọc từ chủ đề nghề nghiệp, môi trường, đơn xin việc — sát với đề thi Goethe B1 và yêu cầu thực tế Ausbildung.</div>
+          <div className="text-xs text-[var(--muted)] mt-3">Selected for the vocabulary and structures most frequently tested in TELC B1 and Goethe B1-C1 exams.</div>
         </section>
 
         {/* Grammar Bank */}
         <section className="mb-12">
           <div className="flex items-end justify-between mb-4">
             <div>
-              <div className="text-[#F4C430] text-xs tracking-[2px]">CẤU TRÚC PHỨC TẠP B1-C1</div>
-              <h2 className="text-2xl font-semibold tracking-tight">Ngân hàng cấu trúc & giải thích</h2>
+              <div className="text-[#F4C430] text-xs tracking-[2px]">B1-C1 COMPLEX STRUCTURES</div>
+              <h2 className="text-2xl font-semibold tracking-tight">Structure bank &amp; explanations</h2>
             </div>
-            <Link href="/practice/grammar" className="text-sm text-[#F4C430] hover:underline">Luyện ngay →</Link>
+            <Link href="/practice/grammar" className="text-sm text-[#F4C430] hover:underline">Practice now →</Link>
           </div>
 
           <div className="grid md:grid-cols-1 gap-4">
@@ -236,7 +243,7 @@ export default function ResourcesPage() {
                 <div className="font-semibold text-lg tracking-tight mb-1">{item.q}</div>
                 <div className="text-[#A8B3C7] mb-2">{item.en}</div>
                 <div className="text-sm">
-                  <span className="text-[#F4C430]">Đáp án đúng:</span> {item.correct} — {item.hint}
+                  <span className="text-[#F4C430]">Correct answer:</span> {item.correct} — {item.hint}
                 </div>
                 <div className="mt-2 text-sm opacity-90">{item.explanation}</div>
                 <div className="text-xs text-[#F4C430] mt-2">{item.topic} • {item.cefr}</div>
@@ -249,17 +256,16 @@ export default function ResourcesPage() {
         <section className="mb-12">
           <div className="flex items-end justify-between mb-4">
             <div>
-              <div className="text-[#F4C430] text-xs tracking-[2px]">OFFICIAL GOETHE B1 WORTLISTE</div>
-              <h2 className="text-2xl font-semibold tracking-tight">Ngân hàng từ vựng đầy đủ 3000+ từ (trộn ngẫu nhiên)</h2>
+              <div className="text-[var(--accent-light)] text-xs tracking-[2px]">OFFICIAL B1 EXAM VOCABULARY</div>
+              <h2 className="text-2xl font-semibold tracking-tight">Complete 3,000+ Term Bank for TELC &amp; Goethe B1</h2>
             </div>
-            <Link href="/practice/vocab" className="text-sm text-[#F4C430] hover:underline">Luyện MCQ ngay →</Link> <Link href="/practice/bank" className="text-sm text-[#F4C430] hover:underline ml-3">Hoặc Quick Bank Drill (gamified 12 từ) →</Link>
+            <Link href="/practice/vocab" className="text-sm text-[#F4C430] hover:underline">MCQ practice now →</Link> <Link href="/practice/bank" className="text-sm text-[#F4C430] hover:underline ml-3">Or Quick Bank Drill (gamified 12 terms) →</Link>
           </div>
 
           <div className="practice-card p-6">
-            <p className="text-sm text-[#A8B3C7] mb-4">
-              3078+ thuật ngữ từ danh sách chính thức Goethe-Zertifikat B1 (Wortliste). Đã trộn ngẫu nhiên (shuffled) để luyện tập đa dạng. 
-              Sử dụng tìm kiếm để lọc theo chủ đề hoặc từ. Phù hợp cho Ausbildung, ôn thi, xuất Anki hoặc học thụ động.
-              Nguồn: trích xuất từ PDF chính thức (xem comment trong lib/data/full-vocab.json để cập nhật đầy đủ).
+            <p className="text-sm text-[var(--muted)] mb-4">
+              3,078+ terms drawn from official Goethe B1 and TELC B1 word lists. Shuffled for varied practice. 
+              Use search to filter by exam theme. Essential for all four skills in TELC and Goethe B1-C1.
             </p>
 
             {/* Client-side search and shuffled display for the large bank */}
@@ -267,28 +273,30 @@ export default function ResourcesPage() {
           </div>
         </section>
 
-        {/* Ausbildung-specific tips (commercial value) */}
+        {/* Exam preparation tips */}
         <section className="mb-10">
           <div className="practice-card p-6">
-            <h3 className="font-semibold mb-3">Mẹo nhanh cho người đi Ausbildung (từ thực tế B1 Beruf)</h3>
+            <h3 className="font-semibold mb-3">Quick Tips for TELC & Goethe B1-C1 Success</h3>
             <ul className="text-sm space-y-2 text-[#A8B3C7]">
-              <li>• Tập trung từ vựng nghề: Bewerbung, Ausbildung, Praktikum, Fachkraft, Weiterbildung, Teamgeist, Nachhaltigkeit.</li>
-              <li>• Konjunktiv II dùng nhiều khi nói về “giả sử / kế hoạch tương lai” trong phỏng vấn hoặc báo cáo.</li>
-              <li>• Passive + Modal rất hay gặp khi mô tả quy trình, an toàn lao động, deadline.</li>
-              <li>• Làm full model test từ goethe.de trước khi thi thật để quen format và timing.</li>
+              <li>• Focus on high-frequency B1 exam vocabulary: environment, work, technology, society, education, travel.</li>
+              <li>• Konjunktiv II is frequently used when talking about “hypotheticals / future plans” in interviews or reports.</li>
+              <li>• Passive + modal verbs appear often when describing processes, workplace safety, or deadlines.</li>
+              <li>• Complete full model tests from goethe.de before the real exam to get used to format and timing.</li>
             </ul>
-            <div className="mt-4 text-xs">Nội dung GermanForge được thiết kế bổ trợ trực tiếp cho lộ trình Ausbildung và yêu cầu tiếng Đức B1-B2 của các doanh nghiệp Đức.</div>
-            <div className="mt-3 text-xs text-[#F4C430]">Tiến độ "đã nắm" (mastered) được lưu local trên trình duyệt của bạn. Khi reload web, các từ/cấu trúc đã trả lời đúng sẽ không lặp lại cho đến khi bạn reset. Xem nút reset ở cuối mỗi quiz.</div>
+            <div className="mt-4 text-xs">GermanForge is designed specifically for TELC B1 and Goethe B1-C1 exam preparation.</div>
+            <div className="mt-3 text-xs text-[#F4C430]">Mastered progress is stored locally in your browser. On reload, correctly answered items will not repeat until you reset. Look for the reset button at the end of each quiz.</div>
           </div>
         </section>
 
         <div className="text-center">
           <Button asChild className="btn-primary px-8 py-3">
-            <Link href="/dashboard">Quay về Dashboard & tiếp tục luyện tập</Link>
+            <Link href="/dashboard">Back to Dashboard &amp; continue training</Link>
           </Button>
-          <div className="mt-3 text-xs text-[#A8B3C7]">Phối hợp với DHND — Du Học Nghề Đức | GermanForge là công cụ hỗ trợ luyện tập chuyên sâu B1-C1.</div>
+          <div className="mt-3 text-xs text-[#A8B3C7]">GermanForge — Professional B1-C1 exam training for TELC and Goethe.</div>
         </div>
       </div>
+
+      <MobileBottomNav />
     </div>
   );
 }

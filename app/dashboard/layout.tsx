@@ -13,7 +13,7 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA]">
-      {/* Professional dark header matching du hoc nghe duc style - no white, no icons, flag accents */}
+      {/* Professional dark header - no white, no icon spam, clean exam focus */}
       <header className="sticky top-0 z-50 bg-[var(--surface)] border-b border-[var(--line)]">
         <div className="mx-auto max-w-6xl px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
@@ -21,16 +21,22 @@ export default function DashboardLayout({
               <div className="logo-mark w-8 h-8 rounded-[9px] bg-gradient-to-br from-[var(--black)] to-[var(--red)] flex items-center justify-center text-white text-sm font-bold border border-[rgba(244,196,48,.35)]">GF</div>
               GermanForge
             </Link>
+            {/* Desktop nav */}
             <nav className="hidden md:flex gap-6 text-sm font-medium text-[var(--muted)]">
               <Link href="/dashboard" className="hover:text-[var(--text)]">Home</Link>
               <Link href="/practice" className="hover:text-[var(--text)]">Practice</Link>
             </nav>
+
+            {/* Mobile phone quick link (the bottom nav provides the full separate UI) */}
+            <div className="md:hidden">
+              <Link href="/practice" className="text-sm text-[var(--muted)] hover:text-[var(--text)]">Practice</Link>
+            </div>
           </div>
 
           {/* Clean top stats - no icons, no white bg, elegant */}
           <div className="flex items-center gap-5 text-sm font-medium text-[var(--muted)]">
             <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface2)] border border-[var(--line)]">
-              <span className="font-semibold text-[var(--text)]">{streak} ngày streak</span>
+              <span className="font-semibold text-[var(--text)]">{streak} day streak</span>
             </div>
 
             <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--surface2)] border border-[var(--line)]">

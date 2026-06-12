@@ -4,32 +4,98 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { createClient, hasSupabase } from '@/lib/supabase/client';
+import { getBankMastered, onLoginMerge } from '@/lib/progress';
+import { toast } from 'sonner';
+import MobileBottomNav from '@/components/MobileBottomNav';
 
 export default function Dashboard() {
-  const streak = 14;
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isGuest, setIsGuest] = useState(true);
+
+  const streak = 14; // demo — can be made dynamic later from profile
   const todayXP = 85;
   const dailyGoal = 120;
-  const level = 12;
-  const xpToNext = 420;
 
-  // Integrate 3000+ word bank into gamification — live, drives level/XP visuals
+  // Real bank from unified progress layer (localStorage or Supabase)
   const [bankMastered, setBankMastered] = useState(0);
   const BANK_TOTAL = 3078;
 
+  // Load auth state + bank (merged when signed in)
   useEffect(() => {
-    const saved = localStorage.getItem('germanforge_bank_mastered');
-    if (saved) {
-      setBankMastered(JSON.parse(saved).length);
-    }
-    // Listen for cross-page sync (other tabs or after quiz finish)
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === 'germanforge_bank_mastered' && e.newValue) {
-        setBankMastered(JSON.parse(e.newValue).length);
+    let mounted = true;
+
+    async function load() {
+      // Auth
+      if (hasSupabase()) {
+        const supabase = createClient();
+        if (supabase) {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user && mounted) {
+            setUserEmail(user.email || null);
+            setIsGuest(false);
+
+            // On first load after login, merge any local work into the cloud account
+            await onLoginMerge();
+          }
+        }
       }
-    };
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+
+      // Bank (now async + backend-aware)
+      const bank = await getBankMastered();
+      if (mounted) setBankMastered(bank.length);
+
+      // Cross-tab / after-quiz live updates (still works for guest + we can enhance later)
+      const onStorage = (e: StorageEvent) => {
+        if (e.key === 'germanforge_bank_mastered' && e.newValue && mounted) {
+          try {
+            setBankMastered(JSON.parse(e.newValue).length);
+          } catch {}
+        }
+      };
+      window.addEventListener('storage', onStorage);
+      return () => window.removeEventListener('storage', onStorage);
+    }
+
+    load();
+
+    // Optional: listen for auth changes (sign out from other tab etc)
+    if (hasSupabase()) {
+      const supabase = createClient();
+      if (supabase) {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
+          if (!mounted) return;
+          if (session?.user) {
+            setUserEmail(session.user.email || null);
+            setIsGuest(false);
+            const bank = await getBankMastered();
+            setBankMastered(bank.length);
+          } else {
+            setUserEmail(null);
+            setIsGuest(true);
+            // revert to local only
+            try {
+              const raw = localStorage.getItem('germanforge_bank_mastered');
+              setBankMastered(raw ? JSON.parse(raw).length : 0);
+            } catch {}
+          }
+        });
+        return () => subscription.unsubscribe();
+      }
+    }
   }, []);
+
+  async function handleSignOut() {
+    if (!hasSupabase()) return;
+    const supabase = createClient();
+    if (supabase) {
+      await supabase.auth.signOut();
+      setUserEmail(null);
+      setIsGuest(true);
+      toast.success('Signed out. Your local progress is still here.');
+      // Stay on dashboard (guest mode continues to work perfectly)
+    }
+  }
 
   const bankPercent = ((bankMastered / BANK_TOTAL) * 100).toFixed(1);
   const bankContribXP = bankMastered * 3; // every mastered bank word boosts effective progress
@@ -39,122 +105,122 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] pb-16">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4 bg-[rgba(10,13,20,.92)] backdrop-blur border-b border-[var(--line)]">
+      <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4 bg-[#171A21] border-b border-[#2C303A]">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <div className="logo-mark w-8 h-8 rounded-[9px] bg-gradient-to-br from-[#111418] to-[#C8102E] flex items-center justify-center text-white text-sm font-bold border border-[rgba(244,196,48,.35)]">GF</div>
-            GermanForge
+            <div className="logo-mark w-8 h-8 rounded-lg bg-[#8B1E3D] flex items-center justify-center text-white text-sm font-semibold tracking-tight">GF</div>
+            <span>GermanForge</span>
           </Link>
-          <Link href="/practice" className="text-sm text-[#A8B3C7] hover:text-[#F5F7FA]">Practice</Link>
+          <Link href="/practice" className="text-sm text-[#8F95A3] hover:text-[#EDEEF2]">Practice</Link>
         </div>
-        <div className="text-sm text-[#A8B3C7]">Guest • Anh Kiet</div>
+
+        <div className="flex items-center gap-4 text-sm">
+          {userEmail ? (
+            <>
+              <span className="text-[#8F95A3] hidden sm:inline">{userEmail}</span>
+              <button
+                onClick={handleSignOut}
+                className="text-[#8F95A3] hover:text-[#EDEEF2] underline"
+              >
+                Sign out
+              </button>
+              <Link href="/profile" className="text-[#F4C430] hover:underline">Profile</Link>
+            </>
+          ) : (
+            <>
+              <span className="text-[#8F95A3]">Guest</span>
+              <Link href="/login" className="text-[#F4C430] hover:underline">Sign in</Link>
+            </>
+          )}
+        </div>
       </nav>
 
       <div className="pt-20 container max-w-5xl mx-auto px-6">
-        {/* Header - clean like previous KPIs */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-8">
-          <div>
-            <div className="text-[#F4C430] text-xs tracking-[2px]">GUTEN MORGEN!</div>
-            <h1 className="text-4xl font-semibold tracking-tight">Sẵn sàng giữ streak, Anh Kiet?</h1>
+        <div className="mb-8">
+          <div className="text-sm text-[#8F95A3]">
+            {userEmail ? `Good to see you, ${userEmail.split('@')[0]}.` : 'Good to see you, Anh Kiet.'}
           </div>
-          <div className="text-right">
-            <div className="text-4xl font-bold text-[#F4C430] tabular-nums">{streak}</div>
-            <div className="text-sm text-[#A8B3C7] -mt-1">NGÀY STREAK</div>
-          </div>
+          <h1 className="text-3xl font-semibold tracking-tight mt-1">Ready to do some real work today?</h1>
+          <div className="mt-1 text-sm text-[#8F95A3]">{streak} days in a row. That’s the kind of consistency that shows up on exam day.</div>
+          {userEmail && <div className="mt-1 text-xs text-[#F4C430]">Progress is now syncing to the cloud.</div>}
         </div>
 
-        {/* Goal card - elegant, flag accent */}
-        <div className="practice-card p-8 mb-6">
-          <div className="flex flex-col md:flex-row gap-8 items-center">
+        {/* Today’s focus — simple and human */}
+        <div className="practice-card p-7 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="font-semibold">Mục tiêu hôm nay</span>
-              </div>
-              <div className="flex items-baseline gap-2 mb-3">
-                <span className="text-6xl font-bold tabular-nums text-[#F4C430]">{todayXP}</span>
-                <span className="text-2xl text-[#A8B3C7]">/ {dailyGoal} XP</span>
-              </div>
-              <div className="h-2 bg-[var(--surface2)] rounded-full overflow-hidden">
-                <div className="xp-bar h-2" style={{ width: `${Math.min((todayXP / dailyGoal) * 100, 100)}%` }} />
+              <div className="text-sm text-[#8F95A3] mb-1">Today’s focus</div>
+              <div className="text-3xl font-semibold tracking-tight tabular-nums">{todayXP} / {dailyGoal} points</div>
+              <div className="mt-3 h-1.5 bg-[#2C303A] rounded-full overflow-hidden">
+                <div className="h-1.5 bg-[#8B1E3D]" style={{ width: `${Math.min((todayXP / dailyGoal) * 100, 100)}%` }} />
               </div>
             </div>
-            <div>
-              <Button asChild className="btn-primary px-8 py-3 text-lg">
-                <Link href="/practice">Bắt đầu luyện tập</Link>
+            <div className="shrink-0">
+              <Button asChild className="btn-primary px-6 py-2.5">
+                <Link href="/practice">Do a session</Link>
               </Button>
-              <div className="text-center text-xs text-[#A8B3C7] mt-2">8–12 câu • ~5 phút</div>
+              <div className="text-center text-xs text-[#8F95A3] mt-2">Usually 8–12 minutes</div>
             </div>
           </div>
         </div>
 
-        {/* Progress row - clean cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* Two honest numbers — no KPI theater */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
           <div className="practice-card p-6">
-            <div className="font-semibold mb-3 flex items-center gap-2">Streak &amp; Tiến độ</div>
-            <div className="text-5xl font-bold tabular-nums text-[#F4C430] mb-1">{streak}</div>
-            <div className="text-sm text-[#A8B3C7]">ngày liên tục • Giữ đều đặn cho Ausbildung</div>
+            <div className="text-sm text-[#8F95A3] mb-1">Current streak</div>
+            <div className="text-5xl font-semibold tabular-nums tracking-tighter">{streak}</div>
+            <div className="text-sm text-[#8F95A3] mt-1">days in a row. Small, steady, and it shows.</div>
           </div>
+
           <div className="practice-card p-6">
-            <div className="font-semibold mb-3 flex items-center gap-2">Cấp độ (Bank tích hợp)</div>
-            <div className="text-5xl font-bold tabular-nums text-[#F4C430] mb-1">{effectiveLevel}</div>
-            <div className="text-sm text-[#A8B3C7] mb-2">+{bankContribXP} effective XP từ Bank • {xpToNextBank} từ nữa lên mốc bank tiếp</div>
-            <div className="h-2 bg-[var(--surface2)] rounded-full overflow-hidden">
-              <div className="xp-bar h-2" style={{ width: `${Math.min((bankMastered % 80) / 80 * 100, 100)}%` }} />
+            <div className="text-sm text-[#8F95A3] mb-1">Vocabulary bank</div>
+            <div className="text-5xl font-semibold tabular-nums tracking-tighter">{bankMastered}</div>
+            <div className="text-sm text-[#8F95A3] mt-1">words mastered out of {BANK_TOTAL}. The ones that actually matter on the paper.</div>
+            <div className="h-1.5 bg-[#2C303A] rounded-full overflow-hidden mt-3">
+              <div className="h-1.5 bg-[#8B1E3D]" style={{ width: `${Math.min((bankMastered / BANK_TOTAL) * 100, 100)}%` }} />
             </div>
           </div>
         </div>
 
-        {/* Practice launcher - clean, image friendly */}
-        <div>
-          <div className="font-semibold text-xl mb-4">Chọn kỹ năng luyện tập</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <Link href="/practice/vocab" className="skill-card group p-6">
-              <div className="text-[#F4C430] text-xs tracking-widest mb-1">VOCABULARY B1-C1</div>
-              <div className="font-semibold text-2xl mb-2">Từ vựng nâng cao</div>
-              <div className="text-[#A8B3C7] text-sm">100+ mục (mở rộng từ Goethe B1 Wortliste, sẵn sàng cho 3000+ từ) • Ví dụ thực tế • Chủ đề nghề &amp; Ausbildung • Trộn ngẫu nhiên</div>
-              <div className="mt-4 text-sm text-[#F4C430] group-hover:underline">Bắt đầu →</div>
-            </Link>
-            <Link href="/practice/grammar" className="skill-card group p-6">
-              <div className="text-[#F4C430] text-xs tracking-widest mb-1">GRAMMAR B1-C1</div>
-              <div className="font-semibold text-2xl mb-2">Cấu trúc phức tạp</div>
-              <div className="text-[#A8B3C7] text-sm">8+ cấu trúc • Giải thích chi tiết • Passive, Konjunktiv, Relativ</div>
-              <div className="mt-4 text-sm text-[#F4C430] group-hover:underline">Bắt đầu →</div>
-            </Link>
-          </div>
-        </div>
+        <div className="mb-2 text-sm text-[#8F95A3]">The real work</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+          <Link href="/practice/vocab" className="skill-card group p-6 block">
+            <div className="text-[#8B1E3D] text-xs tracking-widest mb-1">VOCABULARY</div>
+            <div className="font-semibold text-xl mb-1 tracking-tight">The words that actually show up</div>
+            <div className="text-sm text-[#C5CAD6]">3,000+ terms pulled from real TELC and Goethe papers. No filler.</div>
+            <div className="mt-4 text-sm text-[#8B1E3D] group-hover:underline">Work on vocabulary →</div>
+          </Link>
 
-        <div className="mt-8">
-          <Link href="/resources" className="practice-card group block p-5 hover:border-[var(--gold)] transition-colors">
-            <div className="text-[#F4C430] text-xs tracking-widest mb-1">OFFICIAL GOETHE + BANK</div>
-            <div className="font-semibold">Tài nguyên chính thức &amp; Ngân hàng học liệu B1-C1</div>
-            <div className="text-sm text-[#A8B3C7] group-hover:underline">Link model tests • Ví dụ Ausbildung • Giải thích chi tiết →</div>
+          <Link href="/practice/grammar" className="skill-card group p-6 block">
+            <div className="text-[#8B1E3D] text-xs tracking-widest mb-1">GRAMMAR</div>
+            <div className="font-semibold text-xl mb-1 tracking-tight">The structures they actually score</div>
+            <div className="text-sm text-[#C5CAD6]">The ones that reliably appear in B1-C1 writing and speaking. Practiced in real sentences.</div>
+            <div className="mt-4 text-sm text-[#8B1E3D] group-hover:underline">Work on grammar →</div>
           </Link>
         </div>
 
-        {/* Gamification integration: 3000+ word bank mastery stat — NOW A CORE PILLAR, added into everything */}
-        <div className="mt-6">
-          <div className="practice-card p-6">
-            <div className="font-semibold mb-3 flex items-center gap-2">Official 3000+ Wortliste Bank Mastery</div>
-            <div className="flex items-baseline gap-3 mb-1">
-              <div className="text-5xl font-bold tabular-nums text-[#F4C430]">{bankMastered}/{BANK_TOTAL}</div>
-              <div className="text-sm text-[#A8B3C7]">({bankPercent}%)</div>
-            </div>
-            <div className="text-sm text-[#A8B3C7] mb-4">Mỗi từ master từ ngân hàng Goethe chính thức tự động đẩy level, XP streaks và Ausbildung readiness. Tất cả bài tập (Vocab/Grammar/Writing/Bank Drill) đều sync vào đây — không lặp từ sau khi đúng.</div>
+        <Link href="/resources" className="practice-card p-5 block mb-6 hover:border-[#8B1E3D] transition-colors">
+          <div className="text-[#8B1E3D] text-xs tracking-widest mb-1">OFFICIAL MATERIALS</div>
+          <div className="font-medium">TELC &amp; Goethe model tests + the vocabulary bank that matters</div>
+          <div className="text-sm text-[#8F95A3] mt-1">Real past papers and the exact words candidates are expected to know.</div>
+        </Link>
 
-            <div className="flex flex-wrap gap-3">
-              <Button asChild className="btn-primary px-6 py-2">
-                <Link href="/practice/bank">Quick Bank Drill (Master 12 từ +XP ngay)</Link>
-              </Button>
-              <Button asChild className="btn-ghost px-6 py-2">
-                <Link href="/resources">Xem &amp; Tìm kiếm toàn bộ ngân hàng →</Link>
-              </Button>
-              <Link href="/practice" className="text-sm self-center text-[#F4C430] hover:underline">Hoặc luyện Vocab/Grammar/Writing (cũng + Bank)</Link>
-            </div>
+        <div className="practice-card p-6">
+          <div className="text-sm text-[#8F95A3] mb-1">Your vocabulary bank</div>
+          <div className="text-4xl font-semibold tabular-nums tracking-tighter">{bankMastered} <span className="text-base font-normal text-[#8F95A3]">/ {BANK_TOTAL}</span></div>
+          <div className="text-sm text-[#C5CAD6] mt-1 mb-4">Every correct answer across the site feeds this. No repeats after you get it right.</div>
+
+          <div className="flex flex-wrap gap-2">
+            <Link href="/practice/bank" className="btn-primary text-sm px-4 py-1.5">Open the bank</Link>
+            <Link href="/resources" className="btn-ghost text-sm px-4 py-1.5">See the official tests</Link>
           </div>
         </div>
 
-        <div className="text-center text-xs text-[#A8B3C7] mt-8">Guest mode • Tiến độ lưu local. Sign in sau để sync với DHND.</div>
+        <div className="text-center text-xs text-[#8F95A3] mt-8">Guest mode. Everything stays on your machine. Just honest work.</div>
       </div>
+
+      {/* Mobile phone UI — thumb-friendly bottom tabs (hidden on desktop) */}
+      <MobileBottomNav />
     </div>
   );
 }
