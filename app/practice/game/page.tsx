@@ -20,18 +20,7 @@ type GameItem = {
 };
 
 export default function PracticeGame() {
-  const [mode, setMode] = useState<GameMode>('write');
-  const [score, setScore] = useState(0);
-  const [totalAnswered, setTotalAnswered] = useState(0);
-  const [xpEarned, setXpEarned] = useState(0);
-  const [current, setCurrent] = useState<GameItem | null>(null);
-  const [remaining, setRemaining] = useState<GameItem[]>([]);
-  const [userInput, setUserInput] = useState('');
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [feedback, setFeedback] = useState<{ correct: boolean; message: string; explanation: string } | null>(null);
-  const [sessionComplete, setSessionComplete] = useState(false);
-
-  // Build game items from declensions + some fix-error examples (grammar structures)
+  // Build game items from declensions + some fix-error examples (grammar structures) - BEFORE state that uses them
   const baseDeclensionItems: GameItem[] = declensionItems.map(item => ({
     sentence: item.sentence,
     correct: item.correct,
@@ -89,6 +78,26 @@ export default function PracticeGame() {
     return baseDeclensionItems;
   }
 
+  const [mode, setMode] = useState<GameMode>('write');
+  const [score, setScore] = useState(0);
+  const [totalAnswered, setTotalAnswered] = useState(0);
+  const [xpEarned, setXpEarned] = useState(0);
+  const [userInput, setUserInput] = useState('');
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [feedback, setFeedback] = useState<{ correct: boolean; message: string; explanation: string } | null>(null);
+  const [sessionComplete, setSessionComplete] = useState(false);
+
+  // Initialize with first session immediately so content and buttons show right away (fixes loading stuck)
+  const [remaining, setRemaining] = useState<GameItem[]>(() => {
+    const items = getItemsForMode('write');
+    return [...items].sort(() => Math.random() - 0.5);
+  });
+  const [current, setCurrent] = useState<GameItem | null>(() => {
+    const items = getItemsForMode('write');
+    const shuffled = [...items].sort(() => Math.random() - 0.5);
+    return shuffled[0] || null;
+  });
+
   function startNewSession(newMode: GameMode) {
     const items = getItemsForMode(newMode);
     const shuffled = [...items].sort(() => Math.random() - 0.5);
@@ -127,15 +136,14 @@ export default function PracticeGame() {
     if (isCorrect) {
       message = 'Correct!';
       const points = 10 + Math.floor(Math.random() * 6); // 10-15 points per correct
-      const newScore = score + points;
-      setScore(newScore);
-      setTotalAnswered(totalAnswered + 1);
+      setScore((s) => s + points);
+      setTotalAnswered((t) => t + 1);
 
       // Reward system: XP + daily tracking
       const xp = 10;
       awardXp(xp);
       logDailyActivity(1, xp, 0); // 1 word/activity, xp, 0 sessions for this
-      setXpEarned(xpEarned + xp);
+      setXpEarned((x) => x + xp);
 
       // Master the base word if available (for bank integration)
       if (current.base) {
@@ -184,12 +192,8 @@ export default function PracticeGame() {
     startNewSession(mode);
   }
 
-  // Auto-start on mount with default mode
-  useEffect(() => {
-    if (!current && remaining.length === 0 && !sessionComplete) {
-      startNewSession('write');
-    }
-  }, []);
+  // Note: initial state now starts the session immediately so buttons and content are there on load. 
+  // The old useEffect was removed to prevent any stuck loading state.
 
   return (
     <div className="min-h-screen bg-[#0A0D14] text-[#F5F7FA] py-8">
@@ -270,28 +274,26 @@ export default function PracticeGame() {
                   <button
                     key={idx}
                     onClick={() => {
+                      const isCorrect = opt === current.correct;
                       setUserInput(opt);
-                      setTimeout(() => {
-                        const isCorrect = opt === current.correct;
-                        setFeedback({
-                          correct: isCorrect,
-                          message: isCorrect ? 'Correct!' : `Correct was: ${current.correct}`,
-                          explanation: current.explanation,
-                        });
-                        setIsAnswered(true);
-                        if (isCorrect) {
-                          const points = 8;
-                          setScore(score + points);
-                          setTotalAnswered(totalAnswered + 1);
-                          awardXp(8);
-                          logDailyActivity(0, 8, 1);
-                          setXpEarned(xpEarned + 8);
-                          logPerformance('case-practice', current.case || 'general', true);
-                        }
-                      }, 50);
+                      setFeedback({
+                        correct: isCorrect,
+                        message: isCorrect ? 'Correct!' : `Correct was: ${current.correct}`,
+                        explanation: current.explanation,
+                      });
+                      setIsAnswered(true);
+                      if (isCorrect) {
+                        const points = 8;
+                        setScore((s) => s + points);
+                        setTotalAnswered((t) => t + 1);
+                        awardXp(8);
+                        logDailyActivity(0, 8, 1);
+                        setXpEarned((x) => x + 8);
+                        logPerformance('case-practice', current.case || 'general', true);
+                      }
                     }}
                     disabled={isAnswered}
-                    className="text-left p-4 rounded-xl border border-[#2C303A] hover:border-[#8B1E3D] bg-[#0A0C12] disabled:opacity-70"
+                    className="text-left p-4 rounded-xl border border-[#2C303A] hover:border-[#8B1E3D] bg-[#0A0C12] disabled:opacity-70 active:bg-[#111418] transition-colors"
                   >
                     {opt}
                   </button>

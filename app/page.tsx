@@ -97,11 +97,19 @@ export default function GermanForgeLanding() {
             { title: "Word Forms & Cases", desc: "Master nominative, accusative, dative and genitive in real sentences." },
             { title: "The Official Bank", desc: "Quick mastery drills. Prioritises what you don’t know yet. Syncs everywhere." },
           ].map((f, i) => (
-            <div key={i} className="practice-card p-5 sm:p-6 group hover:border-[#8B1E3D]/60 transition-colors bg-gradient-to-b from-[#111418] to-[#0F1116]">
+            <motion.div 
+              key={i} 
+              className="practice-card p-5 sm:p-6 group hover:border-[#8B1E3D]/60 transition-colors bg-gradient-to-b from-[#111418] to-[#0F1116] cursor-default"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -3, transition: { duration: 0.15 } }}
+              whileTap={{ scale: 0.985 }}
+              transition={{ delay: 0.05 * i }}
+            >
               <div className="text-[#8B1E3D] text-xs tracking-[2px] mb-3">{String(i+1).padStart(2, '0')}</div>
               <div className="font-semibold text-lg sm:text-xl tracking-tight mb-3">{f.title}</div>
               <div className="text-[14px] sm:text-[15px] text-[#C5CAD6] leading-snug">{f.desc}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -120,11 +128,18 @@ export default function GermanForgeLanding() {
               { num: "02", title: "Master", text: "Every correct answer removes the item from future practice. The bank grows with you." },
               { num: "03", title: "Track", text: "See your real daily progress, streaks and history in the dedicated progress view." },
             ].map((step, i) => (
-              <div key={i} className="space-y-2 sm:space-y-3 px-4">
+              <motion.div 
+                key={i} 
+                className="space-y-2 sm:space-y-3 px-4"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -2 }}
+                transition={{ delay: 0.1 * i }}
+              >
                 <div className="mx-auto inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#8B1E3D] to-[#C24A3A] text-white text-sm font-medium">{step.num}</div>
                 <div className="font-semibold text-lg sm:text-xl tracking-tight">{step.title}</div>
                 <div className="text-[#C5CAD6] text-[14px] sm:text-[15px] max-w-[30ch] mx-auto leading-snug">{step.text}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -144,9 +159,6 @@ export default function GermanForgeLanding() {
         <div className="mt-3 sm:mt-4 text-xs text-[#8F95A3]">Guest mode • Everything stays on your device until you sign in</div>
       </div>
 
-      <footer className="border-t border-[#2C303A] bg-[#0A0C12] py-5 sm:py-6 text-center text-xs sm:text-sm text-[#8F95A3]">
-        GermanForge — Professional Preparation for TELC B1 &amp; Goethe B1–C1 Exams
-      </footer>
     </div>
   );
 }
