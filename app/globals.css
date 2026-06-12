@@ -1,31 +1,36 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* GermanForge — Premium dark theme with gold/amber accents and glassmorphism.
-   High-end SaaS aesthetic for serious B1-C1 exam preparation. */
+/* ════════════════════════════════════════════════════════════════════
+   GermanForge — Design System v2 "Goldschmiede"
+   Dark editorial theme: ink black, forged gold, champagne serif accents,
+   film grain, glassmorphism. Built for B1–C1 exam preparation.
+   ════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Base surfaces */
-  --bg: #0A0D14;
-  --bg-2: #0D1018;
-  --surface: #111520;
-  --surface-2: #161B28;
-  --surface-3: #1C2235;
+  /* Base surfaces — deep ink, warm undertone */
+  --bg: #07090F;
+  --bg-2: #0A0D14;
+  --surface: #0E1119;
+  --surface-2: #141925;
+  --surface-3: #1B2132;
 
   /* Text */
-  --text: #F0F2F7;
-  --text-2: #C8CEDC;
-  --muted: #9BA4B8;
+  --text: #F2F3F8;
+  --text-2: #C9CFDD;
+  --muted: #98A1B6;
 
   /* Borders */
-  --line: #1E2538;
-  --line-2: #2A3148;
+  --line: #1C2336;
+  --line-2: #293049;
 
-  /* Gold/Amber accent palette */
+  /* Gold / amber accent palette */
   --gold: #D4A017;
   --gold-bright: #F0BA30;
   --gold-warm: #E8962A;
   --gold-dim: #A07810;
+  --gold-deep: #6E5208;
+  --champagne: #F4E3BC;
   --gold-glow: rgba(212, 160, 23, 0.15);
   --gold-glow-strong: rgba(212, 160, 23, 0.3);
 
@@ -34,6 +39,7 @@
   --green-dim: #166534;
   --red: #EF4444;
   --red-dim: #991B1B;
+  --violet: #A78BFA;
 
   /* Glass effect */
   --glass-bg: rgba(255, 255, 255, 0.04);
@@ -49,17 +55,17 @@
   --popover: var(--surface-2);
   --popover-foreground: var(--text);
   --primary: var(--gold);
-  --primary-foreground: #0A0D14;
+  --primary-foreground: #07090F;
   --secondary: var(--surface-2);
   --secondary-foreground: var(--text);
   --muted: var(--surface-2);
-  --muted-foreground: #9BA4B8;
+  --muted-foreground: #98A1B6;
 
-  /* Custom UI relies on --muted for readable secondary text (labels, subs, descriptions).
-     Ensure it stays the light gray even after shadcn mappings. */
-  --muted: #9BA4B8;
+  /* Custom UI relies on --muted for readable secondary text (labels, subs,
+     descriptions). Ensure it stays the light gray even after shadcn mappings. */
+  --muted: #98A1B6;
   --accent: var(--gold-warm);
-  --accent-foreground: #0A0D14;
+  --accent-foreground: #07090F;
   --accent-light: var(--gold-bright);
   --destructive: #EF4444;
   --border: var(--line);
@@ -80,9 +86,137 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ========================================================
+::selection {
+  background: var(--gold);
+  color: #07090F;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Film grain overlay (signature texture) ─────────────────────────── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  opacity: 0.045;
+  animation: grainShift 9s steps(6) infinite;
+}
+
+@keyframes grainShift {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-3%, 2%); }
+  40%  { transform: translate(2%, -3%); }
+  60%  { transform: translate(-2%, -2%); }
+  80%  { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ════════════════════════════════════════════════════════════════════ */
+
+.font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+.serif-accent {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.display-hero {
+  font-size: clamp(3rem, 9.5vw, 7.5rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  font-weight: 900;
+}
+
+.display-xl {
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 900;
+}
+
+.display-lg {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--champagne) 0%, var(--gold-bright) 38%, var(--gold-warm) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-soft {
+  background: linear-gradient(180deg, var(--text) 20%, rgba(242, 243, 248, 0.55) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-label,
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.eyebrow-rule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eyebrow-rule::before {
+  content: "";
+  width: 2rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+/* Split-text reveal scaffolding */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.char,
+.word-reveal {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ════════════════════════════════════════════════════════════════════
    GLASSMORPHISM CARDS
-   ======================================================== */
+   ════════════════════════════════════════════════════════════════════ */
 
 .glass-card {
   background: var(--glass-bg);
@@ -107,7 +241,7 @@ body {
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Legacy .practice-card and .skill-card — now glassmorphism */
+/* Legacy .practice-card and .skill-card — glassmorphism */
 .practice-card, .skill-card {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -124,13 +258,27 @@ body {
   transform: translateY(-2px);
 }
 
-/* ========================================================
+/* Panel with gradient hairline border (premium card) */
+.forge-panel {
+  position: relative;
+  border-radius: 20px;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(150deg, rgba(212, 160, 23, 0.45), rgba(255, 255, 255, 0.06) 40%, rgba(212, 160, 23, 0.12)) border-box;
+  border: 1px solid transparent;
+}
+
+.forge-panel-glow {
+  box-shadow: 0 0 40px rgba(212, 160, 23, 0.08), 0 24px 48px rgba(0, 0, 0, 0.45);
+}
+
+/* ════════════════════════════════════════════════════════════════════
    BUTTONS
-   ======================================================== */
+   ════════════════════════════════════════════════════════════════════ */
 
 .btn-primary {
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-warm) 100%);
-  color: #0A0D14;
+  color: #07090F;
   font-weight: 700;
   border-radius: 999px;
   padding-left: 1.5rem;
@@ -164,9 +312,42 @@ body {
   border-color: var(--gold-dim);
 }
 
-/* ========================================================
-   QUIZ OPTIONS
-   ======================================================== */
+/* Hero CTA with sweeping shine */
+.btn-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 45%, var(--gold-warm) 100%);
+  color: #07090F;
+  font-weight: 800;
+  border-radius: 999px;
+  box-shadow: 0 0 32px rgba(212, 160, 23, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+}
+
+.btn-hero::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-hero:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 48px rgba(212, 160, 23, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.btn-hero:hover::after {
+  left: 130%;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   QUIZ / FEEDBACK
+   ════════════════════════════════════════════════════════════════════ */
 
 .quiz-option {
   background: var(--surface-2);
@@ -197,10 +378,6 @@ body {
   border-color: var(--red);
 }
 
-/* ========================================================
-   FEEDBACK
-   ======================================================== */
-
 .feedback {
   padding: 1rem 1.25rem;
   border-radius: 12px;
@@ -218,54 +395,90 @@ body {
   background: rgba(239, 68, 68, 0.07);
 }
 
-/* ========================================================
-   TYPOGRAPHY UTILITIES
-   ======================================================== */
-
-.gradient-text {
-  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-warm) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Wrong-answer shake */
+@keyframes shakeX {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
 }
 
-.section-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  font-weight: 700;
+.shake {
+  animation: shakeX 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
-.section-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text);
+/* Correct-answer pulse */
+@keyframes correctPulse {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+  100% { box-shadow: 0 0 0 22px rgba(34, 197, 94, 0); }
 }
 
-/* ========================================================
+.correct-pulse {
+  animation: correctPulse 0.7s ease-out;
+}
+
+/* Floating "+XP" chip */
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateY(8px) scale(0.85); }
+  20% { opacity: 1; transform: translateY(0) scale(1.05); }
+  100% { opacity: 0; transform: translateY(-36px) scale(1); }
+}
+
+.xp-float {
+  animation: floatUp 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════════════════════
    LOGO + NAV
-   ======================================================== */
+   ════════════════════════════════════════════════════════════════════ */
 
 .logo-mark {
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-warm) 100%);
-  color: #0A0D14;
+  color: #07090F;
   font-weight: 800;
   border-radius: 10px;
   box-shadow: 0 0 12px var(--gold-glow);
 }
 
 .nav-glass {
-  background: rgba(10, 13, 20, 0.8);
+  background: rgba(7, 9, 15, 0.72);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--line);
 }
 
-/* ========================================================
-   PROGRESS / XP BAR
-   ======================================================== */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link:hover {
+  color: var(--gold-bright);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   PROGRESS / XP
+   ════════════════════════════════════════════════════════════════════ */
 
 .xp-bar-track {
   background: var(--surface-2);
@@ -282,9 +495,27 @@ body {
   box-shadow: 0 0 8px var(--gold-glow);
 }
 
-/* ========================================================
-   ACHIEVEMENT / BADGE
-   ======================================================== */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, 0.16) 50%, transparent 75%);
+  transform: translateX(-100%);
+  animation: shimmerSweep 2.6s ease-in-out infinite;
+}
+
+@keyframes shimmerSweep {
+  to { transform: translateX(100%); }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ACHIEVEMENT / SKILL TREE / STREAK (legacy-compatible)
+   ════════════════════════════════════════════════════════════════════ */
 
 .achievement-card {
   background: var(--glass-bg);
@@ -303,10 +534,6 @@ body {
   opacity: 0.45;
   filter: grayscale(0.6);
 }
-
-/* ========================================================
-   SKILL TREE NODES
-   ======================================================== */
 
 .skill-node {
   border: 2px solid var(--line-2);
@@ -332,10 +559,6 @@ body {
   cursor: not-allowed;
 }
 
-/* ========================================================
-   STREAK / COMBO
-   ======================================================== */
-
 .streak-flame {
   color: var(--gold-warm);
   filter: drop-shadow(0 0 8px rgba(232, 150, 42, 0.6));
@@ -349,7 +572,7 @@ body {
 
 .combo-badge {
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-warm) 100%);
-  color: #0A0D14;
+  color: #07090F;
   font-weight: 800;
   border-radius: 999px;
   padding: 0.2rem 0.75rem;
@@ -363,9 +586,212 @@ body {
   100% { transform: scale(1); }
 }
 
-/* ========================================================
-   HERO / 3D CANVAS
-   ======================================================== */
+/* ════════════════════════════════════════════════════════════════════
+   MARQUEE
+   ════════════════════════════════════════════════════════════════════ */
+
+.marquee {
+  overflow: hidden;
+  position: relative;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: marqueeScroll 36s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  to { transform: translateX(-50%); }
+}
+
+.marquee-item {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.6rem, 3.4vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(212, 160, 23, 0.55);
+  white-space: nowrap;
+  padding: 0 1.6rem;
+}
+
+.marquee-item.solid {
+  color: var(--champagne);
+  -webkit-text-stroke: 0;
+}
+
+.marquee-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  box-shadow: 0 0 10px var(--gold-glow-strong);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   EDITORIAL MODULE ROWS (landing features)
+   ════════════════════════════════════════════════════════════════════ */
+
+.module-row {
+  position: relative;
+  display: block;
+  border-top: 1px solid var(--line);
+  transition: background 0.3s ease;
+}
+
+.module-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.module-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(212, 160, 23, 0.07), rgba(212, 160, 23, 0.015) 55%, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.module-row:hover::before {
+  opacity: 1;
+}
+
+.module-row .module-num {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  color: var(--gold-dim);
+  transition: color 0.3s ease;
+}
+
+.module-row:hover .module-num {
+  color: var(--gold-bright);
+}
+
+.module-row .module-arrow {
+  transform: translateX(-8px);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+}
+
+.module-row:hover .module-arrow {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.module-row .module-title {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease;
+}
+
+.module-row:hover .module-title {
+  transform: translateX(10px);
+  color: var(--gold-bright);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SCROLL-DRAWN SVG LINE
+   ════════════════════════════════════════════════════════════════════ */
+
+.scroll-line-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.scroll-line-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   CUSTOM CURSOR (fine pointers only)
+   ════════════════════════════════════════════════════════════════════ */
+
+@media (pointer: fine) {
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    pointer-events: none;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gold-bright);
+    box-shadow: 0 0 10px var(--gold-glow-strong);
+  }
+
+  .cursor-ring {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(212, 160, 23, 0.5);
+    transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .cursor-ring.is-active {
+    width: 52px;
+    height: 52px;
+    border-color: rgba(240, 186, 48, 0.9);
+    background: rgba(212, 160, 23, 0.08);
+  }
+}
+
+@media (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   PRELOADER
+   ════════════════════════════════════════════════════════════════════ */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader-word {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.8rem, 5vw, 3.4rem);
+  color: var(--champagne);
+  letter-spacing: -0.01em;
+}
+
+.preloader-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
+  font-weight: 800;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   HERO / 3D / BACKGROUND
+   ════════════════════════════════════════════════════════════════════ */
 
 .hero-canvas-wrapper {
   position: relative;
@@ -376,9 +802,11 @@ body {
   pointer-events: none;
 }
 
-/* ========================================================
-   HEATMAP
-   ======================================================== */
+.hero-vignette {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, transparent 0%, rgba(7, 9, 15, 0.55) 78%, var(--bg) 100%),
+    linear-gradient(180deg, rgba(7, 9, 15, 0.45) 0%, transparent 22%, transparent 70%, var(--bg) 100%);
+}
 
 .heatmap-cell {
   border-radius: 3px;
@@ -389,16 +817,10 @@ body {
   opacity: 0.85;
 }
 
-/* ========================================================
-   MISC UTILITIES
-   ======================================================== */
-
-/* Gold glow for featured elements */
 .gold-glow {
   box-shadow: 0 0 24px var(--gold-glow-strong);
 }
 
-/* Subtle grid texture on dark surfaces */
 .texture-bg {
   background-image:
     linear-gradient(rgba(212, 160, 23, 0.025) 1px, transparent 1px),
@@ -406,7 +828,6 @@ body {
   background-size: 40px 40px;
 }
 
-/* Ambient glow orb for hero/backgrounds */
 .orb-gold {
   position: absolute;
   border-radius: 50%;
@@ -421,7 +842,10 @@ body {
   pointer-events: none;
 }
 
-/* Scrollbar styling */
+/* ════════════════════════════════════════════════════════════════════
+   MISC
+   ════════════════════════════════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -440,7 +864,6 @@ body {
   background: var(--gold-dim);
 }
 
-/* Clean overrides */
 html, body { background: var(--bg); color: var(--text); }
 
 /* shadcn popover / dropdown dark overrides */
@@ -448,7 +871,40 @@ html, body { background: var(--bg); color: var(--text); }
 .text-black, .text-zinc-900, .text-gray-900 { color: var(--text) !important; }
 .border-white, .border-zinc-200 { border-color: var(--line) !important; }
 
-/* GSAP will-change optimization */
 .gsap-reveal {
   will-change: transform, opacity;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   REDUCED MOTION — calm everything down
+   ════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::after {
+    animation: none;
+  }
+
+  .marquee-track,
+  .shimmer::after,
+  .streak-flame,
+  .xp-float {
+    animation: none !important;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

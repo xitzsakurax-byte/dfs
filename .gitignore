@@ -45,3 +45,6 @@ C1.zip
 c1ref/
 *.zip
 
+
+# local Claude Code config
+.claude/

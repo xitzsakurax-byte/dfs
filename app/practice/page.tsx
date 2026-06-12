@@ -2,106 +2,131 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { BookOpen, NotebookPen, Layers, Database, FileText, Gamepad2, Library } from 'lucide-react';
+import AppNav from '@/components/AppNav';
 import MobileBottomNav from '@/components/MobileBottomNav';
+
+const MODULES = [
+  {
+    href: '/practice/vocab', Icon: BookOpen, label: 'Vocabulary for exams',
+    title: 'B1–C1 Exam Lexicon',
+    desc: 'Curated B1–C1 terms for TELC & Goethe with example sentences. Wrong answers feed your SRS queue.',
+    cta: 'Start training',
+  },
+  {
+    href: '/practice/grammar', Icon: NotebookPen, label: 'Grammar for exams',
+    title: 'Complex Structures',
+    desc: 'Key B1–C1 structures tested in TELC and Goethe — clear explanations plus exam-focused practice.',
+    cta: 'Start training',
+  },
+  {
+    href: '/practice/writing', Icon: FileText, label: 'Writing · TELC & Goethe',
+    title: 'Exam Writing Tasks',
+    desc: 'Authentic email, report and opinion tasks with instant heuristic scoring aligned to official criteria.',
+    cta: 'Start writing',
+  },
+  {
+    href: '/practice/bank', Icon: Database, label: 'Official B1 vocabulary bank',
+    title: '3,078-Word Drill',
+    desc: 'The official Goethe Wortliste as a mastery drill. Prioritises unmastered terms, never repeats a mastered one.',
+    cta: 'Start drill',
+    featured: true,
+  },
+  {
+    href: '/practice/declensions', Icon: Layers, label: 'Word forms · cases',
+    title: 'Declensions (N/A/D/G)',
+    desc: 'All four cases in real exam sentences — prepositions, verbs with case, adjective endings.',
+    cta: 'Practice cases',
+  },
+  {
+    href: '/practice/game', Icon: Gamepad2, label: 'Interactive practice',
+    title: 'Case & Grammar Game',
+    desc: 'Write forms, fix structure errors, pop quizzes. Combo multipliers up to 3× XP on hot streaks.',
+    cta: 'Play the game',
+  },
+];
 
 export default function PracticeHub() {
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] py-8">
-      <div className="container max-w-5xl mx-auto px-6">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <div className="text-[var(--accent-light)] text-xs tracking-[2px]">TELC B1 • GOETHE B1-C1</div>
-            <h1 className="text-4xl font-semibold tracking-tight">Exam Skills</h1>
-          </div>
-          <Link href="/dashboard" className="text-sm text-[var(--muted)] hover:text-[#EDEEF2]">← Back</Link>
+    <div className="min-h-screen pb-24 text-[var(--text)]" style={{ background: 'var(--bg)' }}>
+      <AppNav right={<span style={{ color: 'var(--muted)' }}>Anh Kiet</span>} />
+
+      <div className="pt-24 max-w-6xl mx-auto px-5 sm:px-8">
+        <div className="mb-10">
+          <div className="eyebrow eyebrow-rule mb-3">TELC · Goethe · B1–C1</div>
+          <h1 className="display-lg">
+            The training <span className="serif-accent gradient-text" style={{ fontWeight: 500 }}>floor.</span>
+          </h1>
+          <p className="mt-3 max-w-[52ch] text-[15px]" style={{ color: 'var(--text-2)' }}>
+            Six modules built around real exam formats. Everything you answer feeds
+            XP, streaks, quests and your spaced-repetition queue.
+          </p>
         </div>
 
-        {/* Separate phone UI: comfortable 1-2 column cards on mobile. Desktop gets the rich multi-column view */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-6">
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-            <Link href="/practice/vocab" className="skill-card group block p-6">
-              <div>
-                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">VOCABULARY FOR EXAMS</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">B1-C1 Exam Lexicon</div>
-                <div className="text-[var(--muted)] text-[15px]">3,000+ official terms for TELC &amp; Goethe. Theme-based for all sections. Mastery tracking with no repeats.</div>
-              </div>
-              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Start Training →</div>
-            </Link>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
-            <Link href="/practice/grammar" className="skill-card group block p-6">
-              <div>
-                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">GRAMMAR FOR EXAMS</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">Complex Structures</div>
-                <div className="text-[var(--muted)] text-[15px]">Key B1-C1 structures tested in TELC and Goethe. Clear explanations + exam-focused practice.</div>
-              </div>
-              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Start Training →</div>
-            </Link>
-          </motion.div>
-
-          {/* New commercial writing mock test card */}
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
-            <Link href="/practice/writing" className="skill-card group block p-6">
-              <div>
-                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">WRITING • TELC &amp; GOETHE B1-C1</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">Exam Writing Tasks</div>
-                <div className="text-[var(--muted)] text-[15px]">Authentic email, report and opinion tasks scored by AI against official TELC &amp; Goethe criteria. Integrated exam vocabulary.</div>
-              </div>
-              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Start Writing Practice →</div>
-            </Link>
-          </motion.div>
-
-          {/* Dedicated 3000+ Bank gamification card - added into everything */}
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}>
-            <Link href="/practice/bank" className="skill-card group block p-6 border border-[var(--gold)]/60">
-              <div>
-                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">OFFICIAL B1 EXAM VOCABULARY BANK</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">3,000+ Terms for TELC &amp; Goethe</div>
-                <div className="text-[var(--muted)] text-[15px]">Quick Mastery Drills • Prioritizes unmastered terms • +XP per mastered word • Real-time sync across all training • Smart no-repeat system</div>
-              </div>
-              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Start Vocabulary Drill →</div>
-            </Link>
-          </motion.div>
-
-          {/* New: Word Forms / Declensions (Nominativ, Akkusativ, Dativ, Genitiv) */}
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.30 }}>
-            <Link href="/practice/declensions" className="skill-card group block p-6">
-              <div>
-                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">WORD FORMS • CASES</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">Declensions (N/A/D/G)</div>
-                <div className="text-[var(--muted)] text-[15px]">Master the 4 cases with real exam sentences. Prepositions, verbs + case, adjective endings. Essential for B1 writing &amp; speaking.</div>
-              </div>
-              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Practice Cases →</div>
-            </Link>
-          </motion.div>
-
-          {/* New dedicated Game section with writing, error fixing, pop quiz, rewards */}
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-            <Link href="/practice/game" className="skill-card group block p-6 border border-[#8B1E3D]/40">
-              <div>
-                <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">INTERACTIVE PRACTICE</div>
-                <div className="font-semibold text-2xl mb-2 tracking-tight">Case &amp; Grammar Game</div>
-                <div className="text-[var(--muted)] text-[15px]">Write forms, fix structure errors, pop quizzes. Earn XP &amp; points. No repeats, real exam focus.</div>
-              </div>
-              <div className="mt-6 text-sm text-[var(--accent-light)] font-medium group-hover:underline">Play the Game →</div>
-            </Link>
-          </motion.div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {MODULES.map((m, i) => (
+            <motion.div
+              key={m.href}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 + i * 0.06 }}
+            >
+              <Link
+                href={m.href}
+                className="skill-card group flex flex-col p-6 h-full"
+                style={m.featured ? { borderColor: 'rgba(212,160,23,0.45)' } : undefined}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center"
+                    style={{ background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.22)' }}
+                  >
+                    <m.Icon size={19} style={{ color: 'var(--gold-bright)' }} />
+                  </div>
+                  {m.featured && (
+                    <span className="text-[10px] px-2.5 py-1 rounded-full font-bold tracking-[0.12em] uppercase"
+                      style={{ background: 'rgba(212,160,23,0.12)', color: 'var(--gold)', border: '1px solid rgba(212,160,23,0.3)' }}>
+                      Core
+                    </span>
+                  )}
+                </div>
+                <div className="text-[11px] font-bold tracking-[0.14em] uppercase mb-1.5" style={{ color: 'var(--muted)' }}>
+                  {m.label}
+                </div>
+                <div className="font-bold text-xl tracking-tight mb-2 group-hover:text-[var(--gold-bright)] transition-colors">
+                  {m.title}
+                </div>
+                <div className="text-sm leading-relaxed flex-1" style={{ color: 'var(--text-2)' }}>{m.desc}</div>
+                <div className="mt-5 text-sm font-semibold" style={{ color: 'var(--gold)' }}>
+                  {m.cta} →
+                </div>
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Prominent commercial resources link */}
-        <Link href="/resources" className="practice-card group block p-6 mb-8 hover:border-[var(--gold)] transition-colors">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[var(--accent-light)] text-xs tracking-widest mb-1">OFFICIAL + ENRICHED</div>
-              <div className="font-semibold text-2xl tracking-tight">TELC &amp; Goethe Official Materials</div>
-              <div className="text-[var(--muted)] mt-1 text-[15px]">Direct links to model tests and marking criteria • Complete B1 exam vocabulary bank • Targeted skill resources</div>
+        {/* Resources strip */}
+        <Link href="/resources" className="glass-card group flex items-center justify-between gap-5 p-6 mb-8">
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.22)' }}>
+              <Library size={19} style={{ color: 'var(--gold-bright)' }} />
             </div>
-            <div className="text-[var(--accent-light)] text-sm font-medium group-hover:underline">Browse now →</div>
+            <div>
+              <div className="font-bold text-lg tracking-tight">TELC &amp; Goethe Official Materials</div>
+              <div className="text-sm mt-0.5" style={{ color: 'var(--muted)' }}>
+                Model tests, marking criteria, the full vocabulary bank and trusted external resources.
+              </div>
+            </div>
           </div>
+          <span className="text-sm font-semibold flex-shrink-0 group-hover:translate-x-1 transition-transform" style={{ color: 'var(--gold)' }}>
+            Browse →
+          </span>
         </Link>
 
-        <div className="text-xs text-[var(--muted)] text-center">Listening &amp; Speaking modules with authentic exam audio coming soon. Word forms (declensions) are now included as a core B1-C1 skill for TELC &amp; Goethe.</div>
+        <div className="text-xs text-center" style={{ color: 'var(--muted)' }}>
+          Listening &amp; speaking modules with authentic exam audio are planned next.
+        </div>
       </div>
 
       <MobileBottomNav />

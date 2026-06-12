@@ -2,108 +2,142 @@
 
 import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Sphere, MeshDistortMaterial, Stars } from '@react-three/drei';
+import { Float, MeshDistortMaterial, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 
-// ─── Floating Icosahedron (main centerpiece) ──────────────────────────────────
-function GoldIcosahedron() {
-  const meshRef = useRef<THREE.Mesh>(null);
+/* Full-bleed hero scene: molten-gold distorted core inside a wireframe shell,
+   orbiting particle nebula, slow camera drift, and pointer parallax.
+   Rendered behind the hero copy (canvas is pointer-events: none). */
+
+// Shared pointer state (canvas has pointer-events none, so listen on window)
+const pointer = { x: 0, y: 0 };
+
+function usePointerTracking() {
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+      pointer.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+}
+
+// ─── Molten gold core ─────────────────────────────────────────────────────────
+function ForgeCore() {
+  const shellRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (!meshRef.current) return;
-    meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.2;
-    meshRef.current.rotation.y += 0.004;
+    if (!shellRef.current) return;
+    shellRef.current.rotation.y -= 0.0035;
+    shellRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.25) * 0.25;
   });
 
   return (
-    <Float speed={1.2} rotationIntensity={0.4} floatIntensity={0.6}>
-      <mesh ref={meshRef} position={[0, 0, 0]}>
-        <icosahedronGeometry args={[1.4, 1]} />
-        <meshStandardMaterial
+    <Float speed={1.1} rotationIntensity={0.35} floatIntensity={0.7}>
+      {/* molten distorted sphere */}
+      <mesh>
+        <sphereGeometry args={[1.15, 64, 64]} />
+        <MeshDistortMaterial
           color="#D4A017"
-          metalness={0.85}
-          roughness={0.15}
-          wireframe={false}
-          emissive="#8B6A00"
-          emissiveIntensity={0.3}
+          emissive="#7A5C06"
+          emissiveIntensity={0.45}
+          metalness={0.9}
+          roughness={0.18}
+          distort={0.32}
+          speed={1.6}
         />
       </mesh>
-      {/* Wireframe overlay */}
-      <mesh position={[0, 0, 0]}>
-        <icosahedronGeometry args={[1.42, 1]} />
-        <meshBasicMaterial color="#F0BA30" wireframe opacity={0.15} transparent />
+      {/* rotating wireframe shell */}
+      <mesh ref={shellRef}>
+        <icosahedronGeometry args={[1.75, 1]} />
+        <meshBasicMaterial color="#F0BA30" wireframe transparent opacity={0.14} />
       </mesh>
     </Float>
   );
 }
 
-// ─── Orbiting particles ────────────────────────────────────────────────────────
-function GoldParticles({ count = 120 }: { count?: number }) {
+// ─── Particle nebula ──────────────────────────────────────────────────────────
+function Nebula({ count = 850, radius = 5.5, color = '#F0BA30', opacity = 0.65, size = 0.026 }: {
+  count?: number; radius?: number; color?: string; opacity?: number; size?: number;
+}) {
   const pointsRef = useRef<THREE.Points>(null);
 
-  const [positions, sizes] = useMemo(() => {
+  const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
-    const sz = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 2.5 + Math.random() * 2.5;
-      pos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = r * Math.cos(phi);
-      sz[i] = Math.random() * 0.04 + 0.01;
+      // flattened spiral disc with vertical scatter
+      const arm = Math.random() * Math.PI * 2;
+      const dist = 1.8 + Math.pow(Math.random(), 0.65) * radius;
+      const swirl = dist * 0.55;
+      pos[i * 3] = Math.cos(arm + swirl) * dist;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * (0.4 + dist * 0.22);
+      pos[i * 3 + 2] = Math.sin(arm + swirl) * dist - 1.2;
     }
-    return [pos, sz];
-  }, [count]);
+    return pos;
+  }, [count, radius]);
 
   useFrame((state) => {
     if (!pointsRef.current) return;
-    pointsRef.current.rotation.y += 0.0015;
-    pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.1;
+    pointsRef.current.rotation.y += 0.00045;
+    pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.12) * 0.06;
   });
 
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-        <bufferAttribute attach="attributes-size" args={[sizes, 1]} />
       </bufferGeometry>
       <pointsMaterial
-        color="#F0BA30"
-        size={0.025}
+        color={color}
+        size={size}
         sizeAttenuation
         transparent
-        opacity={0.7}
+        opacity={opacity}
         depthWrite={false}
+        blending={THREE.AdditiveBlending}
       />
     </points>
   );
 }
 
-// ─── Outer ring ────────────────────────────────────────────────────────────────
+// ─── Orbit ring ───────────────────────────────────────────────────────────────
 function OrbitRing() {
   const ringRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     if (!ringRef.current) return;
-    ringRef.current.rotation.z += 0.003;
-    ringRef.current.rotation.x = Math.PI / 2.8 + Math.sin(state.clock.elapsedTime * 0.25) * 0.08;
+    ringRef.current.rotation.z += 0.0025;
+    ringRef.current.rotation.x = Math.PI / 2.6 + Math.sin(state.clock.elapsedTime * 0.22) * 0.09;
   });
 
   return (
-    <mesh ref={ringRef} position={[0, 0, 0]}>
-      <torusGeometry args={[2.6, 0.02, 16, 100]} />
-      <meshBasicMaterial color="#D4A017" transparent opacity={0.25} />
+    <mesh ref={ringRef}>
+      <torusGeometry args={[2.9, 0.015, 16, 120]} />
+      <meshBasicMaterial color="#D4A017" transparent opacity={0.3} />
     </mesh>
   );
 }
 
-// ─── Camera drift ─────────────────────────────────────────────────────────────
+// ─── Pointer parallax + camera drift ─────────────────────────────────────────
+function ParallaxRig({ children }: { children: React.ReactNode }) {
+  const groupRef = useRef<THREE.Group>(null);
+  usePointerTracking();
+
+  useFrame(() => {
+    if (!groupRef.current) return;
+    groupRef.current.rotation.y += (pointer.x * 0.22 - groupRef.current.rotation.y) * 0.04;
+    groupRef.current.rotation.x += (-pointer.y * 0.14 - groupRef.current.rotation.x) * 0.04;
+  });
+
+  return <group ref={groupRef}>{children}</group>;
+}
+
 function CameraRig() {
   const { camera } = useThree();
   useFrame((state) => {
-    camera.position.x = Math.sin(state.clock.elapsedTime * 0.15) * 0.4;
-    camera.position.y = Math.cos(state.clock.elapsedTime * 0.1) * 0.3;
+    camera.position.x = Math.sin(state.clock.elapsedTime * 0.12) * 0.35;
+    camera.position.y = Math.cos(state.clock.elapsedTime * 0.09) * 0.25;
     camera.lookAt(0, 0, 0);
   });
   return null;
@@ -126,11 +160,11 @@ export default function HeroScene() {
       <div className="w-full h-full flex items-center justify-center">
         <div
           style={{
-            width: 180,
-            height: 180,
+            width: 320,
+            height: 320,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(212,160,23,0.25) 0%, transparent 70%)',
-            border: '1px solid rgba(212,160,23,0.3)',
+            background: 'radial-gradient(circle, rgba(212,160,23,0.22) 0%, transparent 70%)',
+            border: '1px solid rgba(212,160,23,0.25)',
           }}
         />
       </div>
@@ -139,20 +173,25 @@ export default function HeroScene() {
 
   return (
     <Canvas
-      camera={{ position: [0, 0, 6], fov: 45 }}
+      camera={{ position: [0, 0.4, 6.5], fov: 48 }}
       dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: true }}
+      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       style={{ background: 'transparent' }}
     >
-      <ambientLight intensity={0.4} />
-      <pointLight position={[5, 5, 5]} intensity={1.2} color="#F0BA30" />
-      <pointLight position={[-5, -5, -3]} intensity={0.5} color="#3B82F6" />
-      <directionalLight position={[0, 10, 0]} intensity={0.3} color="#ffffff" />
+      <ambientLight intensity={0.35} />
+      <pointLight position={[6, 5, 5]} intensity={1.4} color="#F0BA30" />
+      <pointLight position={[-6, -4, -3]} intensity={0.5} color="#3B82F6" />
+      <directionalLight position={[0, 10, 2]} intensity={0.25} color="#ffffff" />
 
-      <Stars radius={80} depth={50} count={600} factor={2} saturation={0} fade speed={0.5} />
-      <GoldParticles count={100} />
-      <OrbitRing />
-      <GoldIcosahedron />
+      <Stars radius={90} depth={55} count={900} factor={2.2} saturation={0} fade speed={0.4} />
+
+      <ParallaxRig>
+        <Nebula count={850} color="#F0BA30" />
+        <Nebula count={300} color="#8FB4FF" opacity={0.35} size={0.02} radius={6.5} />
+        <OrbitRing />
+        <ForgeCore />
+      </ParallaxRig>
+
       <CameraRig />
     </Canvas>
   );

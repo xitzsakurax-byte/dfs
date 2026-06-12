@@ -98,6 +98,25 @@ export const vocab: VocabItem[] = [
   { de: "die Ambiguität", en: "ambiguity", example: "Die Ambiguität der Formulierung führte zu Missverständnissen.", topic: "Kommunikation", cefr: "C1" },
   { de: "die Deduktion", en: "deduction", example: "Durch Deduktion lassen sich allgemeine Regeln aus Einzelfällen ableiten.", topic: "Wissenschaft", cefr: "C1" },
   { de: "jemandem den Wind aus den Segeln nehmen", en: "to take the wind out of someone's sails", example: "Durch gute Vorbereitung nahm er dem Prüfer den Wind aus den Segeln.", topic: "Umgangssprache Beruf", cefr: "C1" },
+
+  // C1 additions — word selection informed by the C1 reference Wortlisten
+  // (Werkstatt C1 et al.); glosses and example sentences are original.
+  { de: "bewerkstelligen", en: "to manage / to pull off (something difficult)", example: "Es ist nicht leicht zu bewerkstelligen, Beruf und Weiterbildung gleichzeitig zu meistern.", topic: "Arbeitswelt", cefr: "C1" },
+  { de: "das Wagnis", en: "venture / risky undertaking", example: "Der Umzug ins Ausland war ein Wagnis, das sich am Ende gelohnt hat.", topic: "Lebenswege", cefr: "C1" },
+  { de: "allmählich", en: "gradual(ly)", example: "Die Wirtschaft erholt sich allmählich von der Krise.", topic: "Innovation & Wandel", cefr: "B2" },
+  { de: "die Begleiterscheinung", en: "side effect / accompanying phenomenon", example: "Ständiger Zeitdruck ist eine typische Begleiterscheinung des modernen Arbeitslebens.", topic: "Gesellschaft", cefr: "C1" },
+  { de: "in Misskredit geraten", en: "to fall into disrepute", example: "Durch den Skandal ist der Konzern bei den Verbrauchern in Misskredit geraten.", topic: "Medien & Öffentlichkeit", cefr: "C1" },
+  { de: "bezeichnenderweise", en: "tellingly / characteristically", example: "Bezeichnenderweise äußerte sich das Unternehmen nicht zu den Vorwürfen.", topic: "Argumentation", cefr: "C1" },
+  { de: "aufholen", en: "to catch up (on a deficit)", example: "Nach der langen Krankheit musste sie den Lernstoff in kurzer Zeit aufholen.", topic: "Bildung", cefr: "B2" },
+  { de: "die Auswertung", en: "evaluation / analysis (of data)", example: "Die Auswertung der Umfrage ergab ein überraschend deutliches Ergebnis.", topic: "Wissenschaft & Forschung", cefr: "B2" },
+  { de: "die Abgrenzung", en: "demarcation / setting boundaries", example: "Vielen Beschäftigten fällt die Abgrenzung zwischen Arbeit und Freizeit zunehmend schwer.", topic: "Arbeitswelt", cefr: "C1" },
+  { de: "mahnen", en: "to urge / to admonish", example: "Fachleute mahnen seit Jahren zu einem sparsameren Umgang mit Ressourcen.", topic: "Umwelt & Gesellschaft", cefr: "C1" },
+  { de: "das Bewusstsein", en: "awareness / consciousness", example: "Das Bewusstsein für nachhaltigen Konsum ist in den letzten Jahren deutlich gestiegen.", topic: "Gesellschaft", cefr: "B2" },
+  { de: "zunehmend", en: "increasingly", example: "Digitale Kompetenzen werden zunehmend zur Voraussetzung für qualifizierte Berufe.", topic: "Arbeitswelt", cefr: "B2" },
+  { de: "der Reiz", en: "appeal / attraction; stimulus", example: "Der besondere Reiz dieser Stadt liegt in ihrer kulturellen Vielfalt.", topic: "Ausdruck & Stil", cefr: "C1" },
+  { de: "desolat", en: "dire / desolate (state)", example: "Der Bericht beschreibt den desolaten Zustand vieler öffentlicher Gebäude.", topic: "Gesellschaft", cefr: "C1" },
+  { de: "ambitioniert", en: "ambitious", example: "Sie verfolgt ambitionierte Ziele für ihre berufliche Zukunft.", topic: "Karriere", cefr: "B2" },
+  { de: "die Bedrohung", en: "threat", example: "Der Klimawandel gilt als die größte Bedrohung für künftige Generationen.", topic: "Umwelt", cefr: "B2" },
 ];
 
 // NOTE: Shuffle must happen in a useEffect/client-side call, NOT at module scope.
