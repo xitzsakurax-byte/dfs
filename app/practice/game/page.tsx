@@ -72,6 +72,43 @@ function generateQuizOptions(item: GameItem): string[] {
   return shuffled.slice(0, 4);
 }
 
+/* Blank slots matching the answer's letters: "dem Auto" → 3 slots, gap, 4 slots.
+   Gives the player the exact shape of the expected answer. */
+function Blanks({ answer }: { answer: string }) {
+  return (
+    <span className="inline-flex items-baseline gap-3 mx-1.5 align-baseline" aria-label={`Answer with ${answer.replace(/ /g, '').length} letters`}>
+      {answer.split(' ').map((word, wi) => (
+        <span key={wi} className="inline-flex gap-[3px]">
+          {Array.from(word).map((_, ci) => (
+            <span key={ci} className="blank-slot" />
+          ))}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/* Replaces the ___ placeholder with sized blanks and shows the dictionary form
+   to decline (e.g. "das Auto") so the player knows which word is being asked. */
+function SentenceWithBlanks({ sentence, answer, base, showBase }: {
+  sentence: string; answer: string; base?: string; showBase: boolean;
+}) {
+  const parts = sentence.split(/_{2,}/);
+  if (parts.length === 1) return <>{sentence}</>;
+  return (
+    <>
+      {parts[0]}
+      <Blanks answer={answer} />
+      {parts.slice(1).join(' ')}
+      {showBase && base && (
+        <span className="base-hint block mt-3 text-base font-normal">
+          Word to decline: <strong className="serif-accent" style={{ color: 'var(--gold-bright)' }}>{base}</strong>
+        </span>
+      )}
+    </>
+  );
+}
+
 const MODE_META: Record<GameMode, { label: string; prompt: string; Icon: typeof PenLine }> = {
   write: { label: 'Write Forms', prompt: 'Schreiben Sie die korrekte Form', Icon: PenLine },
   fix: { label: 'Fix Errors', prompt: 'Korrigieren Sie den Satz', Icon: Wrench },
@@ -218,7 +255,9 @@ export default function PracticeGame() {
       <AppNav
         right={
           combo >= 3 ? (
-            <span className="combo-badge inline-flex items-center gap-1">⚡ {combo}× chain</span>
+            <span className="combo-badge inline-flex items-center gap-1.5">
+              <Zap size={12} strokeWidth={2.6} /> {combo}× chain
+            </span>
           ) : (
             <span style={{ color: 'var(--muted)' }}>Anh Kiet</span>
           )
@@ -315,7 +354,12 @@ export default function PracticeGame() {
             <div className="eyebrow mb-3">{meta.prompt}</div>
 
             <div className="text-xl sm:text-2xl font-semibold leading-snug mb-8" lang="de">
-              {current.sentence}
+              <SentenceWithBlanks
+                sentence={current.sentence}
+                answer={current.correct}
+                base={current.base}
+                showBase={mode === 'write'}
+              />
             </div>
 
             {/* Input modes */}

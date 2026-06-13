@@ -1,0 +1,23 @@
+<svg viewBox="0 0 140 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- GermanForge — certificate with ribbon seal (original) -->
+  <g stroke="#D4A017" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- document -->
+    <rect x="14" y="10" width="92" height="84" rx="6"/>
+    <!-- header rule -->
+    <line x1="28" y1="28" x2="76" y2="28"/>
+    <!-- text lines -->
+    <line x1="28" y1="44" x2="92" y2="44"/>
+    <line x1="28" y1="56" x2="92" y2="56"/>
+    <line x1="28" y1="68" x2="70" y2="68"/>
+  </g>
+  <g stroke="#F0BA30" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- ribbon tails -->
+    <path d="M104 78 l-7 22 l11 -7 l9 8 l-4 -23"/>
+    <!-- seal -->
+    <circle cx="108" cy="68" r="16" fill="#0E1119"/>
+    <circle cx="108" cy="68" r="16"/>
+    <circle cx="108" cy="68" r="10.5" stroke-dasharray="3 4"/>
+    <!-- check -->
+    <path d="M102.5 68 l4 4.5 l8 -9"/>
+  </g>
+</svg>

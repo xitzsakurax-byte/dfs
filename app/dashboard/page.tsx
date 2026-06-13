@@ -118,7 +118,7 @@ export default function Dashboard() {
         level: realStats.level,
       });
       newAchievements.forEach(a => {
-        toast.success(`Achievement unlocked: ${a.title} ${a.icon}`, {
+        toast.success(`Achievement unlocked: ${a.title}`, {
           description: `+${a.xpReward} XP`,
         });
       });
@@ -164,7 +164,9 @@ export default function Dashboard() {
         right={
           <>
             {combo >= 3 && (
-              <span className="combo-badge hidden sm:inline-flex items-center gap-1">⚡ {combo}× combo</span>
+              <span className="combo-badge hidden sm:inline-flex items-center gap-1.5">
+                <Zap size={12} strokeWidth={2.6} /> {combo}× combo
+              </span>
             )}
             <span style={{ color: 'var(--muted)' }}>Anh Kiet</span>
           </>
@@ -186,7 +188,7 @@ export default function Dashboard() {
           </h1>
           {stats.streak > 0 && (
             <div className="mt-2 flex items-center gap-2 text-sm" style={{ color: 'var(--text-2)' }}>
-              <span className="streak-flame">🔥</span>
+              <Flame size={15} className="streak-flame" strokeWidth={2.2} />
               <span>That consistency shows up on exam day.</span>
             </div>
           )}

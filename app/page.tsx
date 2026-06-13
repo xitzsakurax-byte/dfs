@@ -5,6 +5,7 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flame, Zap, Trophy, Repeat } from 'lucide-react';
 import Preloader from '@/components/Preloader';
 import Cursor from '@/components/Cursor';
 import ScrollLine from '@/components/ScrollLine';
@@ -411,13 +412,18 @@ export default function GermanForgeLanding() {
               </p>
               <div className="space-y-5">
                 {[
-                  { icon: '🔥', label: 'Daily streaks', desc: 'Tracked on Vietnam time, every single day' },
-                  { icon: '⚡', label: 'Combo multiplier', desc: 'Chain correct answers for up to 3× XP' },
-                  { icon: '🏆', label: '14 achievements', desc: 'From first word to total bank mastery' },
-                  { icon: '🔁', label: 'SM-2 spaced repetition', desc: 'Misses come back right before you forget them' },
+                  { Icon: Flame, label: 'Daily streaks', desc: 'Tracked on Vietnam time, every single day' },
+                  { Icon: Zap, label: 'Combo multiplier', desc: 'Chain correct answers for up to 3× XP' },
+                  { Icon: Trophy, label: '14 achievements', desc: 'From first word to total bank mastery' },
+                  { Icon: Repeat, label: 'SM-2 spaced repetition', desc: 'Misses come back right before you forget them' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <span className="text-2xl flex-shrink-0 mt-0.5">{item.icon}</span>
+                    <span
+                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.25)' }}
+                    >
+                      <item.Icon size={18} style={{ color: 'var(--gold-bright)' }} strokeWidth={1.9} />
+                    </span>
                     <div>
                       <div className="font-bold">{item.label}</div>
                       <div className="text-sm" style={{ color: 'var(--text-2)' }}>{item.desc}</div>
@@ -434,7 +440,9 @@ export default function GermanForgeLanding() {
                   <div className="text-xs font-semibold tracking-wide" style={{ color: 'var(--muted)' }}>Level 7 · Geselle</div>
                   <div className="text-2xl font-black tracking-tight mt-0.5">3,420 XP</div>
                 </div>
-                <span className="demo-combo combo-badge text-sm px-3.5 py-1.5">⚡ 3× combo</span>
+                <span className="demo-combo combo-badge text-sm px-3.5 py-1.5 inline-flex items-center gap-1.5">
+                  <Zap size={13} strokeWidth={2.6} /> 3× combo
+                </span>
               </div>
 
               <div className="xp-bar-track shimmer mb-1.5" style={{ height: 8 }}>
@@ -469,8 +477,8 @@ export default function GermanForgeLanding() {
                 ))}
               </div>
 
-              <div className="mt-7 flex items-center gap-3 text-xs" style={{ color: 'var(--muted)' }}>
-                <span className="streak-flame text-base">🔥</span>
+              <div className="mt-7 flex items-center gap-2.5 text-xs" style={{ color: 'var(--muted)' }}>
+                <Flame size={15} className="streak-flame" strokeWidth={2.2} />
                 12-day streak — longest yet
               </div>
             </div>
@@ -548,6 +556,8 @@ export default function GermanForgeLanding() {
                   highlights: ['60/100 to pass each module', 'Modules can be taken separately', 'Certificate never expires'],
                   accent: 'rgba(212,160,23,0.09)',
                   border: 'rgba(212,160,23,0.28)',
+                  img: '/img/brandenburg-gate.svg',
+                  imgAlt: 'Brandenburg Gate line illustration',
                 },
                 {
                   name: 'telc Deutsch',
@@ -556,12 +566,20 @@ export default function GermanForgeLanding() {
                   highlights: ['≥60% written + oral to pass', 'Failed sections retakeable', 'C1 Hochschule for university entry'],
                   accent: 'rgba(59,130,246,0.07)',
                   border: 'rgba(59,130,246,0.22)',
+                  img: '/img/certificate-seal.svg',
+                  imgAlt: 'Certificate with seal illustration',
                 },
               ].map((exam, i) => (
-                <div key={i} className="rounded-2xl p-7 sm:p-9 transition-transform duration-300 hover:-translate-y-1.5"
+                <div key={i} className="relative overflow-hidden rounded-2xl p-7 sm:p-9 transition-transform duration-300 hover:-translate-y-1.5"
                   style={{ background: exam.accent, border: `1px solid ${exam.border}` }}
                   data-reveal>
-                  <div className="flex items-start justify-between gap-4 mb-6">
+                  <img
+                    src={exam.img}
+                    alt={exam.imgAlt}
+                    className="absolute -right-3 -bottom-4 w-36 sm:w-44 pointer-events-none select-none"
+                    style={{ opacity: 0.5, filter: 'drop-shadow(0 0 14px rgba(212,160,23,0.25))' }}
+                  />
+                  <div className="relative flex items-start justify-between gap-4 mb-6">
                     <div>
                       <div className="font-black text-2xl sm:text-3xl tracking-tight">{exam.name}</div>
                       <div className="text-sm mt-1" style={{ color: 'var(--muted)' }}>{exam.levels}</div>
@@ -571,7 +589,7 @@ export default function GermanForgeLanding() {
                       {exam.tag}
                     </span>
                   </div>
-                  <ul className="space-y-3">
+                  <ul className="relative space-y-3">
                     {exam.highlights.map((h, j) => (
                       <li key={j} className="flex items-center gap-3 text-[15px]" style={{ color: 'var(--text-2)' }}>
                         <span style={{ color: 'var(--gold)' }}>✓</span>
@@ -595,6 +613,12 @@ export default function GermanForgeLanding() {
         <section className="relative z-10 py-28 sm:py-40 overflow-hidden">
           <div className="orb-gold" style={{ width: 700, height: 700, top: '50%', left: '50%', transform: 'translate(-50%,-50%)', opacity: 0.55 }} />
           <div className="relative max-w-4xl mx-auto px-5 sm:px-8 text-center" data-reveal>
+            <img
+              src="/img/anvil.svg"
+              alt="Anvil and hammer illustration"
+              className="mx-auto mb-7 w-24 sm:w-28 select-none"
+              style={{ filter: 'drop-shadow(0 0 18px rgba(212,160,23,0.35))' }}
+            />
             <div className="inline-block px-5 py-1.5 text-[11px] tracking-[0.3em] uppercase font-semibold rounded-full mb-9"
               style={{ border: '1px solid rgba(212,160,23,0.3)', color: 'var(--gold)', background: 'rgba(212,160,23,0.06)' }}>
               No gimmicks — just the work that works

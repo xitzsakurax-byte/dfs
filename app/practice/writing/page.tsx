@@ -100,7 +100,7 @@ export default function WritingMockTest() {
     const newRating = {
       overall: totalScore,
       perTask: results,
-      fullFeedback: fullFeedback + `\n\n💡 Suggested 3000+ Wortliste terms to improve: ${suggestions.join(', ')}`,
+      fullFeedback: fullFeedback + `\n\nSuggested Wortliste terms to improve: ${suggestions.join(', ')}`,
       suggestions,
     };
 

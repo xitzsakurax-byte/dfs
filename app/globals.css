@@ -418,6 +418,22 @@ body::after {
   animation: correctPulse 0.7s ease-out;
 }
 
+/* Answer blank slots — one per letter of the expected answer */
+.blank-slot {
+  display: inline-block;
+  width: 0.55em;
+  height: 0.15em;
+  border-radius: 2px;
+  background: var(--gold-dim);
+  box-shadow: 0 0 6px rgba(212, 160, 23, 0.25);
+  transform: translateY(-0.12em);
+}
+
+.base-hint {
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
 /* Floating "+XP" chip */
 @keyframes floatUp {
   0% { opacity: 0; transform: translateY(8px) scale(0.85); }

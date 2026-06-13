@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { NotebookPen } from 'lucide-react';
 import MobileBottomNav from '@/components/MobileBottomNav';
 
 type Level = 'B1' | 'B2' | 'C1';
@@ -331,7 +332,12 @@ export default function ExamsPage() {
         {/* TestDaF note */}
         <div className="glass-card p-6 mt-6">
           <div className="flex items-start gap-4">
-            <span className="text-3xl flex-shrink-0">📝</span>
+            <span
+              className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.25)' }}
+            >
+              <NotebookPen size={19} style={{ color: 'var(--gold-bright)' }} />
+            </span>
             <div>
               <div className="font-bold mb-1">TestDaF (Test Deutsch als Fremdsprache)</div>
               <p className="text-sm text-[var(--text-2)] mb-3">

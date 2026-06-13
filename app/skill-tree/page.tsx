@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { Lock, X } from 'lucide-react';
 import { getSkillTree, type SkillNode } from '@/lib/gamification';
 import MobileBottomNav from '@/components/MobileBottomNav';
 
@@ -50,8 +51,8 @@ function NodeCard({ node, onSelect }: { node: SkillNode; onSelect: (n: SkillNode
         />
       </div>
       {!node.unlocked && (
-        <div className="mt-2 text-xs text-[var(--muted)]">
-          🔒 Locked — complete prerequisites first
+        <div className="mt-2 text-xs text-[var(--muted)] flex items-center gap-1.5">
+          <Lock size={11} /> Locked — complete prerequisites first
         </div>
       )}
     </button>
@@ -151,7 +152,9 @@ export default function SkillTreePage() {
                   </div>
                   <div className="font-black text-lg">{selected.title}</div>
                 </div>
-                <button onClick={() => setSelected(null)} className="text-[var(--muted)] hover:text-[var(--text)] text-xl">✕</button>
+                <button onClick={() => setSelected(null)} className="text-[var(--muted)] hover:text-[var(--text)]" aria-label="Close">
+                  <X size={18} />
+                </button>
               </div>
               <div className="flex items-center justify-between mb-3 text-sm">
                 <span className="text-[var(--muted)]">Mastery</span>

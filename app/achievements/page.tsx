@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { CheckCircle2, Circle } from 'lucide-react';
 import { getAchievements, getDailyQuests, type Achievement } from '@/lib/gamification';
 import { getVietnamDateString } from '@/lib/progress';
+import AchievementIcon from '@/components/AchievementIcon';
 import MobileBottomNav from '@/components/MobileBottomNav';
 
 export default function AchievementsPage() {
@@ -62,7 +64,7 @@ export default function AchievementsPage() {
               {unlocked.map(a => (
                 <div key={a.id} className="achievement-card unlocked p-5">
                   <div className="flex items-start gap-4">
-                    <span className="text-3xl flex-shrink-0">{a.icon}</span>
+                    <AchievementIcon name={a.icon} />
                     <div>
                       <div className="font-bold">{a.title}</div>
                       <div className="text-sm text-[var(--text-2)] mt-0.5">{a.description}</div>
@@ -90,7 +92,7 @@ export default function AchievementsPage() {
               {locked.map(a => (
                 <div key={a.id} className="achievement-card locked p-5">
                   <div className="flex items-start gap-4">
-                    <span className="text-3xl flex-shrink-0 grayscale">{a.icon}</span>
+                    <AchievementIcon name={a.icon} locked />
                     <div>
                       <div className="font-semibold text-[var(--muted)]">{a.title}</div>
                       <div className="text-sm text-[var(--muted)] mt-0.5">{a.description}</div>
@@ -109,7 +111,11 @@ export default function AchievementsPage() {
           <div className="space-y-4">
             {quests.map((q, i) => (
               <div key={i} className="flex items-start gap-4">
-                <span className="text-2xl flex-shrink-0 mt-0.5">{q.completed ? '✅' : '○'}</span>
+                <span className="flex-shrink-0 mt-1">
+                  {q.completed
+                    ? <CheckCircle2 size={20} style={{ color: 'var(--gold)' }} />
+                    : <Circle size={20} style={{ color: 'var(--line-2)' }} />}
+                </span>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div className="font-semibold">{q.title}</div>
