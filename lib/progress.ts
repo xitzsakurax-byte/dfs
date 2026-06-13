@@ -222,13 +222,16 @@ export async function getWritingHistory(): Promise<any[]> {
 
 // --- Reset everything to zero (local only) ---
 export async function resetAllToZero() {
-  const keysToClear = [
-    BANK_KEY, WRITING_KEY, XP_KEY, STREAK_KEY, LAST_DATE_KEY, DAILY_LOG_KEY,
-    'germanforge_bank_mastered', 'germanforge_vocab_completed', 'germanforge_grammar_completed',
-    'germanforge_declensions_completed', 'germanforge_writing_attempts',
-    'germanforge_performance'
-  ]
-  keysToClear.forEach(k => localStorage.removeItem(k))
+  // Clear every germanforge_* key in localStorage (XP, streak, daily log,
+  // bank, performance, achievements, SRS queue, quests, daily backups…),
+  // then the sessionStorage combo. This is a full wipe back to a fresh start.
+  const toRemove: string[] = []
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i)
+    if (k && k.startsWith('germanforge_')) toRemove.push(k)
+  }
+  toRemove.forEach(k => localStorage.removeItem(k))
+  try { sessionStorage.removeItem('germanforge_combo') } catch {}
 }
 
 // --- onLoginMerge stub (no login/backend anymore) ---

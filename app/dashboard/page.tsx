@@ -6,9 +6,9 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import {
   BookOpen, NotebookPen, Layers, Database, FileText, Gamepad2,
-  Flame, Trophy, Star, TrendingUp, Zap, Target, ShieldCheck, Download, Upload,
+  Flame, Trophy, Star, TrendingUp, Zap, Target, ShieldCheck, Download, Upload, RotateCcw,
 } from 'lucide-react';
-import { getBankMastered, getUserStats, getUserPerformance, getWritingHistory, getDailyHistory, xpToNextLevel } from '@/lib/progress';
+import { getBankMastered, getUserStats, getUserPerformance, getWritingHistory, getDailyHistory, xpToNextLevel, resetAllToZero } from '@/lib/progress';
 import { autoDailyBackup, getBackupDates, exportProgress, importProgress } from '@/lib/sync';
 import { getDailyQuests, getAchievements, checkAndUnlockAchievements, getSkillTree, getCurrentCombo, getComboMultiplier } from '@/lib/gamification';
 import { getVietnamDateString } from '@/lib/progress';
@@ -86,6 +86,7 @@ export default function Dashboard() {
   const [writingCount, setWritingCount] = useState(0);
   const [week, setWeek] = useState<Array<{ date: string; xp_earned: number; words_mastered: number }>>([]);
   const [backupDates, setBackupDates] = useState<string[]>([]);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -519,6 +520,39 @@ export default function Dashboard() {
                 />
               </label>
             </div>
+          </div>
+
+          {/* Reset */}
+          <div className="mt-5 pt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3" style={{ borderTop: '1px solid var(--line)' }}>
+            <div className="text-sm" style={{ color: 'var(--muted)' }}>
+              {confirmReset
+                ? 'This erases all XP, streak, mastery, achievements and history. This cannot be undone.'
+                : 'Progress wrong or want a clean slate? Reset everything to zero.'}
+            </div>
+            {!confirmReset ? (
+              <button
+                onClick={() => setConfirmReset(true)}
+                className="btn-ghost px-5 py-2.5 text-sm inline-flex items-center gap-2 flex-shrink-0"
+                style={{ borderColor: 'rgba(239,68,68,0.4)', color: 'var(--red)' }}
+              >
+                <RotateCcw size={14} /> Reset progress
+              </button>
+            ) : (
+              <div className="flex gap-2.5 flex-shrink-0">
+                <button onClick={() => setConfirmReset(false)} className="btn-ghost px-5 py-2.5 text-sm">Cancel</button>
+                <button
+                  onClick={async () => {
+                    await resetAllToZero();
+                    toast.success('Progress reset to zero', { description: 'Starting fresh — reloading…' });
+                    setTimeout(() => window.location.reload(), 900);
+                  }}
+                  className="px-5 py-2.5 text-sm rounded-full font-bold inline-flex items-center gap-2"
+                  style={{ background: 'var(--red)', color: '#fff' }}
+                >
+                  <RotateCcw size={14} /> Yes, erase everything
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
