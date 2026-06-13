@@ -6,9 +6,10 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import {
   BookOpen, NotebookPen, Layers, Database, FileText, Gamepad2,
-  Flame, Trophy, Star, TrendingUp, Zap, Target,
+  Flame, Trophy, Star, TrendingUp, Zap, Target, ShieldCheck, Download, Upload,
 } from 'lucide-react';
 import { getBankMastered, getUserStats, getUserPerformance, getWritingHistory, getDailyHistory, xpToNextLevel } from '@/lib/progress';
+import { autoDailyBackup, getBackupDates, exportProgress, importProgress } from '@/lib/sync';
 import { getDailyQuests, getAchievements, checkAndUnlockAchievements, getSkillTree, getCurrentCombo, getComboMultiplier } from '@/lib/gamification';
 import { getVietnamDateString } from '@/lib/progress';
 import AppNav from '@/components/AppNav';
@@ -84,6 +85,7 @@ export default function Dashboard() {
   const [combo, setCombo] = useState(0);
   const [writingCount, setWritingCount] = useState(0);
   const [week, setWeek] = useState<Array<{ date: string; xp_earned: number; words_mastered: number }>>([]);
+  const [backupDates, setBackupDates] = useState<string[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -127,6 +129,10 @@ export default function Dashboard() {
       setAchievements(allAchievements);
 
       setCombo(getCurrentCombo());
+
+      // Daily sync: snapshot today's progress (last 7 days kept locally)
+      autoDailyBackup();
+      setBackupDates(getBackupDates());
     }
 
     load();
@@ -464,6 +470,56 @@ export default function Dashboard() {
             <div className="font-semibold">Trusted Learning Resources</div>
             <div className="text-sm mt-1" style={{ color: 'var(--muted)' }}>DW, Nachrichtenleicht, Schubert-Verlag, official Modellsätze and more.</div>
           </Link>
+        </div>
+
+        {/* Data & backup */}
+        <div className="glass-card-static p-6 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div className="flex items-start gap-4">
+              <span
+                className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)' }}
+              >
+                <ShieldCheck size={19} style={{ color: 'var(--green)' }} />
+              </span>
+              <div>
+                <div className="font-bold">Daily progress sync</div>
+                <div className="text-sm mt-0.5" style={{ color: 'var(--muted)' }}>
+                  {backupDates.length > 0
+                    ? `Snapshot saved automatically every day · last: ${backupDates[0]} · ${backupDates.length}/7 days kept`
+                    : 'A snapshot of your progress is saved automatically every day you train.'}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2.5 flex-shrink-0">
+              <button
+                onClick={() => { exportProgress(); toast.success('Progress exported', { description: 'JSON file downloaded — keep it safe.' }); }}
+                className="btn-ghost px-5 py-2.5 text-sm inline-flex items-center gap-2"
+              >
+                <Download size={14} /> Export
+              </button>
+              <label className="btn-ghost px-5 py-2.5 text-sm inline-flex items-center gap-2 cursor-pointer">
+                <Upload size={14} /> Import
+                <input
+                  type="file"
+                  accept="application/json,.json"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    e.target.value = '';
+                    if (!file) return;
+                    try {
+                      const n = await importProgress(file);
+                      toast.success(`Progress imported (${n} records)`, { description: 'Reloading…' });
+                      setTimeout(() => window.location.reload(), 900);
+                    } catch (err) {
+                      toast.error('Import failed', { description: err instanceof Error ? err.message : 'Invalid file' });
+                    }
+                  }}
+                />
+              </label>
+            </div>
+          </div>
         </div>
 
         <div className="text-center text-xs pb-4" style={{ color: 'var(--muted)' }}>
